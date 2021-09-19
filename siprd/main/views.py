@@ -3,7 +3,7 @@ from .forms import NewUserForm
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
-
+from django.http import JsonResponse
 
 def homepage(request):
 	return render(request=request, template_name='main/home.html')
@@ -37,3 +37,7 @@ def login_request(request):
 			messages.error(request,"Invalid username or password.")
 	form = AuthenticationForm()
 	return render(request=request, template_name="main/login.html", context={"login_form":form})
+
+def ping(request):
+	if request.method == "GET":
+		return JsonResponse({'foo': 'bar'})
