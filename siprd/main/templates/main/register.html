@@ -10,7 +10,8 @@
     </head>
 
     <body>
-        {% load crispy_forms_tags %}         
+        {% load crispy_forms_tags %}
+        {% load socialaccount %}      
 
         <!--Register--> 
         <div class="container py-5">
@@ -20,6 +21,7 @@
                 {{ register_form|crispy }}                    
                 <button class="btn btn-primary" type="submit">Register</button>
             </form>
+            <a href="{% provider_login_url 'google' %}">Register With Google</a>
             <p class="text-center">If you already have an account, <a href="/login">login</a> instead.</p>
         </div>
 
