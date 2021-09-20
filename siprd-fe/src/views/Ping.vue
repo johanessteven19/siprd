@@ -15,7 +15,7 @@
     export default {
         name: "Ping",
         data(){
-            return {ping:  "",}
+            return {ping:"",}
         },
         method: {
             
