@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     "corsheaders",
+    'adminfeatures.apps.AdminfeaturesConfig',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

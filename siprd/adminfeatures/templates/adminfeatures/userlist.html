@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+      <!--Bootstrap CSS-->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+
+    <body>
+
+        <!--Register--> 
+        <div class="container py-5">
+            <h1>List</h1>
+          <table>
+            <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Status</th>
+            </tr>
+            {% for i in users %}
+            <tr>
+              <td>{{i.users_id}}</td>
+              <td>{{i.users_name}}</td>
+              <!-- <th>{{i.users_status}}</th> -->
+              {% if i.users_status  == 'accepted' %}
+              <td>Approved</td>
+              {% elif i.users_status == 'rejected' %}
+              <td>Rejected</td>
+              {% else %}
+              <!-- <th><button>Accept</button></th>
+             
+              <th><button>Reject</button></th> -->
+              <td>
+                <button onclick="" style="border-color: #78c288;" class="btn-border approve_user" id={{i.users_id}}>Accept</button>
+                <button onclick="" style="border-color: #ed7b6f;" class="btn-border reject_user" id={{i.users_id}}>Reject</button>
+              </td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+
+        <!-- Optional Javascript -->
+      <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    </body>
+    
+{% block javascript %}
+<script>
+  $(document).ready(function() {
+    $('.approve_user').click(function() {
+      console.log("here");
+      var id = $(this).attr("id");
+      var url = `${window.location.origin}/adminfeatures/approveUser/${id}`;
+
+      console.log(id);
+      console.log(url);
+      $.ajax({
+        url: url,
+      }).done(function(data) {
+        location.reload();
+      });
+    });
+
+    $('.reject_user').click(function() {
+      var id = $(this).attr("id");
+      var url = `${window.location.origin}/reject-student/${id}`;
+
+      console.log(id);
+      console.log(url);
+      $.ajax({
+        url: url,
+      }).done(function(data) {
+        location.reload();
+      });
+    });
+  });
+
+</script>
+
+{% endblock %}
