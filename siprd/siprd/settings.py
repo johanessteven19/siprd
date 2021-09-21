@@ -83,11 +83,16 @@ WSGI_APPLICATION = 'siprd.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
+# FIXME: This still uses set variables instead of environment variables!
+# NOT FOR PRODUCTION until this is fixed.
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'siprd',
+        'USER': 'siprd',
+        'PASSWORD': 'supersecure',
+        'HOST': '127.0.0.1',
+        'PORT': 8888
     }
 }
 
@@ -160,3 +165,5 @@ LOGOUT_REDIRECT_URL = '/'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
 ]
+
+AUTH_USER_MODEL = 'main.User'
