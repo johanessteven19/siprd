@@ -9,19 +9,20 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from .models import User
+import jwt, datetime
 
 def homepage(request):
 	return render(request=request, template_name='main/home.html')
 
 # Register API
-class APIViewRegister(APIView):
+class RegisterAPI(APIView):
 	def post(self, request):
 		serializer = UserSerializer(data=request.data)
 		serializer.is_valid(raise_exception=True)
 		serializer.save()
 		return Response(serializer.data)
 
-class APIViewLogin(APIView):
+class LoginAPI(APIView):
 	def post(self, request):
 		username = request.data['username']
 		password = request.data['password']
@@ -34,9 +35,51 @@ class APIViewLogin(APIView):
 		if not user.check_password(password):
 			raise AuthenticationFailed('Incorrect Password!')
 
-		return Response({
-			'message': 'Login Success!'
-		})
+		payload = {
+			'username': user.username, 
+			'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60), # expiration date
+			'iat': datetime.datetime.utcnow()									# creation date
+		}
+
+		# FIXME: Hide secret key as env variable in production
+		token = jwt.encode(payload, 'secret', algorithm='HS256')
+		# decoded = jwt.decode(token, 'secret', algorithms=['HS256'])
+
+		response = Response()
+		
+		response.set_cookie(key='jwt', value=token, httponly=True)
+		response.data = {
+			'jwt': token,
+		}
+
+		return response 
+
+class UserAPI(APIView):
+	def get(self, request):
+		token = request.COOKIES.get('jwt')
+
+		if not token:
+			raise AuthenticationFailed('You are not authenticated.')
+		
+		try:
+			payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+		except jwt.ExpiredSignatureError:
+			raise AuthenticationFailed('You are not authenticated.')
+
+		user = User.objects.filter(username=payload['username']).first()
+		serializer = UserSerializer(user)
+
+		return Response(serializer.data)
+
+class LogoutAPI(APIView):
+	def post(self, request):
+		response = Response()
+		response.delete_cookie('jwt')
+		response.data = {
+			'message': 'Log out success.'
+		}
+
+		return response
 
 def register_request(request):
 	if request.method == "POST":

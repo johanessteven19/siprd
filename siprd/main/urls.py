@@ -9,6 +9,8 @@ urlpatterns = [
     path("register", views.register_request, name="register"),
     path("login", views.login_request, name="login"),
     path("ping", views.ping, name="ping"),
-    path("api/register", views.APIViewRegister.as_view()),
-    path("api/login", views.APIViewLogin.as_view())
+    path("api/register", views.RegisterAPI.as_view()),
+    path("api/login", views.LoginAPI.as_view()),
+    path("api/user", views.UserAPI.as_view()),
+    path("api/logout", views.LogoutAPI.as_view())
 ]
