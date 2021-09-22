@@ -1,12 +1,24 @@
+from .serializers import UserSerializer
 from django.shortcuts import  render, redirect
 from .forms import NewUserForm
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import JsonResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import generics
 
 def homepage(request):
 	return render(request=request, template_name='main/home.html')
+
+# Register API
+class APIViewRegister(APIView):
+	def post(self, request):
+		serializer = UserSerializer(data=request.data)
+		serializer.is_valid(raise_exception=True)
+		serializer.save()
+		return Response(serializer.data)
 
 def register_request(request):
 	if request.method == "POST":
