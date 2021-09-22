@@ -7,7 +7,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework.exceptions import AuthenticationFailed
+from .models import User
 
 def homepage(request):
 	return render(request=request, template_name='main/home.html')
@@ -19,6 +20,23 @@ class APIViewRegister(APIView):
 		serializer.is_valid(raise_exception=True)
 		serializer.save()
 		return Response(serializer.data)
+
+class APIViewLogin(APIView):
+	def post(self, request):
+		username = request.data['username']
+		password = request.data['password']
+
+		user = User.objects.filter(username=username).first()
+
+		if user is None:
+			raise AuthenticationFailed('User not found!')
+
+		if not user.check_password(password):
+			raise AuthenticationFailed('Incorrect Password!')
+
+		return Response({
+			'message': 'Login Success!'
+		})
 
 def register_request(request):
 	if request.method == "POST":
