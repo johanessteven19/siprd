@@ -27,12 +27,16 @@ class Register(APIView):
 				return Response(status=status.HTTP_201_CREATED)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Fetches the data of the user who is currently logged in
 class ViewUserData(APIView):
 	permission_classes = [IsAuthenticated]
 
 	def get(self, request):
 		username = request.user.username
-		return JsonResponse({'username': username})
+		user = User.objects.filter(username=username).first()
+		serializer = UserSerializer(user)
+
+		return Response(serializer.data)
 
 # Test view for user authentication
 @api_view(['GET'])
@@ -40,36 +44,7 @@ class ViewUserData(APIView):
 def pingAuth(request):
 	return JsonResponse({'message': 'You are logged in!'})
 
-def register_request(request):
-	if request.method == "POST":
-		form = NewUserForm(request.POST)
-		if form.is_valid():
-			user = form.save()
-			login(request, user)
-			messages.success(request, "Registration successful." )
-			return redirect("main:homepage")
-		messages.error(request, "Unsuccessful registration. Invalid information.")
-	form = NewUserForm()
-	return render (request=request, template_name="main/register.html", context={"register_form":form})
-
-def login_request(request):
-	if request.method == "POST":
-		form = AuthenticationForm(request, data=request.POST)
-		if form.is_valid():
-			username = form.cleaned_data.get('username')
-			password = form.cleaned_data.get('password')
-			user = authenticate(username=username, password=password)
-			if user is not None:
-				login(request, user)
-				messages.info(request, f"You are now logged in as {username}.")
-				return redirect("main:homepage")
-			else:
-				messages.error(request,"Invalid username or password.")
-		else:
-			messages.error(request,"Invalid username or password.")
-	form = AuthenticationForm()
-	return render(request=request, template_name="main/login.html", context={"login_form":form})
-
+# General ping test
 def ping(request):
 	if request.method == "GET":
 		return JsonResponse({'foo': 'bar'})
