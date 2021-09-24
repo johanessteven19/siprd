@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import Home from "../views/Home.vue";
 import Ping from "../views/Ping.vue";
+import Register from "../views/Register.vue";
 
 Vue.use(VueRouter);
 
@@ -24,6 +25,12 @@ const routes: Array<RouteConfig> = [
     path: "/ping",
     name: "Ping",
     component: Ping,
+  },
+
+  {
+    path: "/register",
+    name: "Register",
+    component: Register,
   },
 ];
 
