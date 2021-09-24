@@ -1,31 +1,29 @@
 <template>
   <div class="ping">
-    <h1>{{ping}}</h1>
+    <h1>{{ ping }}</h1>
   </div>
 </template>
 
 <script>
-    import Vue from "vue";
-    import axios from "axios";
-    import VueAxios from "vue-axios";
-    // import Vuetify from "vuetify";
+import Vue from "vue";
+import axios from "axios";
+import VueAxios from "vue-axios";
+// import Vuetify from "vuetify";
 
-    Vue.use(VueAxios, axios);
+Vue.use(VueAxios, axios);
 
-    export default {
-        name: "Ping",
-        data(){
-            return {ping:"",}
-        },
-        method: {
-            
-        },
-        beforeMount(){
-                console.log('test')
-                Vue.axios.get("http://localhost:8000/ping").then((res)=>{
-                    this.ping = res.data
-                    console.log(res)
-                    })
-            }
-    }
+export default {
+  name: "Ping",
+  data() {
+    return { ping: "" };
+  },
+  method: {},
+  beforeMount() {
+    console.log("test");
+    Vue.axios.get("http://localhost:8000/ping").then((res) => {
+      this.ping = res.data;
+      console.log(res);
+    });
+  },
+};
 </script>
