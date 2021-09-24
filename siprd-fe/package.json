@@ -1,5 +1,5 @@
 {
-  "name": "siprd-fe",
+  "name": "siprd",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -44,5 +44,12 @@
       "vue-cli-service lint",
       "git add"
     ]
-  }
+  },
+  "description": "```\r npm install\r ```",
+  "main": ".eslintrc.js",
+  "directories": {
+    "test": "tests"
+  },
+  "author": "",
+  "license": "ISC"
 }
