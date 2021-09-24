@@ -1,0 +1,13 @@
+# Docker Compose file to start PostgreSQL container
+# FOR TESTING PURPOSES ONLY
+
+version: '3'
+services:
+  db:
+    image: postgres
+    ports:
+      - "8888:5432"
+    environment:
+      POSTGRES_DB: siprd
+      POSTGRES_USER: siprd
+      POSTGRES_PASSWORD: supersecure
