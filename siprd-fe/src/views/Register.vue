@@ -1,66 +1,153 @@
 <template>
-  <div class="register">
-    <h2>Buat akun baru</h2>
-    <form id="register-form" @submit="checkForm" action="http://127.0.0.1:8000/" method="post" novalidate="true">
-        <p v-if="errors.length">
-         <b>Please correct the following error(s):</b>
-            <ul>
-                <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-            </ul>
-        </p>
-        <p>Email*</p>
-        <input v-model="email" type="email" placeholder="Email">
+    <v-container>
+    <validation-observer ref="observer" v-slot="{ invalid }">
+        <h2>Buat akun baru</h2>
+        <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
+        <v-row>
+            <v-col md="5">
+            <validation-provider v-slot="{ errors }" name="email" rules="required|email">
+                <v-text-field
+                    v-model="email"
+                    :error-messages="errors"
+                    label="Email"
+                    required>  
+                </v-text-field>
+            </validation-provider>
 
-        <p>Username*</p>
-        <input v-model="username" placeholder="Username">
+            <validation-provider v-slot="{ errors }" name="username" rules="required">
+                <v-text-field
+                    v-model="username"
+                    :error-messages="errors"
+                    label="Username"
+                    required>   
+                </v-text-field>
+            </validation-provider>
 
-        <p>Nama Lengkap*</p>
-        <input v-model="full_name" placeholder="Nama Lengkap">
+           <validation-provider v-slot="{ errors }" name="university" rules="required">
+                <v-text-field
+                    v-model="university"
+                    :error-messages="errors"
+                    label="Universitas"
+                    required>   
+                </v-text-field>
+            </validation-provider>
 
-        <p>Kata Sandi*</p>
-        <input v-model="password" placeholder="Kata Sandi">
+            <validation-provider v-slot="{ errors }" name="field_of_study" rules="required">
+                <v-text-field
+                    v-model="field_of_study"
+                    :error-messages="errors"
+                    label="Bidang Keahlian"
+                    required>   
+                </v-text-field>
+            </validation-provider>
 
-        <p>NIP</p>
-        <input v-model="nip" placeholder="NIP">
+            <validation-provider v-slot="{ errors }" name="position" rules="required">
+                <v-select
+                    v-model="position"
+                    :items="posSelect"
+                    :error-messages="errors"
+                    label="Jabatan"
+                    data-vv-name="select"
+                    required>
+                </v-select>
+            </validation-provider>
+            </v-col>
 
-        <p>Universitas*</p>
-        <input v-model="university" placeholder="Universitas">
+            <v-col md="5" class="ml-auto">
+            <validation-provider v-slot="{ errors }" name="fullname" rules="required">
+                <v-text-field
+                    v-model="full_name"
+                    :error-messages="errors"
+                    label="Nama Lengkap"
+                    required>   
+                </v-text-field>
+            </validation-provider>
 
-        <p>Bidang Keahlian</p>
-        <input v-model="field_of_study" placeholder="Bidang Keahlian">
+            <validation-provider v-slot="{ errors }" name="password" rules="required">
+                <v-text-field
+                    v-model="password"
+                    :error-messages="errors"
+                    label="Password"
+                    :type="'password'"
+                    required>
+                </v-text-field>
+            </validation-provider>
 
-        <p>Jabatan Akademik</p>
-        <select v-model="position">
-            <option value="" disabled>Jabatan Akademik</option>
-            <option>Asisten Ahli</option>
-            <option>Lektor</option>
-            <option>Lektor Kepala</option>
-            <option>Guru Besar/Professor</option>
-        </select>
+            <validation-provider v-slot="{ errors }" name="nip">
+                <v-text-field
+                    v-model="nip"
+                    :error-messages="errors"
+                    label="NIP"
+                    required>   
+                </v-text-field>
+            </validation-provider>
 
-        <p>Role*</p>
-        <select v-model="role">
-            <option disabled value="">Role</option>
-            <option>Dosen</option>
-            <option>Reviewer</option>
-            <option>SDM PT</option>
-            <option>Admin</option>
-        </select>
+            <validation-provider v-slot="{ errors }" name="role">
+                <v-select
+                    v-model="role"
+                    :items="roleSelect"
+                    :error-messages="errors"
+                    label="Role"
+                    data-vv-name="select"
+                    required>
+                </v-select>
+            </validation-provider>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col md="6">
+            <v-btn
+                class="mr-6"
+                :disabled="invalid"
+                type="submit"
+                color="success"
+            >
+                Daftar
+            </v-btn>
+            </v-col>
 
-        <p> 
-            <input type="submit" value="Daftar">
-        </p>
-    </form>
-  </div>
+            <v-col md="5" class="ml-auto">
+            <v-btn
+                :disabled="valid"
+                type="button"
+                color="success"
+            >
+                Masuk dengan Google
+            </v-btn>
+            </v-col>
+        </v-row>
+        </v-form>
+    </validation-observer>
+    <br>
+    <p>Sudah punya akun? <a v-on:click="loginRedir">Masuk</a></p>
+    </v-container>
 </template>
 
 <script>
     import Vue from "vue";
     import axios from "axios";
     import VueAxios from "vue-axios";
-    // import Vuetify from "vuetify";
+    import Vuetify from "vuetify";
+    import { required, digits, email, max, regex } from 'vee-validate/dist/rules'
+    import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
+
+    setInteractionMode('eager')
+
+    extend('required', {
+        ...required,
+        message: '{_field_} can not be empty',
+    })
+
+    extend('email', {
+        ...email,
+        message: 'Email must be valid',
+    })
     export default{
         name: "Register",
+        components: {
+        ValidationProvider,
+        ValidationObserver,
+        },
         data(){
             return {
             errors: [],
@@ -72,7 +159,19 @@
             university: null,
             field_of_study: null,
             position: null,
-            role: null
+            posSelect: [
+                'Asisten Ahli',
+                'Lektor',
+                'Lektor Kepala',
+                'Guru Besar/Professor'
+            ],
+            role: null,
+            roleSelect: [
+                'Dosen',
+                'Reviewer',
+                'SDM PT',
+                'Admin'
+            ],
             }
         },
         methods: {
@@ -91,7 +190,8 @@
                 Vue.axios.post("http://localhost:8000/api/register",data).then((res)=>{
                     if(res.status===201){
                         alert("Akun berhasil dibuat.")
-                        this.$router.push("/")
+                        console.log("YES")
+                        this.$router.push("/login")
                     }else{
                         alert("Gagal")
                     }
@@ -99,49 +199,18 @@
             },
 
             checkForm: function (e) {
-                console.log("hi")
-                e.preventDefault();
-                this.errors = [];
-                console.log(this.full_name)
-                console.log(this.university)
-
-                if (!this.username) {
-                    this.errors.push("Username required.");
-                }
-                if (!this.full_name) {
-                    this.errors.push("Name Lengkap required.");
-                }
-                if (!this.password) {
-                    this.errors.push("Kata sandi required.");
-                }
-                if (!this.university) {
-                    this.errors.push("Universitas required.");
-                }
-                if (!this.role) {
-                    this.errors.push("Role required.");
-                }
-                if (!this.email) {
-                    this.errors.push('Email required.');
-                } else if (!this.validEmail(this.email)) {
-                    this.errors.push('Valid email required.');
-                }
-
-                console.log(this.errors)
-                if (!this.errors.length) {
-                    console.log("error")
-                    this.submitForm()
-                    return
-                }
+                this.$refs.observer.validate()
+                this.submitForm()
+                return
             },
 
-            validEmail: function (email) {
-            var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return re.test(email);
-            },
+            loginRedir: function(e){
+                this.$router.push("/login")
+            }
         },
 
         beforeMount(){
-            console.log('test')
+            console.log("test")
             Vue.axios.post("http://localhost:8000/api/register").then((res)=>{
                 this.register = res.data
                 console.log(res)
