@@ -209,9 +209,9 @@ DJOSER = {
     'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:8000/google'],
     'SERIALIZERS': {
-        'user_create': 'main.serializers.UserSerializer',
-        'user': 'main.serializers.UserSerializer',
-        'current_user': 'main.serializers.UserSerializer',
+        'user_create': 'siprd.main.serializers.UserSerializer',
+        'user': 'siprd.main.serializers.UserSerializer',
+        'current_user': 'siprd.main.serializers.UserSerializer',
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
     }
 }
