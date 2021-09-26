@@ -120,8 +120,8 @@ DATABASES = {
         'NAME': 'siprd',
         'USER': 'siprd',
         'PASSWORD': 'supersecure',
-        'HOST': '127.0.0.1',
-        'PORT': 8888
+        'HOST': 'db',
+        'PORT': 5432
     }
 }
 

@@ -41,7 +41,18 @@
           submit
         </v-btn>
         </div>
+        <br>
+        <v-btn
+          :disabled="valid"
+          type="button"
+          color="success"
+        >
+        Masuk dengan Google
+        </v-btn>
+        
       </v-form>
+      <br>
+      <p>Sudah punya akun? <a v-on:click="regisRedir">Daftar</a></p>
   </v-container>
 </template>
 
@@ -104,7 +115,12 @@
             alert("login gagal, ada masalah pada server")
           }
         })
+      },
+
+      regisRedir: function(e){
+        this.$router.push("/register")
       }
+
     }
   }
 </script>
