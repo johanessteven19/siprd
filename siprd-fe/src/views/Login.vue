@@ -73,6 +73,7 @@
                 
               </div>
             </v-form>
+            <br>
             <GoogleLogin 
               :params="params" 
               :renderParams="renderParams" 
@@ -120,8 +121,8 @@
           client_id: '473901621952-2upinaorbnjbmreeap1mqvb084d8bqpk.apps.googleusercontent.com'
         },
         renderParams: {
-          width: 250,
-          height: 50,
+          width: 460,
+          height: 40,
           longtitle: true
         }
       }

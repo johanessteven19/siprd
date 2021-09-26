@@ -1,7 +1,11 @@
 <template>
-    <v-container>
+    <v-container style=
+        "margin: auto;
+        width: 60%;
+        padding: 70px 0;">
     <validation-observer ref="observer" v-slot="{ invalid }">
-        <h2>Buat akun baru</h2>
+        <h2>Buat Akun Baru</h2>
+        <br>
         <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
         <v-row>
             <v-col md="5">
@@ -9,7 +13,7 @@
                 <v-text-field
                     v-model="email"
                     :error-messages="errors"
-                    label="Email"
+                    label="Email*"
                     required>  
                 </v-text-field>
             </validation-provider>
@@ -18,7 +22,7 @@
                 <v-text-field
                     v-model="username"
                     :error-messages="errors"
-                    label="Username"
+                    label="Username*"
                     required>   
                 </v-text-field>
             </validation-provider>
@@ -27,12 +31,12 @@
                 <v-text-field
                     v-model="university"
                     :error-messages="errors"
-                    label="Universitas"
+                    label="Universitas*"
                     required>   
                 </v-text-field>
             </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="field_of_study" rules="required">
+            <validation-provider v-slot="{ errors }" name="field_of_study">
                 <v-text-field
                     v-model="field_of_study"
                     :error-messages="errors"
@@ -41,7 +45,7 @@
                 </v-text-field>
             </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="position" rules="required">
+            <validation-provider v-slot="{ errors }" name="position">
                 <v-select
                     v-model="position"
                     :items="posSelect"
@@ -58,7 +62,7 @@
                 <v-text-field
                     v-model="full_name"
                     :error-messages="errors"
-                    label="Nama Lengkap"
+                    label="Nama Lengkap*"
                     required>   
                 </v-text-field>
             </validation-provider>
@@ -67,7 +71,7 @@
                 <v-text-field
                     v-model="password"
                     :error-messages="errors"
-                    label="Password"
+                    label="Password*"
                     :type="'password'"
                     required>
                 </v-text-field>
@@ -82,30 +86,42 @@
                 </v-text-field>
             </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="role">
+            <validation-provider v-slot="{ errors }" name="role" rules="required">
                 <v-select
                     v-model="role"
                     :items="roleSelect"
                     :error-messages="errors"
-                    label="Role"
+                    label="Role*"
                     data-vv-name="select"
                     required>
                 </v-select>
             </validation-provider>
             </v-col>
         </v-row>
+
+        Required*
+            
+            <v-col md="5">
             <v-btn
-                class="mr-6"
+                class="ml-auto white--text"
                 :disabled="invalid"
                 type="submit"
-                color="success"
+                color="#8D38E3"
+                width= '100%'
             >
                 Daftar
             </v-btn>
+            </v-col>
         </v-form>
     </validation-observer>
-            <!-- <v-col md="5" class="ml-auto"> -->
-            <GoogleLogin :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
+            <v-col md="5" >
+            <GoogleLogin 
+            :params="params" 
+            :renderParams="renderParams" 
+            :onSuccess="onSuccess" 
+            :onFailure="onFailure"
+            ></GoogleLogin>
+            </v-col>
             <!-- <user-panel v-else :user="user"></user-panel> -->
     <br>
     <p>Sudah punya akun? <a v-on:click="loginRedir">Masuk</a></p>
@@ -170,8 +186,7 @@
                 client_id: '473901621952-2upinaorbnjbmreeap1mqvb084d8bqpk.apps.googleusercontent.com'
              },
             renderParams: {
-                width: 250,
-                height: 50,
+                width:357,
                 longtitle: true
             }
             }
