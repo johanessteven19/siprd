@@ -1,2 +1,2 @@
 include:
-  local: practice-6/.gitlab-ci.yml
+  local: siprd/.gitlab-ci.yml
