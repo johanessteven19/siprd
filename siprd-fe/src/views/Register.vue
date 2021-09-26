@@ -94,8 +94,6 @@
             </validation-provider>
             </v-col>
         </v-row>
-        <v-row>
-            <v-col md="6">
             <v-btn
                 class="mr-6"
                 :disabled="invalid"
@@ -104,20 +102,11 @@
             >
                 Daftar
             </v-btn>
-            </v-col>
-
-            <v-col md="5" class="ml-auto">
-            <v-btn
-                :disabled="valid"
-                type="button"
-                color="success"
-            >
-                Masuk dengan Google
-            </v-btn>
-            </v-col>
-        </v-row>
         </v-form>
     </validation-observer>
+            <!-- <v-col md="5" class="ml-auto"> -->
+            <GoogleLogin :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
+            <!-- <user-panel v-else :user="user"></user-panel> -->
     <br>
     <p>Sudah punya akun? <a v-on:click="loginRedir">Masuk</a></p>
     </v-container>
@@ -130,6 +119,8 @@
     import Vuetify from "vuetify";
     import { required, digits, email, max, regex } from 'vee-validate/dist/rules'
     import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
+    // import UserPanel from '../components/UserPanel.vue'
+    import GoogleLogin from 'vue-google-login';
 
     setInteractionMode('eager')
 
@@ -145,8 +136,10 @@
     export default{
         name: "Register",
         components: {
-        ValidationProvider,
-        ValidationObserver,
+            // UserPanel,
+            ValidationProvider,
+            ValidationObserver,
+            GoogleLogin
         },
         data(){
             return {
@@ -172,6 +165,15 @@
                 'SDM PT',
                 'Admin'
             ],
+            user: {},
+            params: {
+                client_id: '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com'
+             },
+            renderParams: {
+                width: 250,
+                height: 50,
+                longtitle: true
+            }
             }
         },
         methods: {
@@ -206,6 +208,31 @@
 
             loginRedir: function(e){
                 this.$router.push("/login")
+            },
+
+            onSuccess(googleUser) {
+                console.log(googleUser);
+ 
+                // This only gets the user information: id, name, imageUrl and email
+                console.log(googleUser.getBasicProfile());
+            },
+            onGoogleSignInSuccess (resp) {
+                const token = resp.Zi.access_token
+                axios.post('http://localhost:8000/auth/google/', {
+                    access_token: token
+                })
+                .then(resp => {
+                    this.user = resp.data.user
+                })
+                .catch(err => {
+                    console.log(err.response)
+                })
+            },
+            onGoogleSignInError (error) {
+                console.log('OH NOES', error)
+            },
+            isEmpty (obj) {
+                return Object.keys(obj).length === 0
             }
         },
 

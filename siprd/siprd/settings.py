@@ -119,8 +119,8 @@ DATABASES = {
         'NAME': 'siprd',
         'USER': 'siprd',
         'PASSWORD': 'supersecure',
-        'HOST': 'db',
-        'PORT': 5432
+        # 'HOST': 'db',
+        'PORT': 8888
     }
 }
 
