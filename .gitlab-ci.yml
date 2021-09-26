@@ -1,13 +1,10 @@
-stages:
-  - docker
+
 
 include:
   local: siprd/.gitlab-ci.yml
-
-build:
-  stage: docker
-  before_script:
-    - docker-compose up
+  
+before_script:
+  - docker-compose up
 
 
 # services:
