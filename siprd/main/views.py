@@ -13,6 +13,9 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.decorators import api_view, permission_classes
 from .models import User
 
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from rest_auth.registration.views import SocialLoginView
+
 def homepage(request):
 	return render(request=request, template_name='main/home.html')
 
@@ -37,6 +40,9 @@ class ViewUserData(APIView):
 		serializer = UserSerializer(user)
 
 		return Response(serializer.data)
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
 
 # Test view for user authentication
 @api_view(['GET'])
