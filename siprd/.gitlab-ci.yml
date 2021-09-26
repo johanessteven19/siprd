@@ -37,6 +37,9 @@ Deployment:
   before_script:
     - gem install dpl
     - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+    - pip install -r requirements.txt
+    - python manage.py makemigrations
+    - python manage.py migrate
   script:
     - dpl --provider=heroku --app=siprd --api-key=$HEROKU_API_KEY
     - export HEROKU_API_KEY=$HEROKU_API_KEY
