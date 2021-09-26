@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -14,6 +14,8 @@ urlpatterns = [
     path("api/register", views.Register.as_view()),
     path("api/user", views.ViewUserData.as_view()),
     path("api/ping", views.pingAuth),
+    path('api/google', include('djoser.social.urls')),
+    #path('accounts/profile/', RedirectSocial.as_view()),
 
     # NOTE: Grants users a Refresh-Access token pair.
     # Input: JSON file containing username and password
