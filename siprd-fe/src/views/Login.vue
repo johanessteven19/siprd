@@ -73,6 +73,12 @@
                 
               </div>
             </v-form>
+            <GoogleLogin 
+              :params="params" 
+              :renderParams="renderParams" 
+              :onSuccess="onSuccess" 
+              :onFailure="onFailure">
+            </GoogleLogin>
             <p style="margin-top: 20px;" class="register">Tidak memiliki akun? <span> <a href="/Register" >Daftar</a></span></p>
         </v-container>
     </v-card>
@@ -88,12 +94,16 @@
 
   import { required, digits, email, max, regex } from 'vee-validate/dist/rules'
   import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
+  import GoogleLogin from 'vue-google-login';
 
   Vue.use(VueAxios, axios);
   Vue.use(Vuetify)
   
   export default {
     name:"Login",
+    components: {
+      GoogleLogin
+    },
     data(){
       return {
         errors: [],
@@ -106,6 +116,14 @@
         passRules: [
           v => !!v || 'Kata sandi tidak sesuai',
         ],
+        params: {
+          client_id: '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com'
+        },
+        renderParams: {
+          width: 250,
+          height: 50,
+          longtitle: true
+        }
       }
     },
     methods: {
@@ -139,7 +157,12 @@
             alert("login gagal, ada masalah pada server")
           }
         })
-      }
+      },
+      onSuccess(googleUser) {
+        console.log(googleUser);
+        // This only gets the user information: id, name, imageUrl and email
+        console.log(googleUser.getBasicProfile());
+      },
     }
   }
 </script>
