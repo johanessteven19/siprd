@@ -17,14 +17,3 @@ connect:
   # official way to provide password to psql: http://www.postgresql.org/docs/9.3/static/libpq-envars.html
   - export PGPASSWORD=supersecure
   - psql -h "postgres" -U "siprd" -d "siprd" -c "SELECT 'OK' AS status;"
-
-
-
-# services:
-#   - postgres:12.2-alpine
-
-# variables:
-#   POSTGRES_DB: siprd
-#   POSTGRES_USER: siprd
-#   POSTGRES_PASSWORD: supersecure
-#   POSTGRES_HOST_AUTH_METHOD: trust

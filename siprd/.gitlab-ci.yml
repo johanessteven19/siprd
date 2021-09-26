@@ -45,6 +45,7 @@ Deployment:
     - dpl --provider=heroku --app=siprd --api-key=$HEROKU_API_KEY
     - export HEROKU_API_KEY=$HEROKU_API_KEY
   environment:
+    name: production
     url: https://siprd.herokuapp.com/
   only:
     - 8-deploy
