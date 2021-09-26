@@ -1,2 +1,20 @@
+stages:
+  - build
+
 include:
   local: siprd/.gitlab-ci.yml
+
+build:
+  stage: build
+  before_script:
+    - docker-compose up
+
+
+# services:
+#   - postgres:12.2-alpine
+
+# variables:
+#   POSTGRES_DB: siprd
+#   POSTGRES_USER: siprd
+#   POSTGRES_PASSWORD: supersecure
+#   POSTGRES_HOST_AUTH_METHOD: trust
