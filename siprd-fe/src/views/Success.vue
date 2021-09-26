@@ -1,13 +1,7 @@
 <template>
   <v-container>
-    <h1>Hello {{userData.full_name}}</h1>
-    <v-btn
-      depressed
-      color="error"
-      v-on:click="logoutUser"
-    >
-      Logout
-    </v-btn>
+    <h1>Hello {{ userData.full_name }}</h1>
+    <v-btn depressed color="error" v-on:click="logoutUser"> Logout </v-btn>
   </v-container>
 </template>
 
@@ -22,37 +16,35 @@ Vue.use(VueAxios, axios);
 export default {
   name: "Success",
   data() {
-    return { 
-      userData: ""
+    return {
+      userData: "",
     };
   },
   methods: {
-    logoutUser(){
-      console.log("enter")
-      localStorage.removeItem('access')
-      localStorage.removeItem('refresh')
-      this.$router.push("/")
-    }
+    logoutUser() {
+      console.log("enter");
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      this.$router.push("/");
+    },
   },
   beforeMount() {
-    if(localStorage.access){
-      console.log(localStorage.access)
-      console.log(localStorage.refresh)
-      const accessToken = localStorage.access
+    if (localStorage.access) {
+      console.log(localStorage.access);
+      console.log(localStorage.refresh);
+      const accessToken = localStorage.access;
       const config = {
-          headers: { Authorization: "Bearer " + accessToken }
+        headers: { Authorization: "Bearer " + accessToken },
       };
-      Vue.axios.get("http://localhost:8000/api/user", config).then((res)=>{
-        console.log(res.data)
-        if(res.status === 200){
-  
-          this.userData = res.data
+      Vue.axios.get("http://localhost:8000/api/user", config).then((res) => {
+        console.log(res.data);
+        if (res.status === 200) {
+          this.userData = res.data;
         }
-      })
-    }else{
-      this.$router.push("/")
+      });
+    } else {
+      this.$router.push("/");
     }
-
   },
 };
 </script>

@@ -2,6 +2,7 @@
 # FOR TESTING PURPOSES ONLY
 
 version: '3'
+
 services:
   db:
     image: postgres
@@ -11,3 +12,26 @@ services:
       POSTGRES_DB: siprd
       POSTGRES_USER: siprd
       POSTGRES_PASSWORD: supersecure
+  
+  backend:
+    container_name: backend
+    build:
+      context: ./siprd
+      dockerfile: Dockerfile
+    command: python /code/manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  # Comment the below lines to run normally
+  frontend:
+    container_name: frontend
+    build:
+      context: ./siprd-fe
+      dockerfile: Dockerfile
+    working_dir: /app
+    command: npm run serve --host 127.0.0.1
+    ports:
+      - "8080:8080"
+
