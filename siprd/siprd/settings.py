@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    "corsheaders",
+    'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'social_django',
