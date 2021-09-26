@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django.contrib.sites',
     'allauth',
+    'rest_framework.authtoken',
     'djoser',
     'allauth.account',
     'allauth.socialaccount',
@@ -121,6 +122,7 @@ DATABASES = {
         'PASSWORD': 'supersecure',
         'HOST': 'db',
         'PORT': 5432
+        #'PORT': 8888
     }
 }
 
@@ -192,7 +194,7 @@ SITE_ID = 3
 #LOGOUT_REDIRECT_URL = '/'
 
 DJOSER = {
-    'LOGIN_FIELD': 'email',
+    'LOGIN_FIELD': 'username',
     'USER_CREATE_PASSWORD_RETYPE': True,
     'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
