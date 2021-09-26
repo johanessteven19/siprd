@@ -9,6 +9,7 @@ build:
   stage: build
   script:
     - pip install -r siprd/requirements.txt
+    - pip install djoser
     - python siprd/manage.py makemigrations
     - python siprd/manage.py migrate
 
