@@ -44,7 +44,7 @@ Deployment:
     name: production
     url: https://siprd.herokuapp.com/
   only:
-    - master
+    - 8-deploy
 
 
 
