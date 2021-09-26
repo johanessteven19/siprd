@@ -117,10 +117,10 @@ WSGI_APPLICATION = 'siprd.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'siprd',
-        'USER': 'siprd',
-        'PASSWORD': 'supersecure',
-        'HOST': 'postgres',
+        'NAME': 'd71vqpj643r34k',
+        'USER': 'zskrqjmvcvrkex',
+        'PASSWORD': '2ca8458ddce94e7ea09a712a6bb3a4424e09598e91651979821aa550620be2f5',
+        'HOST': 'ec2-52-206-193-199.compute-1.amazonaws.com',
         'PORT': 5432
     }
 }
