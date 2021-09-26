@@ -9,8 +9,8 @@ build:
   stage: build
   script:
     - pip install -r siprd/requirements.txt
-    - python manage.py makemigrations
-    - python manage.py migrate
+    - python siprd/manage.py makemigrations
+    - python siprd/manage.py migrate
 
 # test:
 #   image: python:3.7.3
