@@ -20,12 +20,12 @@ class NewUserForm(UserCreationForm):
         ("SDM_PT", "SDM PT")
     ]
 
-    email = forms.EmailField(required = True, help_text="Email")
-    fullname = forms.CharField(required = True, help_text="Full Name")
-    university = forms.CharField(required = True, help_text="University")
-    expertise = forms.CharField(required = True, help_text="Bidang Keahlian")
-    position = forms.ChoiceField(choices = POSITION_LIST, help_text="Jabatan Akademik")
-    role = forms.ChoiceField(choices = ROLE_LIST, help_text="Role")
+    email = forms.EmailField(required = True)
+    fullname = forms.CharField(required = True)
+    university = forms.CharField(required = True)
+    expertise = forms.CharField(required = True)
+    position = forms.ChoiceField(choices = POSITION_LIST)
+    role = forms.ChoiceField(choices = ROLE_LIST)
 
     class Meta:
 	    model = User

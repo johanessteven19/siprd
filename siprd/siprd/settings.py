@@ -42,13 +42,16 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django.contrib.sites',
     'allauth',
+    'djoser',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     "corsheaders",
     'adminfeatures.apps.AdminfeaturesConfig',
     'rest_framework',
-    'rest_framework_simplejwt'
+    'rest_framework_simplejwt',
+    'social_django',
+    'rest_framework_simplejwt.token_blacklist'
 ]
 
 REST_FRAMEWORK = {
@@ -73,6 +76,7 @@ SIMPLE_JWT = {
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
+    'social_django.middleware.SocialAuthExceptionMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     "corsheaders.middleware.CorsMiddleware",
@@ -96,6 +100,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect'
             ],
         },
     },
@@ -164,6 +170,7 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
@@ -182,8 +189,35 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SITE_ID = 3
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+#LOGIN_REDIRECT_URL = '/'
+#LOGOUT_REDIRECT_URL = '/'
+
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    'SEND_CONFIRMATION_EMAIL': True,
+    'SET_USERNAME_RETYPE': True,
+    'SET_PASSWORD_RETYPE': True,
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:8000/google'],
+    'SERIALIZERS': {
+        'user_create': 'main.serializers.UserSerializer',
+        'user': 'main.serializers.UserSerializer',
+        'current_user': 'main.serializers.UserSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+    }
+}
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'f0cmsWyo3bFj1xvjt0n7U7jM'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile','openid']
+SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['name']
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True

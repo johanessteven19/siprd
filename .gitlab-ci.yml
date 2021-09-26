@@ -1,0 +1,2 @@
+include:
+  local: siprd/.gitlab-ci.yml
