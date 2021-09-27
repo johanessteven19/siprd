@@ -118,7 +118,7 @@
           v => !!v || 'Kata sandi tidak sesuai',
         ],
         params: {
-          client_id: '473901621952-2upinaorbnjbmreeap1mqvb084d8bqpk.apps.googleusercontent.com'
+          client_id: '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com'
         },
         renderParams: {
           width: 460,
@@ -167,7 +167,7 @@
           'provider' : 'google-oauth2',
           'code' : googleUser.getBasicProfile["fT"]
         }
-        Vue.axios.post("http://localhost:8000/api/google/social/jwt-pair/",).then((res)=>{
+        Vue.axios.post("http://localhost:8000/api/google/social/jwt-pair/",data).then((res)=>{
           if (res.status === 200){
             window.localStorage.setItem('refresh',res.data.refresh)
             window.localStorage.setItem('access',res.data.access)

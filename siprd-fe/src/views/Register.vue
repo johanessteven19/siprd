@@ -9,14 +9,24 @@
         <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
         <v-row>
             <v-col md="5">
-            <validation-provider v-slot="{ errors }" name="email" rules="required|email">
+            <div v-if="google_signed!=null">
                 <v-text-field
-                    v-model="email"
-                    :error-messages="errors"
-                    label="Email*"
-                    required>  
+                    :value="email"
+                    label="Email (Filled)"
+                    filled
+                    readonly>   
                 </v-text-field>
-            </validation-provider>
+            </div>
+            <div v-else>
+                <validation-provider v-slot="{ errors }" name="email" rules="required|email">
+                    <v-text-field
+                        v-model="email"
+                        :error-messages="errors"
+                        label="Email*"
+                        required>  
+                    </v-text-field>
+                </validation-provider>
+            </div>
 
             <validation-provider v-slot="{ errors }" name="username" rules="required">
                 <v-text-field
@@ -58,14 +68,24 @@
             </v-col>
 
             <v-col md="5" class="ml-auto">
-            <validation-provider v-slot="{ errors }" name="fullname" rules="required">
+            <div v-if="google_signed!=null">
                 <v-text-field
-                    v-model="full_name"
-                    :error-messages="errors"
-                    label="Nama Lengkap*"
-                    required>   
+                    :value="full_name"
+                    label="Nama lengkap (Filled)"
+                    filled
+                    readonly>   
                 </v-text-field>
-            </validation-provider>
+            </div>
+            <div v-else>
+                <validation-provider v-slot="{ errors }" name="fullname" rules="required">
+                    <v-text-field
+                        v-model="full_name"
+                        :error-messages="errors"
+                        label="Nama Lengkap*"
+                        required>   
+                    </v-text-field>
+                </validation-provider>
+            </div>
 
             <validation-provider v-slot="{ errors }" name="password" rules="required">
                 <v-text-field
@@ -183,12 +203,13 @@
             ],
             user: {},
             params: {
-                client_id: '473901621952-2upinaorbnjbmreeap1mqvb084d8bqpk.apps.googleusercontent.com'
+                client_id: '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com'
              },
             renderParams: {
                 width:357,
                 longtitle: true
-            }
+            },
+            google_signed: null,
             }
         },
         methods: {
@@ -230,6 +251,9 @@
  
                 // This only gets the user information: id, name, imageUrl and email
                 console.log(googleUser.getBasicProfile());
+                this.google_signed="true";
+                this.full_name=googleUser.getBasicProfile().getName();
+                this.email=googleUser.getBasicProfile().getEmail();
             },
             onGoogleSignInSuccess (resp) {
                 const token = resp.Zi.access_token

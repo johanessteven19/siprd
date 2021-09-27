@@ -123,6 +123,7 @@ DATABASES = {
         'PASSWORD': 'supersecure',
         'HOST': 'db',
         'PORT': 5432
+        #'PORT': 8888
     }
 }
 
@@ -181,8 +182,8 @@ SITE_ID = 3
 #LOGIN_REDIRECT_URL = '/'
 #LOGOUT_REDIRECT_URL = '/'
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '473901621952-2upinaorbnjbmreeap1mqvb084d8bqpk.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'na1qhagcvdXDXnNULbE_ttof'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'f0cmsWyo3bFj1xvjt0n7U7jM'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile','openid']
 SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['name']
 

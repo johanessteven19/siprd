@@ -24,7 +24,7 @@ class User(AbstractUser):
     password = models.CharField(max_length=254, blank=False)
     full_name = models.CharField(max_length=254, blank=False)
     university = models.CharField(max_length=254, blank=False)
-    nip = models.PositiveIntegerField()
+    nip = models.PositiveIntegerField(default=1)
     field_of_study = models.CharField(max_length=254, blank=False)
     position = models.CharField(max_length=254, choices=POSITION_CHOICES)
     role = models.CharField(max_length=254, choices=ROLE_CHOICES)
