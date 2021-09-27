@@ -25,12 +25,12 @@ services:
       - db
 
   # Comment the below lines to run normally
-  frontend:
-    container_name: frontend
-    build:
-      context: ./siprd-fe
-      dockerfile: Dockerfile
-    working_dir: /app
-    command: npm run serve --host 127.0.0.1
-    ports:
-      - "8080:8080"
+  # frontend:
+  #   container_name: frontend
+  #   build:
+  #     context: ./siprd-fe
+  #     dockerfile: Dockerfile
+  #   working_dir: /app
+  #   command: npm run serve --host 127.0.0.1
+  #   ports:
+  #     - "8080:8080"
