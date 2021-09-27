@@ -1,2 +1,2 @@
-web: gunicorn siprd.siprd.wsgi --preload
-release: python siprd/manage.py migrate
+web: gunicorn siprd.wsgi --preload
+release: python manage.py migrate
