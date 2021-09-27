@@ -46,9 +46,9 @@
                 </v-text-field>
             </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="field_of_study">
+            <validation-provider v-slot="{ errors }" name="fieldOfStudy">
                 <v-text-field
-                    v-model="field_of_study"
+                    v-model="fieldOfStudy"
                     :error-messages="errors"
                     label="Bidang Keahlian"
                     required>   
@@ -182,11 +182,11 @@
             errors: [],
             email: null,
             username: null,
-            full_name: null,
+            fullName: null,
             password: null,
             nip: null,
             university: null,
-            field_of_study: null,
+            fieldOfStudy: null,
             position: null,
             posSelect: [
                 'Asisten Ahli',
@@ -218,10 +218,10 @@
                     "username": this.username,
                     "email": this.email,
                     "password": this.password,
-                    "full_name": this.full_name,
+                    "full_name": this.fullName,
                     "university": this.university,
                     "nip": this.nip,
-                    "field_of_study": this.field_of_study,
+                    "field_of_study": this.fieldOfStudy,
                     "position": this.position,
                     "role": this.role
                 }
