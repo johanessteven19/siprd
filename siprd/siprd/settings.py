@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -117,12 +118,12 @@ WSGI_APPLICATION = 'siprd.wsgi.application'
 # NOT FOR PRODUCTION until this is fixed.
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'siprd',
-        'USER': 'siprd',
-        'PASSWORD': 'supersecure',
-        'HOST': 'db',
-        'PORT': 5432
+        'ENGINE': os.environ.get("DB_ENGINE", "django.db.backends.postgresql"),
+        'NAME': os.environ.get("DB_NAME", "siprd"),
+        'USER': os.environ.get("DB_USER", "siprd"),
+        'PASSWORD': os.environ.get("DB_PASSWORD", "supersecure"),
+        'HOST': os.environ.get("DB_HOST", "localhost"),
+        'PORT': os.environ.get("DB_PORT", "8888")
         #'PORT': 8888
     }
 }
