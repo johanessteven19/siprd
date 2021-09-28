@@ -74,12 +74,22 @@
               </div>
             </v-form>
             <br>
-            <GoogleLogin 
-              :params="params" 
-              :renderParams="renderParams" 
-              :onSuccess="onSuccess" 
-              :onFailure="onFailure">
-            </GoogleLogin>
+            <v-btn 
+              class="mr-4 white--text"
+              :disabled="false" 
+              color="#2D3748"
+              width= '100%'
+            >
+              <v-icon small>
+                $custom
+              </v-icon>
+              <GoogleLogin 
+                :params="params" 
+                :onSuccess="onSuccess" 
+                :onFailure="onFailure">
+                &nbsp;     Masuk dengan Google
+              </GoogleLogin>
+            </v-btn>
             <p style="margin-top: 20px;" class="register">Tidak memiliki akun? <span> <a href="/Register" >Daftar</a></span></p>
         </v-container>
     </v-card>
@@ -95,15 +105,36 @@
 
   import { required, digits, email, max, regex } from 'vee-validate/dist/rules'
   import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
-  import GoogleLogin from 'vue-google-login';
+  import { GoogleLogin, LoaderPlugin } from 'vue-google-login';
 
   Vue.use(VueAxios, axios);
   Vue.use(Vuetify)
+  Vue.use(LoaderPlugin, {
+    client_id: '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com'
+  })
+
   
   export default {
     name:"Login",
     components: {
       GoogleLogin
+    },
+    beforeMount() {
+      Vue.GoogleAuth.then(auth2 => {
+        if (auth2.isSignedIn.get()) {
+          // TODO: Display select user dialog
+          console.log("Signed in via Google.")
+        }
+        else {
+          console.log("Not signed in via Google")
+        }
+      })
+      if (Vue.isLoggedIn('http://localhost:8000/api/token/refresh/')) {
+        this.$router.push('/success')
+      }
+      else {
+        console.log("No valid auth token found")
+      }
     },
     data(){
       return {
@@ -176,8 +207,13 @@
           }else{
             alert("login gagal, ada masalah pada server")
           }
+        }).catch(error => {
+          console.log(error)
         })
       },
+      onFailure(googleUser) {
+        console.log("Google Login failed!")
+      }
     }
   }
 </script>

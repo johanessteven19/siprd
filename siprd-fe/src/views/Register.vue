@@ -135,12 +135,22 @@
         </v-form>
     </validation-observer>
             <v-col md="5" >
-            <GoogleLogin 
-            :params="params" 
-            :renderParams="renderParams" 
-            :onSuccess="onSuccess" 
-            :onFailure="onFailure"
-            ></GoogleLogin>
+            <v-btn 
+              class="mr-4 white--text"
+              :disabled="false" 
+              color="#2D3748"
+              width= '100%'
+            >
+              <v-icon small>
+                $custom
+              </v-icon>
+              <GoogleLogin 
+                :params="params" 
+                :onSuccess="onSuccess" 
+                :onFailure="onFailure">
+                &nbsp;     Masuk dengan Google
+              </GoogleLogin>
+            </v-btn>
             </v-col>
             <!-- <user-panel v-else :user="user"></user-panel> -->
     <br>
