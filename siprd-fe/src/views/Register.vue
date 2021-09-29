@@ -120,38 +120,39 @@
         </v-row>
 
         Required*
-            
+        <v-row>
             <v-col md="5">
-            <v-btn
-                class="ml-auto white--text"
-                :disabled="invalid"
-                type="submit"
-                color="#8D38E3"
-                width= '100%'
-            >
-                Daftar
-            </v-btn>
+                <v-btn
+                    class="ml-auto white--text"
+                    :disabled="invalid"
+                    type="submit"
+                    color="#8D38E3"
+                    width= '100%'
+                >
+                    Daftar
+                </v-btn>
             </v-col>
+            <v-col md="5" class="ml-auto" >
+                <v-btn 
+                class="mr-4 white--text"
+                :disabled="false" 
+                color="#2D3748"
+                width= '100%'
+                >
+                <v-icon small>
+                    $custom
+                </v-icon>
+                <GoogleLogin 
+                    :params="params" 
+                    :onSuccess="onSuccess" 
+                    :onFailure="onFailure">
+                    &nbsp;     Masuk dengan Google
+                </GoogleLogin>
+                </v-btn>
+            </v-col>
+        </v-row>
         </v-form>
     </validation-observer>
-            <v-col md="5" >
-            <v-btn 
-              class="mr-4 white--text"
-              :disabled="false" 
-              color="#2D3748"
-              width= '100%'
-            >
-              <v-icon small>
-                $custom
-              </v-icon>
-              <GoogleLogin 
-                :params="params" 
-                :onSuccess="onSuccess" 
-                :onFailure="onFailure">
-                &nbsp;     Masuk dengan Google
-              </GoogleLogin>
-            </v-btn>
-            </v-col>
             <!-- <user-panel v-else :user="user"></user-panel> -->
     <br>
     <p>Sudah punya akun? <a v-on:click="loginRedir">Masuk</a></p>
