@@ -14,10 +14,8 @@ urlpatterns = [
     path("api/register", views.Register.as_view()),
     path("api/user", views.ViewUserData.as_view()),
     path("api/ping", views.pingAuth),
-    # path('auth/google', views.GoogleLogin.as_view(), name='google_login'),
-    #path('auth/google', include('djoser.social.urls')),
+    path("api/check-linked-users/", views.CheckLinkedUsers.as_view()),
     path('api/google/', include('rest_social_auth.urls_jwt_pair')),
-    #path('accounts/profile/', RedirectSocial.as_view()),
 
     # NOTE: Grants users a Refresh-Access token pair.
     # Input: JSON file containing username and password

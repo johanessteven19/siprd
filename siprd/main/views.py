@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.decorators import api_view, permission_classes
+from rest_social_auth.views import SocialJWTPairOnlyAuthView
 from .models import User
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
@@ -40,6 +41,24 @@ class ViewUserData(APIView):
 		serializer = UserSerializer(user)
 
 		return Response(serializer.data)
+
+# Will return all user data for the given email
+# only succeeds if the authenticated user's email
+# is the one being queried
+# For use with Google auth, to check for similar emails
+class CheckLinkedUsers(APIView):
+	permission_classes = [IsAuthenticated]
+	
+	def get(self, request):
+		user_email = request.user.email
+		requested_email = UserSerializer(data=request.data).data.get('email')
+		if user_email == requested_email:
+			matches = User.objects.filter(email=user_email).all()
+			serializer = UserSerializer(matches, many=True)
+			return Response(serializer.data)
+		else: return Response("You are not authorized!", status=status.HTTP_401_UNAUTHORIZED)
+
+
 
 # class GoogleLogin(SocialLoginView):
 #     adapter_class = GoogleOAuth2Adapter
