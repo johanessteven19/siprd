@@ -229,7 +229,7 @@
                     "username": this.username,
                     "email": this.email,
                     "password": this.password,
-                    "full_name": this.fullName,
+                    "full_name": this.full_name,
                     "university": this.university,
                     "nip": this.nip,
                     "field_of_study": this.fieldOfStudy,
@@ -240,10 +240,12 @@
                     if(res.status===201){
                         alert("Akun berhasil dibuat.")
                         console.log("YES")
-                        this.$router.push("/login")
+                        this.$router.push("/welcome")
                     }else{
                         alert("Gagal")
                     }
+                }).catch(err => {
+                    console.log(err.response);
                 })
             },
 

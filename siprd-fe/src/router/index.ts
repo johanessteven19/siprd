@@ -5,6 +5,7 @@ import Ping from "../views/Ping.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Success from "../views/Success.vue";
+import RegisterSuccess from "../views/RegisterSuccess.vue";
 
 Vue.use(VueRouter);
 
@@ -46,6 +47,11 @@ const routes: Array<RouteConfig> = [
     path: "/success",
     name: "Success",
     component: Success,
+  },
+  {
+    path: "/welcome",
+    name: "Welcome",
+    component: RegisterSuccess,
   },
 ];
 
