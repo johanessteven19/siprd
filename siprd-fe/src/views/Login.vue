@@ -10,7 +10,7 @@
       height="100%"
     >
         <v-img
-          :src="require('../assets/bunderan.svg')"
+          :src="require('@/assets/bunderan.svg')"
           class="bunderan"
           contain
           height="100%"
@@ -74,22 +74,48 @@
               </div>
             </v-form>
             <br>
-            <v-btn 
-              class="mr-4 white--text"
-              :disabled="false" 
-              color="#2D3748"
-              width= '100%'
+            <v-dialog
+              v-model="dialog"
+              max-width="600px"
             >
-              <v-icon small>
-                $custom
-              </v-icon>
-              <GoogleLogin 
-                :params="params" 
-                :onSuccess="onSuccess" 
-                :onFailure="onFailure">
-                &nbsp;     Masuk dengan Google
-              </GoogleLogin>
-            </v-btn>
+              <template v-slot:activator="{ on }">
+                <v-btn 
+                  class="mr-4 white--text"
+                  :disabled="false" 
+                  color="#2D3748"
+                  width= '100%'
+                  v-on="on"
+                >
+                  <v-icon small>
+                    $custom
+                  </v-icon>
+                  <GoogleLogin 
+                    :params="params" 
+                    :onSuccess="onSuccess" 
+                    :onFailure="onFailure">
+                    &nbsp;     Masuk dengan Google
+                  </GoogleLogin>
+                </v-btn>
+              </template>
+              
+              <v-card>
+
+                <v-card-text>
+                  Test
+                </v-card-text>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="primary"
+                    text
+                    @click="dialog = false"
+                  >
+                  Tutup
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
             <p style="margin-top: 20px;" class="register">Tidak memiliki akun? <span> <a href="/Register" >Daftar</a></span></p>
         </v-container>
     </v-card>
@@ -155,7 +181,8 @@
           width: 460,
           height: 40,
           longtitle: true
-        }
+        },
+        dialog: false
       }
     },
     methods: {
@@ -198,6 +225,9 @@
           'provider' : 'google-oauth2',
           'code' : googleUser.getBasicProfile["fT"]
         }
+        // TODO: Add account selector for Google login
+
+
         Vue.axios.post("http://localhost:8000/api/google/social/jwt-pair/",data).then((res)=>{
           if (res.status === 200){
             window.localStorage.setItem('refresh',res.data.refresh)
