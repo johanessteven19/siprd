@@ -25,7 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6mkrfh@uqp5)jj0@6=g$i_a=h2!zl&bqdp5k_*yfaf5f#4wyro'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Defaults to False unless explicitly set as "True" as env variable
+DEBUG = (os.environ.get("DEBUG_MODE", 'False') == ("True"))
 
 ALLOWED_HOSTS = []
 
@@ -114,8 +115,6 @@ WSGI_APPLICATION = 'siprd.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-# FIXME: This still uses set variables instead of environment variables!
-# NOT FOR PRODUCTION until this is fixed.
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get("DB_ENGINE", "django.db.backends.postgresql"),
@@ -181,9 +180,6 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SITE_ID = 3
-
-#LOGIN_REDIRECT_URL = '/'
-#LOGOUT_REDIRECT_URL = '/'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'f0cmsWyo3bFj1xvjt0n7U7jM'

@@ -1,9 +1,4 @@
 from .serializers import UserSerializer
-from django.shortcuts import  render, redirect
-from .forms import NewUserForm
-from django.contrib.auth import login, authenticate
-from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -11,14 +6,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.decorators import api_view, permission_classes
-from rest_social_auth.views import SocialJWTPairOnlyAuthView
 from .models import User
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-# from rest_auth.registration.views import SocialLoginView
-
-def homepage(request):
-	return render(request=request, template_name='main/home.html')
 
 # Register API
 # Will create a new user in database if valid
@@ -58,15 +48,10 @@ class CheckLinkedUsers(APIView):
 			return Response(serializer.data)
 		else: return Response("You are not authorized!", status=status.HTTP_401_UNAUTHORIZED)
 
-
-
-# class GoogleLogin(SocialLoginView):
-#     adapter_class = GoogleOAuth2Adapter
-
 # Test view for user authentication
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def pingAuth(request):
+def ping_auth(request):
 	return JsonResponse({'message': 'You are logged in!'})
 
 # General ping test

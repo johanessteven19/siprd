@@ -13,7 +13,7 @@ urlpatterns = [
     path("ping", views.ping, name="ping"),
     path("api/register", views.Register.as_view()),
     path("api/user", views.ViewUserData.as_view()),
-    path("api/ping", views.pingAuth),
+    path("api/ping", views.ping_auth),
     path("api/check-linked-users/", views.CheckLinkedUsers.as_view()),
     path('api/google/', include('rest_social_auth.urls_jwt_pair')),
 
