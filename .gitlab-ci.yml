@@ -9,6 +9,7 @@ variables:
   POSTGRES_DB: siprd
   POSTGRES_USER: siprd
   POSTGRES_PASSWORD: supersecure
+  POSTGRES_HOST_AUTH_METHOD: md5
 
 connect:
   stage: build
