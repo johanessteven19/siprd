@@ -9,7 +9,6 @@ app_name = "main"
 
 
 urlpatterns = [
-    path("", views.homepage, name="homepage"),
     path("ping", views.ping, name="ping"),
     path("api/register", views.Register.as_view()),
     path("api/user", views.ViewUserData.as_view()),
