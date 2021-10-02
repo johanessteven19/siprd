@@ -22,7 +22,6 @@ connect:
 sonar-dev:
   image:
     name: sonarsource/sonar-scanner-cli:4.6
-    entrypoint: [“”]
   stage: sonar-dev
   script:
     - sonar-scanner
