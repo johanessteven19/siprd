@@ -2,7 +2,7 @@ stages:
   - build
   # - test
   - sonar-dev
-  # - deploy
+  - sonar-prod
 
 variables:
   # Django db variables for settings.py

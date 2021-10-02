@@ -35,3 +35,17 @@ sonar-dev:
     - master
     - staging
 
+sonar-prod:
+  image:
+    name: sonarsource/sonar-scanner-cli:4.6
+  stage: sonar-prod
+  script:
+    - sonar-scanner -X
+      -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
+      -Dsonar.sources=.
+      -Dsonar.host.url=$SONARQUBE_URL
+      -Dsonar.login=$SONARQUBE_TOKEN
+      -Dsonar.branch.name=$CI_COMMIT_REF_NAME
+  only:
+    - master
+    - staging
