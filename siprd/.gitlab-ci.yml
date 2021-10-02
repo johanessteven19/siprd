@@ -1,8 +1,17 @@
 stages:
   - build
   # - test
-  - deploy
-  # - sonar
+  - sonar-dev
+  # - deploy
+
+variables:
+  # Django db variables for settings.py
+  DB_ENGINE: django.db.backends.postgresql
+  DB_NAME: siprd
+  DB_USER: siprd
+  DB_PASSWORD: supersecure
+  DB_HOST: postgres
+  DB_PORT: 5432
 
 build:
   image: python:3.7.3
@@ -35,20 +44,21 @@ build:
 #   only:
 #     - master
 
-Deployment:
-  image: ruby:2.4
-  stage: deploy
-  before_script:
-    - gem install dpl
-    - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
-  script:
-    - dpl --provider=heroku --app=siprd --api-key=$HEROKU_API_KEY
-    - export HEROKU_API_KEY=$HEROKU_API_KEY
-  environment:
-    name: production
-    url: https://siprd.herokuapp.com/
-  only:
-    - 8-deploy
+# DEPRECATED HEROKU DEPLOYMENT
+# Deployment:
+#   image: ruby:2.4
+#   stage: deploy
+#   before_script:
+#     - gem install dpl
+#     - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+#   script:
+#     - dpl --provider=heroku --app=siprd --api-key=$HEROKU_API_KEY
+#     - export HEROKU_API_KEY=$HEROKU_API_KEY
+#   environment:
+#     name: production
+#     url: https://siprd.herokuapp.com/
+#   only:
+#     - 8-deploy
 
 
 
