@@ -54,7 +54,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'social_django',
     'rest_social_auth',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_social_oauth2',
+    'oauth2_provider'
 ]
 
 REST_FRAMEWORK = {
