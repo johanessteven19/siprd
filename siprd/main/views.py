@@ -7,8 +7,11 @@ from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.decorators import api_view, permission_classes
 from .models import User
+import logging
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+
+logger = logging.getLogger(__name__)
 
 # Register API
 # Will create a new user in database if valid
@@ -40,11 +43,20 @@ class CheckLinkedUsers(APIView):
 	permission_classes = [IsAuthenticated]
 	
 	def get(self, request):
-		user_email = request.user.email
+		logger.info("Checking for linked users...")
+		username = request.user.username
+		user = User.objects.filter(username=username).first()
+		user = UserSerializer(user)
+		logger.info("User found!")
+
+		user_email = user.data.get('email')
+		logger.info("User email: " + user_email)
 		requested_email = UserSerializer(data=request.data).data.get('email')
+		logger.info("Requested email: " + requested_email)
 		if user_email == requested_email:
 			matches = User.objects.filter(email=user_email).all()
 			serializer = UserSerializer(matches, many=True)
+			logger.info("Matches found!")
 			return Response(serializer.data)
 		else: return Response("You are not authorized!", status=status.HTTP_401_UNAUTHORIZED)
 

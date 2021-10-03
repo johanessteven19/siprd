@@ -135,19 +135,22 @@ export default {
     GoogleLogin,
   },
   beforeMount() {
+    // if (Vue.isLoggedIn("http://localhost:8000/api/token/refresh/")) {
+    //   this.$router.push("/success");
+    // } else {
+    //   console.log("No valid auth token found");
+    // }
     Vue.GoogleAuth.then((auth2) => {
       if (auth2.isSignedIn.get()) {
         // TODO: Display select user dialog
         console.log("Signed in via Google.");
+        console.log("Signing out...");
+        auth2.disconnect();
+        console.log("Signed out.");
       } else {
         console.log("Not signed in via Google");
       }
     });
-    if (Vue.isLoggedIn("http://localhost:8000/api/token/refresh/")) {
-      this.$router.push("/success");
-    } else {
-      console.log("No valid auth token found");
-    }
   },
   data() {
     return {
@@ -197,39 +200,58 @@ export default {
           alert("Login berhasil!");
           this.$router.push("/Success");
         } else {
-          alert("login gagal, ada masalah pada server");
+          // TODO: Implement more meaningful error messages based on HTTP status
+          alert("Login gagal");
+          return
         }
       });
     },
     onSuccess(googleUser) {
       console.log(googleUser);
       // This only gets the user information: id, name, imageUrl and email
-      console.log(googleUser.getBasicProfile());
+      const userProfile = googleUser.getBasicProfile()
+      console.log(userProfile);
       const data = {
         provider: "google-oauth2",
-        code: googleUser.getBasicProfile["fT"],
+        code: userProfile.getId()
       };
+
+      console.log(data)
       // TODO: Add account selector for Google login
 
+      var loginSuccess = false;
       Vue.axios
         .post("http://localhost:8000/api/google/social/jwt-pair/", data)
         .then((res) => {
           if (res.status === 200) {
             window.localStorage.setItem("refresh", res.data.refresh);
-            window.localStorage.setItem("access", res.data.access);
+            window.localStorage.setItem("access", res.data.token);
             alert("Login berhasil!");
+            loginSuccess = true;
             this.$router.push("/Success");
           } else {
-            alert("login gagal, ada masalah pada server");
+            alert("login gagal");
           }
         })
         .catch((error) => {
           console.log(error);
+          alert("Login gagal, ada masalah pada server")
         });
+
+      const config = {
+        headers: { Authorization: "Bearer " + localStorage.access },
+        email: userProfile.getEmail()
+      };
+      // Get users linked to this Google account
+      Vue.axios.get("http://localhost:8000/api/check-linked-users/", config).then((res) => {
+        if (res.status === 200) {
+          console.log(res.data);
+        }
+      });
     },
     onFailure(googleUser) {
       console.log("Google Login failed!");
-    },
+    }
   },
 };
 </script>

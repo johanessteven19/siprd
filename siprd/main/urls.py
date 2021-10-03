@@ -15,6 +15,7 @@ urlpatterns = [
     path("api/ping", views.ping_auth),
     path("api/check-linked-users/", views.CheckLinkedUsers.as_view()),
     path('api/google/', include('rest_social_auth.urls_jwt_pair')),
+    path(r'^auth/', include('rest_framework_social_oauth2.urls')),
 
     # NOTE: Grants users a Refresh-Access token pair.
     # Input: JSON file containing username and password
