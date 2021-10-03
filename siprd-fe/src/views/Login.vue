@@ -200,9 +200,20 @@ export default {
           alert("Login berhasil!");
           this.$router.push("/Success");
         } else {
-          // TODO: Implement more meaningful error messages based on HTTP status
           alert("Login gagal");
           return
+        }
+      })
+      .catch((err) => {
+        // NOTE: Do not make this more specific, for security reasons.
+        console.log(err.response);
+        if (typeof err.response !== "undefined") {
+          // Backend accessible, but credentials incorrect
+          alert("Login gagal! Username atau Password salah.");
+        }
+        else {
+          // Backend inaccessible (no response)
+          alert("Maaf, server SIPEERKI tidak dapat dihubungi.");
         }
       });
     },
