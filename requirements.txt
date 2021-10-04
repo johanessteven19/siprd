@@ -5,6 +5,7 @@ cffi==1.14.6
 charset-normalizer==2.0.5
 coreapi==2.3.3
 coreschema==0.0.4
+coverage==6.0
 cryptography==3.4.8
 defusedxml==0.7.1
 Deprecated==1.2.13

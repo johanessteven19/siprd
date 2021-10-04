@@ -22,6 +22,8 @@ build:
     - python siprd/manage.py makemigrations
     - python siprd/manage.py migrate
 
+# TODO: Implement coverage reporting in Gitlab CI/CD
+
 # test:
 #   image: python:3.7.3
 #   stage: test
