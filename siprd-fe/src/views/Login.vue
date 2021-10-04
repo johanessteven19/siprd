@@ -223,7 +223,6 @@ export default {
       console.log(data)
       // TODO: Add account selector for Google login
 
-      var loginSuccess = false;
       Vue.axios
         .post("http://localhost:8000/api/google/social/jwt-pair/", data)
         .then((res) => {

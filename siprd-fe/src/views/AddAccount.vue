@@ -141,11 +141,7 @@
 </template>
 
 <script>
-    import Vue from "vue";
-    import axios from "axios";
-    import VueAxios from "vue-axios";
-    import Vuetify from "vuetify";
-    import { required, digits, email, max, regex } from 'vee-validate/dist/rules'
+    import { required,email} from 'vee-validate/dist/rules'
     import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 
     setInteractionMode('eager')
