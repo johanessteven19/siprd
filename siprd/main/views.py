@@ -1,3 +1,4 @@
+import re
 from .serializers import UserSerializer
 from django.shortcuts import  render, redirect
 from .forms import NewUserForm
@@ -12,6 +13,10 @@ from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.decorators import api_view, permission_classes
 from .models import User
+from django.http import JsonResponse
+
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+# from rest_auth.registration.views import SocialLoginView
 
 def homepage(request):
 	return render(request=request, template_name='main/home.html')
@@ -30,13 +35,31 @@ class Register(APIView):
 # Fetches the data of the user who is currently logged in
 class ViewUserData(APIView):
 	permission_classes = [IsAuthenticated]
-
 	def get(self, request):
 		username = request.user.username
 		user = User.objects.filter(username=username).first()
 		serializer = UserSerializer(user)
 
 		return Response(serializer.data)
+
+class ViewAllUserData(APIView):
+	print("poopss")
+	def get(self, request):
+		print("asd")
+		users = []
+		all_users = User.objects.all()
+		print(all_users)
+		for user in all_users:
+			print(user)
+			serializer = UserSerializer(user)
+			users.append(serializer.data)
+		print(users)
+
+		# return JsonResponse({"models_to_return": list(all_users)})
+		return Response(users)
+
+# class GoogleLogin(SocialLoginView):
+#     adapter_class = GoogleOAuth2Adapter
 
 # Test view for user authentication
 @api_view(['GET'])

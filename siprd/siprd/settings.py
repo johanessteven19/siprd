@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django.contrib.sites',
     'allauth',
+    'rest_framework.authtoken',
     'djoser',
     'allauth.account',
     'allauth.socialaccount',
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'social_django',
+    'rest_social_auth',
     'rest_framework_simplejwt.token_blacklist'
 ]
 
@@ -116,11 +118,14 @@ WSGI_APPLICATION = 'siprd.wsgi.application'
 # NOT FOR PRODUCTION until this is fixed.
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'siprd',
-        'USER': 'siprd',
-        'PASSWORD': 'supersecure',
-        'HOST': 'db',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        # 'HOST': 'db',
+        # 'PORT': 5432,
+        'HOST': 'localhost',
         'PORT': 5432
     }
 }
@@ -175,47 +180,13 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    }
-}
-
 SITE_ID = 3
 
 #LOGIN_REDIRECT_URL = '/'
 #LOGOUT_REDIRECT_URL = '/'
 
-DJOSER = {
-    'LOGIN_FIELD': 'email',
-    'USER_CREATE_PASSWORD_RETYPE': True,
-    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-    'SEND_CONFIRMATION_EMAIL': True,
-    'SET_USERNAME_RETYPE': True,
-    'SET_PASSWORD_RETYPE': True,
-    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
-    'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
-    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:8000/google'],
-    'SERIALIZERS': {
-        'user_create': 'main.serializers.UserSerializer',
-        'user': 'main.serializers.UserSerializer',
-        'current_user': 'main.serializers.UserSerializer',
-        'user_delete': 'djoser.serializers.UserDeleteSerializer',
-    }
-}
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'f0cmsWyo3bFj1xvjt0n7U7jM'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '473901621952-2upinaorbnjbmreeap1mqvb084d8bqpk.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'na1qhagcvdXDXnNULbE_ttof'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile','openid']
 SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['name']
 
