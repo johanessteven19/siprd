@@ -19,6 +19,11 @@ connect:
   - export PGPASSWORD=supersecure
   - psql -h "postgres" -U "siprd" -d "siprd" -c "SELECT 'OK' AS status;"
 
+lint:
+  stage: test
+  script:
+    - npm run lint
+
 sonar-dev:
   image:
     name: sonarsource/sonar-scanner-cli:4.6
