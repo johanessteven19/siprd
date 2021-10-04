@@ -14,12 +14,12 @@ Vue.use(VueRouter);
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    redirect: to => { 
+    redirect: (to) => {
       // TODO: check if user is logged in
       // If not, then
-      return '/login'
+      return "/login";
       // Else display their home screen
-    }
+    },
   },
   {
     path: "/about",

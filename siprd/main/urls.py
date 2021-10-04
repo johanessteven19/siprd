@@ -9,13 +9,13 @@ app_name = "main"
 
 
 urlpatterns = [
-    path("", views.homepage, name="homepage"),
     path("ping", views.ping, name="ping"),
     path("api/register", views.Register.as_view()),
     path("api/user", views.ViewUserData.as_view()),
-    path("api/ping", views.pingAuth),
+    path("api/ping", views.ping_auth),
     path("api/check-linked-users/", views.CheckLinkedUsers.as_view()),
     path('api/google/', include('rest_social_auth.urls_jwt_pair')),
+    path(r'^auth/', include('rest_framework_social_oauth2.urls')),
 
     # NOTE: Grants users a Refresh-Access token pair.
     # Input: JSON file containing username and password
