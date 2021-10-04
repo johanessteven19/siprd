@@ -184,7 +184,6 @@
         </v-row>
       </v-form>
     </validation-observer>
-    <!-- <user-panel v-else :user="user"></user-panel> -->
     <br />
     <p>Sudah punya akun? <a v-on:click="loginRedir">Masuk</a></p>
   </v-container>
@@ -193,16 +192,13 @@
 <script>
 import Vue from "vue";
 import axios from "axios";
-import VueAxios from "vue-axios";
-import Vuetify from "vuetify";
-import { required, digits, email, max, regex } from "vee-validate/dist/rules";
+import { required,email} from "vee-validate/dist/rules";
 import {
   extend,
   ValidationObserver,
   ValidationProvider,
   setInteractionMode,
 } from "vee-validate";
-// import UserPanel from '../components/UserPanel.vue'
 import GoogleLogin from "vue-google-login";
 
 setInteractionMode("eager");

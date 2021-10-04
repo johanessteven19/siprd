@@ -113,13 +113,6 @@ import axios from "axios";
 import VueAxios from "vue-axios";
 import Vuetify from "vuetify";
 
-import { required, digits, email, max, regex } from "vee-validate/dist/rules";
-import {
-  extend,
-  ValidationObserver,
-  ValidationProvider,
-  setInteractionMode,
-} from "vee-validate";
 import { GoogleLogin, LoaderPlugin } from "vue-google-login";
 
 Vue.use(VueAxios, axios);
@@ -230,7 +223,6 @@ export default {
       console.log(data)
       // TODO: Add account selector for Google login
 
-      var loginSuccess = false;
       Vue.axios
         .post("http://localhost:8000/api/google/social/jwt-pair/", data)
         .then((res) => {
@@ -238,7 +230,6 @@ export default {
             window.localStorage.setItem("refresh", res.data.refresh);
             window.localStorage.setItem("access", res.data.token);
             alert("Login berhasil!");
-            loginSuccess = true;
             this.$router.push("/Success");
           } else {
             alert("login gagal");

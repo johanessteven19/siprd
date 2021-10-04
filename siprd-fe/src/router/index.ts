@@ -4,6 +4,8 @@ import Home from "../views/Home.vue";
 import Ping from "../views/Ping.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
+import AddAccount from "../views/AddAccount.vue";
+import EditAccount from "../views/EditAccount.vue";
 import Success from "../views/Success.vue";
 import RegisterSuccess from "../views/RegisterSuccess.vue";
 
@@ -42,6 +44,16 @@ const routes: Array<RouteConfig> = [
     path: "/register",
     name: "Register",
     component: Register,
+  },
+  {
+  path: "/add-account",
+  name: "AddAccount",
+  component: AddAccount,
+  },
+  {
+    path: "/edit-account",
+    name: "EditAccount",
+    component: EditAccount,
   },
   {
     path: "/success",
