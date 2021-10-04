@@ -42,6 +42,27 @@ class ViewUserData(APIView):
 
 		return Response(serializer.data)
 
+# Fetches the data of the user who is currently logged in
+class EditUserData(APIView):
+	permission_classes = [IsAuthenticated]
+
+	def put(self, request):
+		serializer = UserSerializer(data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+# Fetches data with a certain username, then deletes it.
+class DeleteDosen(APIView):
+	# permission_classes = [IsAuthenticated]
+
+	def delete(self, request, uname):
+		# if request.method == 'DELETE' & request.user.role == 'Admin':
+		user = User.objects.filter(username=uname)
+		user.delete()
+		return Response({uname + ' was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
+
 # Will return all user data for the given email
 # only succeeds if the authenticated user's email
 # is the one being queried
