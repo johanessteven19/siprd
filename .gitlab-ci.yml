@@ -1,0 +1,51 @@
+include:
+  local: siprd/.gitlab-ci.yml
+
+services:
+  - postgres:12
+
+variables:
+  # Configure postgres service (https://hub.docker.com/_/postgres/)
+  POSTGRES_DB: siprd
+  POSTGRES_USER: siprd
+  POSTGRES_PASSWORD: supersecure
+  POSTGRES_HOST_AUTH_METHOD: md5
+
+connect:
+  stage: build
+  image: postgres:12
+  script:
+  # official way to provide password to psql: http://www.postgresql.org/docs/9.3/static/libpq-envars.html
+  - export PGPASSWORD=supersecure
+  - psql -h "postgres" -U "siprd" -d "siprd" -c "SELECT 'OK' AS status;"
+
+sonar-dev:
+  image:
+    name: sonarsource/sonar-scanner-cli:4.6
+  stage: sonar-dev
+  script:
+    - sonar-scanner -X
+      -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
+      -Dsonar.sources=.
+      -Dsonar.host.url=$SONARQUBE_URL
+      -Dsonar.login=$SONARQUBE_TOKEN
+      -Dsonar.branch.name=$CI_COMMIT_REF_NAME
+      -Dsonar.branch.target=master
+  except:
+    - master
+    - staging
+
+sonar-prod:
+  image:
+    name: sonarsource/sonar-scanner-cli:4.6
+  stage: sonar-prod
+  script:
+    - sonar-scanner -X
+      -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
+      -Dsonar.sources=.
+      -Dsonar.host.url=$SONARQUBE_URL
+      -Dsonar.login=$SONARQUBE_TOKEN
+      -Dsonar.branch.name=$CI_COMMIT_REF_NAME
+  only:
+    - master
+    - staging

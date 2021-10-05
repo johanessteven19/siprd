@@ -25,9 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6mkrfh@uqp5)jj0@6=g$i_a=h2!zl&bqdp5k_*yfaf5f#4wyro'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Defaults to False unless explicitly set as "True" as env variable
+DEBUG = (os.environ.get("DEBUG_MODE", 'False') == ("True"))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -48,12 +49,14 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    "corsheaders",
+    'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'social_django',
     'rest_social_auth',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_social_oauth2',
+    'oauth2_provider'
 ]
 
 REST_FRAMEWORK = {
@@ -73,6 +76,30 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),
     'USER_ID_FIELD': 'username',
     'USER_ID_CLAIM': 'username'
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'default': {
+            'format': '[DJANGO] %(levelname)s %(asctime)s %(module)s '
+                        '%(name)s.%(funcName)s:%(lineno)s: %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -114,8 +141,6 @@ WSGI_APPLICATION = 'siprd.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-# FIXME: This still uses set variables instead of environment variables!
-# NOT FOR PRODUCTION until this is fixed.
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get("DB_ENGINE", "django.db.backends.postgresql"),
@@ -165,6 +190,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 STATIC_URL = '/static/'
 
 # Default primary key field type
@@ -179,9 +206,6 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SITE_ID = 3
-
-#LOGIN_REDIRECT_URL = '/'
-#LOGOUT_REDIRECT_URL = '/'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'f0cmsWyo3bFj1xvjt0n7U7jM'

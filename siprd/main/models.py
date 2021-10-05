@@ -2,15 +2,16 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
+POSITIONS = (
+    ('Asisten Ahli', 'Asisten_Ahli'),
+    ('Lektor', 'Lektor'),
+    ('Lektor Kepala', 'Lektor_Kepala'),
+    ('Guru Besar/Professor', 'Guru_Besar_Professor')
+)
 
 class User(AbstractUser):
 
-    POSITION_CHOICES = (
-        ('Asisten Ahli', 'Asisten_Ahli'),
-        ('Lektor', 'Lektor'),
-        ('Lektor Kepala', 'Lektor_Kepala'),
-        ('Guru Besar/Professor', 'Guru_Besar_Professor')
-    )
+    POSITION_CHOICES = POSITIONS
 
     ROLE_CHOICES = (
         ('Dosen', 'Dosen'),
@@ -43,12 +44,7 @@ class KaryaIlmiah(models.Model):
         ('Done', 'Done')
     )
 
-    PROMOTION_LEVELS = (
-        ('Asisten Ahli', 'Asisten Ahli'),
-        ('Lektor', 'Lektor'),
-        ('Lektor Kepala', 'Lektor Kepala'),
-        ('Profesor', 'Profesor')
-    )
+    PROMOTION_LEVELS = POSITIONS
 
     karil_id = models.AutoField(primary_key=True)
     pemilik = models.ForeignKey(User, on_delete=models.CASCADE)
