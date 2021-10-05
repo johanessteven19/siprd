@@ -35,24 +35,35 @@ class ViewUserData(APIView):
 
 		return Response(serializer.data)
 
-# Fetches the data of the user who is currently logged in
+# Gets the user data with a certain username --> Edits according to the request
+# Takes URL /api/edit/<username>
 class EditUserData(APIView):
-	permission_classes = [IsAuthenticated]
+	# permission_classes = [IsAuthenticated]
 
-	def put(self, request):
-		serializer = UserSerializer(data=request.data)
+	def put(self, request, uname):
+		try:
+			user = User.objects.get(username=uname)
+		except User.DoesNotExist: 
+        		return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND)
+		user = User.objects.get(username=uname)
+
+		serializer = UserSerializer(user, data=request.data)
 		if serializer.is_valid():
 			serializer.save()
 			return Response(serializer.data)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 
 # Fetches data with a certain username, then deletes it.
+# Takes URL /api/delete/<username>
 class DeleteDosen(APIView):
 	# permission_classes = [IsAuthenticated]
 
 	def delete(self, request, uname):
 		# if request.method == 'DELETE' & request.user.role == 'Admin':
-		user = User.objects.filter(username=uname)
+		try:
+			user = User.objects.filter(username=uname)
+		except User.DoesNotExist: 
+        		return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND) 
 		user.delete()
 		return Response({uname + ' was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
 
