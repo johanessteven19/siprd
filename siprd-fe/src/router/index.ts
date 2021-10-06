@@ -46,9 +46,9 @@ const routes: Array<RouteConfig> = [
     component: Register,
   },
   {
-  path: "/add-account",
-  name: "AddAccount",
-  component: AddAccount,
+    path: "/add-account",
+    name: "AddAccount",
+    component: AddAccount,
   },
   {
     path: "/edit-account",
