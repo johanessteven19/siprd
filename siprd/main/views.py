@@ -37,7 +37,7 @@ class ViewUserData(APIView):
 
 # Will return usernames linked to the given email
 # For use with Google auth, to check for similar emails
-class CheckLinkedUsers(APIView):
+class GetLinkedUsers(APIView):
 	def get(self, request):
 		print("Checking for linked users...")
 		requested_email = request.data['email']
