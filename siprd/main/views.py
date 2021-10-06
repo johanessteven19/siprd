@@ -39,14 +39,14 @@ class ViewUserData(APIView):
 # For use with Google auth, to check for similar emails
 class GetLinkedUsers(APIView):
 	def get(self, request):
-		print("Checking for linked users...")
+		logger.info("Checking for linked users...")
 		requested_email = request.data['email']
 
 		matches = User.objects.filter(email=requested_email)
 		usernames = []
 		for user in matches:
 			usernames.append(user.username)
-		print(f"{len(usernames)} Matches found!")
+		logger.info(f"{len(usernames)} Matches found!")
 
 		if len(usernames) != 0:
 			response = {}
