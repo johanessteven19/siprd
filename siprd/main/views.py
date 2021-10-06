@@ -40,7 +40,7 @@ class ViewUserData(APIView):
 class GetLinkedUsers(APIView):
 	def get(self, request):
 		logger.info("Checking for linked users...")
-		requested_email = request.data['email']
+		requested_email = request.query_params['email']
 
 		matches = User.objects.filter(email=requested_email)
 		usernames = []
