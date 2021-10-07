@@ -7,6 +7,7 @@ import Register from "../views/Register.vue";
 import AddAccount from "../views/AddAccount.vue";
 import EditAccount from "../views/EditAccount.vue";
 import Success from "../views/Success.vue";
+import Dashboard from "../views/Dashboard.vue";
 import RegisterSuccess from "../views/RegisterSuccess.vue";
 
 Vue.use(VueRouter);
@@ -20,6 +21,8 @@ const routes: Array<RouteConfig> = [
       return "/login";
       // Else display their home screen
     },
+    //name: "Dashboard",
+    //component: Dashboard,
   },
   {
     path: "/about",
@@ -64,6 +67,11 @@ const routes: Array<RouteConfig> = [
     path: "/welcome",
     name: "Welcome",
     component: RegisterSuccess,
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
   },
 ];
 
