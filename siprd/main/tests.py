@@ -5,8 +5,10 @@ from django.urls import resolve
 
 # NOTE: These tests suck, feel free to refactor.
 class SIPRDUnitTest(TestCase):
-	global Register_URL, Email, Full_Name
+	global Register_URL, Edit_URL, Edit_URL_False, Email, Full_Name
 	Register_URL= "/api/register"
+	Edit_URL = "/api/edit/"
+	Edit_URL_False = "/api/edit/null"
 	Email = "test.user@example.com"
 	Full_Name = "Test User"
 
@@ -95,3 +97,92 @@ class SIPRDUnitTest(TestCase):
 		access, refresh = response.json().values()
 		self.assertIsNotNone(access)
 		self.assertIsNotNone(refresh)
+
+	def test_edit_user_data_returns_HTTP_OK(self):
+		self.client.post(
+			Register_URL,
+			{
+				'username': 'test',
+				'email': Email,
+				'password': 'test',
+				'full_name': Full_Name,
+				'university': 'UI',
+				'expertise': 'Art',
+				'position': 'Lektor',
+				'role': 'Admin'
+			},
+			format='json')
+		
+		response = self.client.put(
+			Edit_URL + "test",
+			{
+				'username': 'test',
+				'email': Email,
+				'password': 'test',
+				'full_name': Full_Name,
+				'university': 'UGM',
+				'expertise': 'Art',
+				'position': 'Lektor',
+				'role': 'Admin'
+			},
+			format='json'
+		)
+
+		self.assertEqual(response.status_code, 200)
+
+	def test_edit_user_data_user_not_found_returns_HTTP_NOT_FOUND(self):
+		self.client.post(
+			Register_URL,
+			{
+				'username': 'test',
+				'email': Email,
+				'password': 'test',
+				'full_name': Full_Name,
+				'university': 'UI',
+				'expertise': 'Art',
+				'position': 'Lektor',
+				'role': 'Admin'
+			},
+			format='json')
+		
+		response = self.client.put(
+			Edit_URL + "random",
+			{
+				'username': 'test',
+				'email': Email,
+				'password': 'test',
+				'full_name': Full_Name,
+				'university': 'UGM',
+				'expertise': 'Art',
+				'position': 'Lektor',
+				'role': 'Admin'
+			},
+			format='json'
+		)
+
+		self.assertEqual(response.status_code, 404)
+
+	def test_edit_user_data_incomplete_returns_HTTP_BAD_REQUEST(self):
+		self.client.post(
+			Register_URL,
+			{
+				'username': 'test',
+				'email': Email,
+				'password': 'test',
+				'full_name': Full_Name,
+				'university': 'UI',
+				'expertise': 'Art',
+				'position': 'Lektor',
+				'role': 'Admin'
+			},
+			format='json')
+		
+		response = self.client.put(
+			Edit_URL + "test",
+			{
+				'university': 'UGM',
+			},
+			format='json'
+		)
+
+		self.assertEqual(response.status_code, 400)
