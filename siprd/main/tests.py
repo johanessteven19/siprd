@@ -5,15 +5,26 @@ from django.urls import resolve
 
 # NOTE: These tests suck, feel free to refactor.
 class SIPRDUnitTest(TestCase):
-	global Register_URL, Edit_URL, Edit_URL_False, Email, Full_Name
+	global Register_URL, Edit_URL, Delete_URL, Email, Full_Name
 	Register_URL= "/api/register"
 	Edit_URL = "/api/edit/"
-	Edit_URL_False = "/api/edit/null"
+	Delete_URL = "/api/delete/"
 	Email = "test.user@example.com"
 	Full_Name = "Test User"
 
 	def setUp(self):
 		self.client = APIClient()
+
+		self.tester = User.objects.create(
+				username = 'tester',
+				email = Email,
+				password = 'test',
+				full_name = Full_Name,
+				university = 'UI',
+				field_of_study = 'Art',
+				position = 'Lektor',
+				role = 'Admin'
+		)
 
 	def test_ping_url_exists(self):
 		response = self.client.get('/ping')
@@ -98,25 +109,13 @@ class SIPRDUnitTest(TestCase):
 		self.assertIsNotNone(access)
 		self.assertIsNotNone(refresh)
 
+	
+	## == Edit Data Tests == ##
 	def test_edit_user_data_returns_HTTP_OK(self):
-		self.client.post(
-			Register_URL,
-			{
-				'username': 'test',
-				'email': Email,
-				'password': 'test',
-				'full_name': Full_Name,
-				'university': 'UI',
-				'expertise': 'Art',
-				'position': 'Lektor',
-				'role': 'Admin'
-			},
-			format='json')
-		
 		response = self.client.put(
-			Edit_URL + "test",
+			Edit_URL + "tester",
 			{
-				'username': 'test',
+				'username': 'tester',
 				'email': Email,
 				'password': 'test',
 				'full_name': Full_Name,
@@ -131,20 +130,6 @@ class SIPRDUnitTest(TestCase):
 		self.assertEqual(response.status_code, 200)
 
 	def test_edit_user_data_user_not_found_returns_HTTP_NOT_FOUND(self):
-		self.client.post(
-			Register_URL,
-			{
-				'username': 'test',
-				'email': Email,
-				'password': 'test',
-				'full_name': Full_Name,
-				'university': 'UI',
-				'expertise': 'Art',
-				'position': 'Lektor',
-				'role': 'Admin'
-			},
-			format='json')
-		
 		response = self.client.put(
 			Edit_URL + "random",
 			{
@@ -162,23 +147,9 @@ class SIPRDUnitTest(TestCase):
 
 		self.assertEqual(response.status_code, 404)
 
-	def test_edit_user_data_incomplete_returns_HTTP_BAD_REQUEST(self):
-		self.client.post(
-			Register_URL,
-			{
-				'username': 'test',
-				'email': Email,
-				'password': 'test',
-				'full_name': Full_Name,
-				'university': 'UI',
-				'expertise': 'Art',
-				'position': 'Lektor',
-				'role': 'Admin'
-			},
-			format='json')
-		
+	def test_edit_user_data_incomplete_request_returns_HTTP_BAD_REQUEST(self):
 		response = self.client.put(
-			Edit_URL + "test",
+			Edit_URL + "tester",
 			{
 				'university': 'UGM',
 			},
@@ -186,3 +157,18 @@ class SIPRDUnitTest(TestCase):
 		)
 
 		self.assertEqual(response.status_code, 400)
+	
+	## == Delete Dosen Tests == ##
+	def test_delete_user_data_returns_HTTP_NO_CONTENT(self):
+		response = self.client.delete(
+			Delete_URL + "tester"
+		)
+
+		self.assertEqual(response.status_code, 204)
+
+	def test_delete_user_data_not_found_returns_HTTP_NOT_FOUND(self):
+		response = self.client.delete(
+			Delete_URL + "123132132213"
+		)
+
+		self.assertEqual(response.status_code, 404)

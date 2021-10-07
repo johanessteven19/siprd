@@ -61,7 +61,7 @@ class DeleteDosen(APIView):
 	def delete(self, request, uname):
 		# if request.method == 'DELETE' & request.user.role == 'Admin':
 		try:
-			user = User.objects.filter(username=uname)
+			user = User.objects.get(username=uname)
 		except User.DoesNotExist: 
         		return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND) 
 		user.delete()
