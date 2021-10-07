@@ -44,6 +44,18 @@ class ViewUserData(APIView):
 # class GoogleLogin(SocialLoginView):
 #     adapter_class = GoogleOAuth2Adapter
 
+# User Management API
+# Handles Admin/SDMPT management of user accounts
+class ManageUsers(APIView):
+	permission_classes = [IsAuthenticated]
+
+	# Create new dosen
+	# Same as registration..
+	# but done by an authenticated admin or SDMPT.
+	def post(self, request):
+		register_view = Register()
+		return Register.post(register_view, request)
+
 # Test view for user authentication
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
