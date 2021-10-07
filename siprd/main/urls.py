@@ -12,8 +12,6 @@ urlpatterns = [
     path("ping", views.ping, name="ping"),
     path("api/register", views.Register.as_view()),
     path("api/user", views.ViewUserData.as_view()),
-    path("api/edit/<str:uname>", views.EditUserData.as_view()),
-    path('api/delete/<str:uname>', views.DeleteDosen.as_view()),
     path("api/ping", views.ping_auth),
     path("api/manage-users/", views.ManageUsers.as_view()),
     path("api/check-linked-users/", views.CheckLinkedUsers.as_view()),
