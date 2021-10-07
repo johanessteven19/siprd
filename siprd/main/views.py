@@ -1,9 +1,4 @@
 from .serializers import UserSerializer
-from django.shortcuts import  render, redirect
-from .forms import NewUserForm
-from django.contrib.auth import login, authenticate
-from django.contrib import messages
-from django.contrib.auth.forms import AuthenticationForm
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -12,12 +7,11 @@ from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.decorators import api_view, permission_classes
 from .models import User
+import logging
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
-# from rest_auth.registration.views import SocialLoginView
 
-def homepage(request):
-	return render(request=request, template_name='main/home.html')
+logger = logging.getLogger(__name__)
 
 # Register API
 # Will create a new user in database if valid
@@ -41,8 +35,62 @@ class ViewUserData(APIView):
 
 		return Response(serializer.data)
 
-# class GoogleLogin(SocialLoginView):
-#     adapter_class = GoogleOAuth2Adapter
+# Gets the user data with a certain username --> Edits according to the request
+# Takes URL /api/edit/<username>
+class EditUserData(APIView):
+	# permission_classes = [IsAuthenticated]
+
+	def put(self, request, uname):
+		try:
+			user = User.objects.get(username=uname)
+		except User.DoesNotExist: 
+        		return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND)
+		user = User.objects.get(username=uname)
+
+		serializer = UserSerializer(user, data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+# Fetches data with a certain username, then deletes it.
+# Takes URL /api/delete/<username>
+class DeleteDosen(APIView):
+	# permission_classes = [IsAuthenticated]
+
+	def delete(self, request, uname):
+		# if request.method == 'DELETE' & request.user.role == 'Admin':
+		try:
+			user = User.objects.get(username=uname)
+		except User.DoesNotExist: 
+        		return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+		user.delete()
+		return Response({uname + ' was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
+
+# Will return all user data for the given email
+# only succeeds if the authenticated user's email
+# is the one being queried
+# For use with Google auth, to check for similar emails
+class CheckLinkedUsers(APIView):
+	permission_classes = [IsAuthenticated]
+	
+	def get(self, request):
+		logger.info("Checking for linked users...")
+		username = request.user.username
+		user = User.objects.filter(username=username).first()
+		user = UserSerializer(user)
+		logger.info("User found!")
+
+		user_email = user.data.get('email')
+		logger.info("User email: " + user_email)
+		requested_email = UserSerializer(data=request.data).data.get('email')
+		logger.info("Requested email: " + requested_email)
+		if user_email == requested_email:
+			matches = User.objects.filter(email=user_email).all()
+			serializer = UserSerializer(matches, many=True)
+			logger.info("Matches found!")
+			return Response(serializer.data)
+		else: return Response("You are not authorized!", status=status.HTTP_401_UNAUTHORIZED)
 
 # User Management API
 # Handles Admin/SDMPT management of user accounts
@@ -59,7 +107,7 @@ class ManageUsers(APIView):
 # Test view for user authentication
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def pingAuth(request):
+def ping_auth(request):
 	return JsonResponse({'message': 'You are logged in!'})
 
 # General ping test

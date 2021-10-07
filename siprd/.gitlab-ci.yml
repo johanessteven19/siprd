@@ -1,0 +1,66 @@
+stages:
+  - build
+  # - test
+  - sonar-dev
+  - sonar-prod
+
+variables:
+  # Django db variables for settings.py
+  DB_ENGINE: django.db.backends.postgresql
+  DB_NAME: siprd
+  DB_USER: siprd
+  DB_PASSWORD: supersecure
+  DB_HOST: postgres
+  DB_PORT: 5432
+
+build:
+  image: python:3.7.3
+  stage: build
+  script:
+    - pip install -r siprd/requirements.txt
+    - pip install djoser
+    - python siprd/manage.py makemigrations
+    - python siprd/manage.py migrate
+
+# TODO: Implement coverage reporting in Gitlab CI/CD
+
+# test:
+#   image: python:3.7.3
+#   stage: test
+#   before_script:
+#     - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+#     - echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+#     - pip install -r requirements.txt
+#     - python manage.py makemigrations
+#     - python manage.py migrate
+#     - apt-get update -qq && apt-get install -y -qq unzip
+#     - apt-get install -y google-chrome-stable
+#     - apt-get install -y xvfb
+#     - wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip
+#     - unzip chromedriver_linux64.zip
+#     - python manage.py runserver 8000 &
+#   when: on_success
+#   # script:
+#   #   - coverage run --source='.' manage.py test main
+#   #   - coverage report -m
+#   only:
+#     - master
+
+# DEPRECATED HEROKU DEPLOYMENT
+# Deployment:
+#   image: ruby:2.4
+#   stage: deploy
+#   before_script:
+#     - gem install dpl
+#     - wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+#   script:
+#     - dpl --provider=heroku --app=siprd --api-key=$HEROKU_API_KEY
+#     - export HEROKU_API_KEY=$HEROKU_API_KEY
+#   environment:
+#     name: production
+#     url: https://siprd.herokuapp.com/
+#   only:
+#     - 8-deploy
+
+
+

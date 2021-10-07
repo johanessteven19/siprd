@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from . import views
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -9,16 +9,16 @@ app_name = "main"
 
 
 urlpatterns = [
-    path("", views.homepage, name="homepage"),
     path("ping", views.ping, name="ping"),
     path("api/register", views.Register.as_view()),
     path("api/user", views.ViewUserData.as_view()),
-    path("api/ping", views.pingAuth),
+    path("api/edit/<str:uname>", views.EditUserData.as_view()),
+    path('api/delete/<str:uname>', views.DeleteDosen.as_view()),
+    path("api/ping", views.ping_auth),
     path("api/manage-users/", views.ManageUsers.as_view()),
-    # path('auth/google', views.GoogleLogin.as_view(), name='google_login'),
-    #path('auth/google', include('djoser.social.urls')),
+    path("api/check-linked-users/", views.CheckLinkedUsers.as_view()),
     path('api/google/', include('rest_social_auth.urls_jwt_pair')),
-    #path('accounts/profile/', RedirectSocial.as_view()),
+    path(r'^auth/', include('rest_framework_social_oauth2.urls')),
 
     # NOTE: Grants users a Refresh-Access token pair.
     # Input: JSON file containing username and password
