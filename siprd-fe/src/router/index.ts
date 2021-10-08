@@ -8,6 +8,8 @@ import AddAccount from "../views/AddAccount.vue";
 import EditAccount from "../views/EditAccount.vue";
 import Success from "../views/Success.vue";
 import RegisterSuccess from "../views/RegisterSuccess.vue";
+import ForgetPassword from "../views/ForgetPass.vue";
+
 
 Vue.use(VueRouter);
 
@@ -64,6 +66,11 @@ const routes: Array<RouteConfig> = [
     path: "/welcome",
     name: "Welcome",
     component: RegisterSuccess,
+  },
+  {
+    path: "/forget",
+    name: "Forget",
+    component: ForgetPassword,
   },
 ];
 

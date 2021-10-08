@@ -35,6 +35,16 @@ class ViewUserData(APIView):
 
 		return Response(serializer.data)
 
+# Fetches the data of the user who is currently logged in
+class IsUserExist(APIView):
+	def get(self, request):
+		print("req")
+		print(request)
+		# username = request.user.username
+		# user = User.objects.filter(username=username).first()
+		# serializer = UserSerializer(user)
+
+		return Response(request)
 # Will return all user data for the given email
 # only succeeds if the authenticated user's email
 # is the one being queried
