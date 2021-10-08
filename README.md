@@ -65,6 +65,12 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
+8.5. (Optional) Run backend tests
+
+```bash
+coverage run --source='.' manage.py test
+```
+
 9. Models will have been migrated to the postgres image, restart the docker containers to run the dockerized backend.
 
 ```bash
