@@ -202,7 +202,7 @@
                     "position": this.position,
                     "role": this.role
                 }
-                Vue.axios.post("http://localhost:8000/api/register",data).then((res)=>{
+                Vue.axios.post(process.env.VUE_BACKEND_URL+"/api/register",data).then((res)=>{
                     if(res.status===201){
                         alert("Akun berhasil dibuat.")
                         console.log("YES")
@@ -232,7 +232,7 @@
 
         beforeMount(){
             console.log("test")
-            Vue.axios.post("http://localhost:8000/api/register").then((res)=>{
+            Vue.axios.post(process.env.VUE_BACKEND_URL+"/api/register").then((res)=>{
                 this.register = res.data
                 console.log(res)
             })

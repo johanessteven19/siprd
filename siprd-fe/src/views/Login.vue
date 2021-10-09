@@ -128,7 +128,7 @@ export default {
     GoogleLogin,
   },
   beforeMount() {
-    // if (Vue.isLoggedIn("http://localhost:8000/api/token/refresh/")) {
+    // if (Vue.isLoggedIn(process.env.VUE_BACKEND_URL+"/api/token/refresh/")) {
     //   this.$router.push("/success");
     // } else {
     //   console.log("No valid auth token found");
@@ -186,7 +186,7 @@ export default {
         username: this.username,
         password: this.password,
       };
-      Vue.axios.post("http://localhost:8000/api/token/", data).then((res) => {
+      Vue.axios.post(process.env.VUE_BACKEND_URL+"/api/token/", data).then((res) => {
         if (res.status === 200) {
           window.localStorage.setItem("refresh", res.data.refresh);
           window.localStorage.setItem("access", res.data.access);
@@ -224,7 +224,7 @@ export default {
       // TODO: Add account selector for Google login
 
       Vue.axios
-        .post("http://localhost:8000/api/google/social/jwt-pair/", data)
+        .post(process.env.VUE_BACKEND_URL+"/api/google/social/jwt-pair/", data)
         .then((res) => {
           if (res.status === 200) {
             window.localStorage.setItem("refresh", res.data.refresh);
@@ -245,7 +245,7 @@ export default {
         email: userProfile.getEmail()
       };
       // Get users linked to this Google account
-      Vue.axios.get("http://localhost:8000/api/check-linked-users/", config).then((res) => {
+      Vue.axios.get(process.env.VUE_BACKEND_URL+"/api/check-linked-users/", config).then((res) => {
         if (res.status === 200) {
           console.log(res.data);
         }
