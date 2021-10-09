@@ -3,7 +3,6 @@
     <h3> <a v-on:click="backRedir">Back </a></h3>
     <validation-observer ref="observer" v-slot="{ invalid }">
       <h2>Edit Akun</h2>
-      <h1>Hello {{ userData.full_name }}</h1>
       <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
         <v-row>
           <v-col md="5">
@@ -208,6 +207,7 @@ export default {
       role: null,
       roleSelect: ["Dosen", "Reviewer", "SDM PT", "Admin"],
       userData: "",
+      config:null,
     };
   },
   methods: {
@@ -223,27 +223,38 @@ export default {
         position: this.position,
         role: this.role,
       };
-      Vue.axios
-        .put("http://localhost:8000/api/edit/test", data)
-        .then((res) => {
-          if (res.status === 200) {
-            alert("Akun berhasil diedit.");
-            console.log(data);
-            this.$router.push("/login");
-          } else {
-            alert("Gagal");
-          }
-        })
-        .catch((err) => {
-          // TODO: Make this output more user-friendly!!!
-          // Clean string up with a function?
-          console.log(err.response);
-          var responseErrors = JSON.stringify(err.response.data);
-          console.log(responseErrors);
-          var errMsg = "Login gagal, errors: " + responseErrors;
-          alert(errMsg);
-        });
-    },
+    if (localStorage.access) {
+      const accessToken = localStorage.access;
+      console.log("something")
+    const config={
+      headers: {
+          'Authorization': 'Bearer ' + accessToken,
+      }
+    };
+
+    Vue.axios
+      .put("http://localhost:8000/api/manage-users/",data,config)
+      .then((res) => {
+        console.log(res.data)
+        if (res.status === 200) {
+          alert("Akun berhasil diedit.");
+          this.$router.push("/login");
+        } else {
+          alert("Gagal");
+        }
+      })
+      
+          
+      .catch((err) => {
+        // TODO: Make this output more user-friendly!!!
+        // Clean string up with a function?
+        console.log(err);
+        // var responseErrors = JSON.stringify(err.response.data);
+        // console.log(responseErrors);
+        // var errMsg = "Edit gagal, errors: " + responseErrors;
+        // alert(errMsg);
+      });
+    }},
 
     checkForm: function (e) {
       this.$refs.observer.validate();
@@ -258,14 +269,11 @@ export default {
 
   beforeMount() {
       if (localStorage.access) {
-      console.log(localStorage.access);
-      console.log(localStorage.refresh);
       const accessToken = localStorage.access;
       const config = {
         headers: { Authorization: "Bearer " + accessToken },
       };
       Vue.axios.get("http://localhost:8000/api/user", config).then((res) => {
-        console.log(res.data);
         if (res.status === 200) {
           this.userData = res.data;
           this.email=res.data.email;
@@ -276,15 +284,12 @@ export default {
           this.nip=res.data.nip;
           this.fieldOfStudy=res.data.field_of_study;
           this.role=res.data.role;
+          this.position=res.data.position;
         }
       });
       } else {
       this.$router.push("/");
       } 
-    Vue.axios.put("http://localhost:8000/api/edit/test").then((res) => {
-      this.edit= res.data;
-      console.log(res);
-    });
   },
 };
 </script>

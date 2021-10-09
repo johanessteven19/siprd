@@ -35,39 +35,9 @@ class ViewUserData(APIView):
 
 		return Response(serializer.data)
 
-# Gets the user data with a certain username --> Edits according to the request
-# Takes URL /api/edit/<username>
-class EditUserData(APIView):
-	# permission_classes = [IsAuthenticated]
-
-	def put(self, request, uname):
-		try:
-			user = User.objects.get(username=uname)
-		except User.DoesNotExist: 
-        		return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND)
-		user = User.objects.get(username=uname)
-
-		serializer = UserSerializer(user, data=request.data)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
-
-# Fetches data with a certain username, then deletes it.
-# Takes URL /api/delete/<username>
-class DeleteDosen(APIView):
-	# permission_classes = [IsAuthenticated]
-
-	def delete(self, request, uname):
-		# if request.method == 'DELETE' & request.user.role == 'Admin':
-		try:
-			user = User.objects.get(username=uname)
-		except User.DoesNotExist: 
-        		return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND) 
-		user.delete()
-		return Response({uname + ' was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
-
-# Will return usernames linked to the given email
+# Will return all user data for the given email
+# only succeeds if the authenticated user's email
+# is the one being queried
 # For use with Google auth, to check for similar emails
 class GetLinkedUsers(APIView):
 	def get(self, request):
@@ -87,6 +57,68 @@ class GetLinkedUsers(APIView):
 		else:
 			# No matching usernames
 			return Response(status=status.HTTP_204_NO_CONTENT)
+
+# Get user data
+# For use with getting user roles for authorization and others.
+def get_user_data(request):
+	username = request.user.username
+	user = User.objects.filter(username=username).first()
+	serializer = UserSerializer(user)
+	return serializer.data
+
+# User Management API
+# Handles Admin/SDMPT management of user accounts
+class ManageUsers(APIView):
+	permission_classes = [IsAuthenticated]
+	forbidden_role_msg = {'message': 'You must be an Admin or SDM PT to perform this action.'}
+
+	# Create new dosen
+	# Same as registration..
+	# but done by an authenticated admin or SDMPT.
+	def post(self, request):
+		user_data = get_user_data(request)
+		user_role = user_data['role']
+		
+		if ( user_role == "Admin" or user_role == "SDM PT" ):
+			register_view = Register()
+			return Register.post(register_view, request)
+		else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
+
+	# Gets the user data with a certain username --> Edits according to the request
+	# Username in request body
+	# Accessible for Admins, SDM PT, and users who want to edit their own account.
+	def put(self, request):
+		user_data = get_user_data(request)
+		user_role = user_data['role']
+
+		if ( user_role == "Admin" or user_role == "SDM PT" or user_data['username'] == request.data['username']):
+			try:
+				user = User.objects.get(username=request.data['username'])
+			except User.DoesNotExist:
+				return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND)
+			user = User.objects.get(username=request.data['username'])
+
+			serializer = UserSerializer(user, data=request.data)
+			if serializer.is_valid():
+				serializer.save()
+				return Response(serializer.data, status=status.HTTP_200_OK)
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
+
+	# Fetches data with a certain username, then deletes it.
+	# Username in request body
+	def delete(self, request):
+		user_data = get_user_data(request)
+		user_role = user_data['role']
+
+		if ( user_role == "Admin" or user_role == "SDM PT" ):
+			try:
+				user = User.objects.get(username=request.data['username'])
+			except User.DoesNotExist: 
+				return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+			user.delete()
+			return Response({request.data['username'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
+		else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
 # Test view for user authentication
 @api_view(['GET'])

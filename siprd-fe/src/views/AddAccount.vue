@@ -234,7 +234,7 @@ export default {
         role: this.role,
       };
       Vue.axios
-        .post("http://localhost:8000/api/register", data)
+        .post("http://localhost:8000/api/manage-users/", data)
         .then((res) => {
           if (res.status === 201) {
             alert("Akun berhasil dibuat.");
@@ -262,14 +262,6 @@ export default {
     isEmpty(obj) {
       return Object.keys(obj).length === 0;
     },
-  },
-
-  beforeMount() {
-    console.log("test");
-    Vue.axios.post("http://localhost:8000/api/register").then((res) => {
-      this.register = res.data;
-      console.log(res);
-    });
   },
 };
 </script>
