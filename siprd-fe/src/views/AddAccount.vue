@@ -143,6 +143,7 @@
 <script>
     import { required,email} from 'vee-validate/dist/rules'
     import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
+    import Vue from "vue";
 
     setInteractionMode('eager')
 
@@ -201,7 +202,7 @@
                     "position": this.position,
                     "role": this.role
                 }
-                Vue.axios.post(process.env.VUE_BACKEND_URL+"/api/register",data).then((res)=>{
+                Vue.axios.post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/register",data).then((res)=>{
                     if(res.status===201){
                         alert("Akun berhasil dibuat.")
                         console.log("YES")
@@ -231,7 +232,7 @@
 
         beforeMount(){
             console.log("test")
-            Vue.axios.post(process.env.VUE_BACKEND_URL+"/api/register").then((res)=>{
+            Vue.axios.post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/register").then((res)=>{
                 this.register = res.data
                 console.log(res)
             })

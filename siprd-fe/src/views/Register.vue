@@ -265,7 +265,7 @@ export default {
         role: this.role,
       };
       Vue.axios
-        .post(process.env.VUE_BACKEND_URL+"/api/register", data)
+        .post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/register", data)
         .then((res) => {
           if (res.status === 201) {
             alert("Akun berhasil dibuat.");
@@ -308,7 +308,7 @@ export default {
     onGoogleSignInSuccess(resp) {
       const token = resp.Zi.access_token;
       axios
-        .post(process.env.VUE_BACKEND_URL+"/auth/google/", {
+        .post(( process.env.VUE_APP_BACKEND_URL || "" )+"/auth/google/", {
           access_token: token,
         })
         .then((resp) => {
@@ -329,7 +329,7 @@ export default {
 
   beforeMount() {
     console.log("test");
-    Vue.axios.post(process.env.VUE_BACKEND_URL+"/api/register").then((res) => {
+    Vue.axios.post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/register").then((res) => {
       this.register = res.data;
       console.log(res);
     });
