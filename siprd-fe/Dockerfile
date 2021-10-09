@@ -1,13 +1,13 @@
 FROM node:lts-alpine as builder
-
-WORKDIR /app
-
-COPY package*.json ./
-# I don't know why, but for some reason 
-# npm versions above 6 will fail npm install
-RUN npm install -g npm@6
-RUN npm install --save
-
+WORKDIR /build
+COPY package.json yarn.lock ./
+RUN yarn install
 COPY . .
+RUN yarn build --mode production
 
-EXPOSE 8080
+FROM nginx:stable-alpine as production
+COPY --from=builder /build/dist /usr/share/nginx/html
+COPY --from=builder /build/nginx.conf /etc/nginx/conf.d
+RUN rm /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
