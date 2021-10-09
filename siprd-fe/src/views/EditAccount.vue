@@ -1,22 +1,12 @@
 <template>
   <v-container style="margin: auto; width: 60%; padding: 70px 0">
+    <h3> <a v-on:click="backRedir">Back </a></h3>
     <validation-observer ref="observer" v-slot="{ invalid }">
-      <h3>Back</h3>
       <h2>Edit Akun</h2>
-      <br />
+      <h1>Hello {{ userData.full_name }}</h1>
       <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
         <v-row>
           <v-col md="5">
-            <div v-if="google_signed != null">
-              <v-text-field
-                :value="email"
-                label="Email (Filled)"
-                filled
-                readonly
-              >
-              </v-text-field>
-            </div>
-            <div v-else>
               <validation-provider
                 v-slot="{ errors }"
                 name="email"
@@ -26,11 +16,12 @@
                   v-model="email"
                   :error-messages="errors"
                   label="Email*"
+                  :value="email"
+                  
                   required
                 >
                 </v-text-field>
               </validation-provider>
-            </div>
 
             <validation-provider
               v-slot="{ errors }"
@@ -84,19 +75,19 @@
           </v-col>
 
           <v-col md="5" class="ml-auto">
-            <validation-provider
-              v-slot="{ errors }"
-              name="fullname"
-              rules="required"
-            >
-              <v-text-field
-                v-model="full_name"
-                :error-messages="errors"
-                label="Nama Lengkap*"
-                required
+              <validation-provider
+                v-slot="{ errors }"
+                name="fullname"
+                rules="required"
               >
-              </v-text-field>
-            </validation-provider>
+                <v-text-field
+                  v-model="fullName"
+                  :error-messages="errors"
+                  label="Nama Lengkap*"
+                  required
+                >
+                </v-text-field>
+              </validation-provider>
 
             <validation-provider
               v-slot="{ errors }"
@@ -151,18 +142,16 @@
               color="#8D38E3"
               width="100%"
             >
-              Buat Akun
+              Edit Akun
             </v-btn>
           </v-col>
           <v-col md="5" class="ml-auto">
             <v-btn
-              class="ml-auto white--text"
-              :disabled="invalid"
-              type="submit"
-              color="#8D38E3"
+              class="mr-4 white--text"
+              :disabled="false"
+              color="#2D3748"
               width="100%"
-            >
-              Cancel
+            > Cancel
             </v-btn>
           </v-col>
         </v-row>
@@ -173,6 +162,7 @@
 
 <script>
 import Vue from "vue";
+import axios from "axios";
 import { required, email } from "vee-validate/dist/rules";
 import {
   extend,
@@ -217,7 +207,7 @@ export default {
       ],
       role: null,
       roleSelect: ["Dosen", "Reviewer", "SDM PT", "Admin"],
-      user: {},
+      userData: "",
     };
   },
   methods: {
@@ -226,7 +216,7 @@ export default {
         username: this.username,
         email: this.email,
         password: this.password,
-        full_name: this.full_name,
+        full_name: this.fullName,
         university: this.university,
         nip: this.nip,
         field_of_study: this.fieldOfStudy,
@@ -234,18 +224,24 @@ export default {
         role: this.role,
       };
       Vue.axios
-        .post("http://localhost:8000/api/register", data)
+        .put("http://localhost:8000/api/edit/test", data)
         .then((res) => {
-          if (res.status === 201) {
-            alert("Akun berhasil dibuat.");
-            console.log("YES");
-            this.$router.push("/welcome");
+          if (res.status === 200) {
+            alert("Akun berhasil diedit.");
+            console.log(data);
+            this.$router.push("/login");
           } else {
             alert("Gagal");
           }
         })
         .catch((err) => {
+          // TODO: Make this output more user-friendly!!!
+          // Clean string up with a function?
           console.log(err.response);
+          var responseErrors = JSON.stringify(err.response.data);
+          console.log(responseErrors);
+          var errMsg = "Login gagal, errors: " + responseErrors;
+          alert(errMsg);
         });
     },
 
@@ -255,19 +251,38 @@ export default {
       return;
     },
 
-    loginRedir: function (e) {
+    backRedir: function (e) {
       this.$router.push("/login");
-    },
-
-    isEmpty(obj) {
-      return Object.keys(obj).length === 0;
     },
   },
 
   beforeMount() {
-    console.log("test");
-    Vue.axios.post("http://localhost:8000/api/register").then((res) => {
-      this.register = res.data;
+      if (localStorage.access) {
+      console.log(localStorage.access);
+      console.log(localStorage.refresh);
+      const accessToken = localStorage.access;
+      const config = {
+        headers: { Authorization: "Bearer " + accessToken },
+      };
+      Vue.axios.get("http://localhost:8000/api/user", config).then((res) => {
+        console.log(res.data);
+        if (res.status === 200) {
+          this.userData = res.data;
+          this.email=res.data.email;
+          this.username=res.data.username;
+          this.fullName=res.data.full_name;
+          this.password=res.data.password;
+          this.university=res.data.university;
+          this.nip=res.data.nip;
+          this.fieldOfStudy=res.data.field_of_study;
+          this.role=res.data.role;
+        }
+      });
+      } else {
+      this.$router.push("/");
+      } 
+    Vue.axios.put("http://localhost:8000/api/edit/test").then((res) => {
+      this.edit= res.data;
       console.log(res);
     });
   },

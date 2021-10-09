@@ -64,7 +64,6 @@
                 v-model="fieldOfStudy"
                 :error-messages="errors"
                 label="Bidang Keahlian"
-                required
               >
               </v-text-field>
             </validation-provider>
@@ -76,7 +75,6 @@
                 :error-messages="errors"
                 label="Jabatan"
                 data-vv-name="select"
-                required
               >
               </v-select>
             </validation-provider>
@@ -99,7 +97,7 @@
                 rules="required"
               >
                 <v-text-field
-                  v-model="full_name"
+                  v-model="fullName"
                   :error-messages="errors"
                   label="Nama Lengkap*"
                   required
@@ -128,7 +126,6 @@
                 v-model="nip"
                 :error-messages="errors"
                 label="NIP"
-                required
               >
               </v-text-field>
             </validation-provider>
@@ -215,7 +212,6 @@ extend("email", {
 export default {
   name: "Register",
   components: {
-    // UserPanel,
     ValidationProvider,
     ValidationObserver,
     GoogleLogin,
@@ -257,7 +253,7 @@ export default {
         username: this.username,
         email: this.email,
         password: this.password,
-        full_name: this.full_name,
+        full_name: this.fullName,
         university: this.university,
         nip: this.nip,
         field_of_study: this.fieldOfStudy,
@@ -281,7 +277,7 @@ export default {
           console.log(err.response);
           var responseErrors = JSON.stringify(err.response.data);
           console.log(responseErrors);
-          var errMsg = "Login gagal, errors: " + responseErrors;
+          var errMsg = "Register gagal, errors: " + responseErrors;
           alert(errMsg);
         });
     },

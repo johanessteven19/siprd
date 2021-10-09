@@ -1,7 +1,7 @@
 <template>
   <v-container style="margin: auto; width: 60%; padding: 70px 0">
     <validation-observer ref="observer" v-slot="{ invalid }">
-      <h3>Back</h3>
+      <h3><a v-on:click="backRedir">Back</a></h3>
       <h2>Tambah Akun Baru</h2>
       <br />
       <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
@@ -239,7 +239,7 @@ export default {
           if (res.status === 201) {
             alert("Akun berhasil dibuat.");
             console.log("YES");
-            this.$router.push("/welcome");
+            this.backRedir;
           } else {
             alert("Gagal");
           }
@@ -255,8 +255,8 @@ export default {
       return;
     },
 
-    loginRedir: function (e) {
-      this.$router.push("/login");
+    backRedir: function (e) {
+      this.$router.push("/user");
     },
 
     isEmpty(obj) {
