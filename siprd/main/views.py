@@ -72,6 +72,19 @@ class ManageUsers(APIView):
 	permission_classes = [IsAuthenticated]
 	forbidden_role_msg = {'message': 'You must be an Admin or SDM PT to perform this action.'}
 
+	# Fetches all user data
+	def get(self, request):
+		user_data = get_user_data(request)
+		user_role = user_data['role']
+		
+		if ( user_role == "Admin" or user_role == "SDM PT" ):
+			user_list = User.objects.all().order_by("date_joined")
+
+			serializer = UserSerializer(user_list, many=True)
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
+
+
 	# Create new dosen
 	# Same as registration..
 	# but done by an authenticated admin or SDMPT.
