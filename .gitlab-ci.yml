@@ -50,26 +50,26 @@ sonar-prod:
     - master
     - staging
 
-  staging:backend:
-    image: docker:git
-    stage: staging
-    tags:
-      - docker
-    environment:
-      name: staging
-    dependencies: []
-    services:
-      - name: docker:dind
-        command: ["dockerd-entrypoint.sh"]
-    variables:
-      DOCKER_HOST: tcp://docker:2375/
-      DOCKER_DRIVER: overlay2
-      DOCKER_TLS_CERTDIR: ""
-    script:
-      - docker pull $CI_REGISTRY_IMAGE:be-staging || true
-      - docker build --cache-from $CI_REGISTRY_IMAGE/backend:be-staging --tag $CI_REGISTRY_IMAGE:be-staging .
-      - docker push $CI_REGISTRY_IMAGE:be-staging
-    when: manual
+staging-backend:
+  image: docker:git
+  stage: staging
+  tags:
+    - docker
+  environment:
+    name: staging
+  dependencies: []
+  services:
+    - name: docker:dind
+      command: ["dockerd-entrypoint.sh"]
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:be-staging || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE/backend:be-staging --tag $CI_REGISTRY_IMAGE:be-staging .
+    - docker push $CI_REGISTRY_IMAGE:be-staging
+  when: manual
   
-  production:
-    only: production
+  # production:
+  #   only: production

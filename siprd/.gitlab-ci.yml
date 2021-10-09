@@ -4,7 +4,7 @@ stages:
   - sonar-dev
   - sonar-prod
   - staging
-  - production
+  # - production
 
 variables:
   # Django db variables for settings.py
