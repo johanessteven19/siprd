@@ -78,7 +78,7 @@ class ManageUsers(APIView):
 		user_role = user_data['role']
 		
 		if ( user_role == "Admin" or user_role == "SDM PT" ):
-			user_list = User.objects.all().order_by("date_joined")
+			user_list = User.objects.all().order_by("date_joined").reverse()
 
 			serializer = UserSerializer(user_list, many=True)
 			return Response(serializer.data, status=status.HTTP_200_OK)
