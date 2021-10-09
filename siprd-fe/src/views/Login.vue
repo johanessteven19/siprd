@@ -186,41 +186,42 @@ export default {
         username: this.username,
         password: this.password,
       };
-      Vue.axios.post("http://localhost:8000/api/token/", data).then((res) => {
-        if (res.status === 200) {
-          window.localStorage.setItem("refresh", res.data.refresh);
-          window.localStorage.setItem("access", res.data.access);
-          alert("Login berhasil!");
-          this.$router.push("/Success");
-        } else {
-          alert("Login gagal");
-          return
-        }
-      })
-      .catch((err) => {
-        // NOTE: Do not make this more specific, for security reasons.
-        console.log(err.response);
-        if (typeof err.response !== "undefined") {
-          // Backend accessible, but credentials incorrect
-          alert("Login gagal! Username atau Password salah.");
-        }
-        else {
-          // Backend inaccessible (no response)
-          alert("Maaf, server SIPEERKI tidak dapat dihubungi.");
-        }
-      });
+      Vue.axios
+        .post("http://localhost:8000/api/token/", data)
+        .then((res) => {
+          if (res.status === 200) {
+            window.localStorage.setItem("refresh", res.data.refresh);
+            window.localStorage.setItem("access", res.data.access);
+            alert("Login berhasil!");
+            this.$router.push("/Success");
+          } else {
+            alert("Login gagal");
+            return;
+          }
+        })
+        .catch((err) => {
+          // NOTE: Do not make this more specific, for security reasons.
+          console.log(err.response);
+          if (typeof err.response !== "undefined") {
+            // Backend accessible, but credentials incorrect
+            alert("Login gagal! Username atau Password salah.");
+          } else {
+            // Backend inaccessible (no response)
+            alert("Maaf, server SIPEERKI tidak dapat dihubungi.");
+          }
+        });
     },
     onSuccess(googleUser) {
       console.log(googleUser);
       // This only gets the user information: id, name, imageUrl and email
-      const userProfile = googleUser.getBasicProfile()
+      const userProfile = googleUser.getBasicProfile();
       console.log(userProfile);
       const data = {
         provider: "google-oauth2",
-        code: userProfile.getId()
+        code: userProfile.getId(),
       };
 
-      console.log(data)
+      console.log(data);
       // TODO: Add account selector for Google login
 
       Vue.axios
@@ -237,23 +238,25 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          alert("Login gagal, ada masalah pada server")
+          alert("Login gagal, ada masalah pada server");
         });
 
       const config = {
         headers: { Authorization: "Bearer " + localStorage.access },
-        email: userProfile.getEmail()
+        email: userProfile.getEmail(),
       };
       // Get users linked to this Google account
-      Vue.axios.get("http://localhost:8000/api/check-linked-users/", config).then((res) => {
-        if (res.status === 200) {
-          console.log(res.data);
-        }
-      });
+      Vue.axios
+        .get("http://localhost:8000/api/check-linked-users/", config)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.data);
+          }
+        });
     },
     onFailure(googleUser) {
       console.log("Google Login failed!");
-    }
+    },
   },
 };
 </script>

@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.dispatch import receiver
+from django.urls import reverse
+from django_rest_passwordreset.signals import reset_password_token_created
+from django.core.mail import send_mail
 
 # Create your models here.
 POSITIONS = (
@@ -10,7 +14,6 @@ POSITIONS = (
 )
 
 class User(AbstractUser):
-
     POSITION_CHOICES = POSITIONS
 
     ROLE_CHOICES = (
@@ -33,8 +36,8 @@ class User(AbstractUser):
 
     REQUIRED_FIELDS = []
 
-class KaryaIlmiah(models.Model):
 
+class KaryaIlmiah(models.Model):
     STATUS_CHOICES = (
         ('Not Reviewed Yet', 'Not_Reviewed_Yet'),
         ('In Review', 'In_Review'),
@@ -62,8 +65,8 @@ class KaryaIlmiah(models.Model):
 
     REQUIRED_FIELDS = []
 
-class Review(models.Model):
 
+class Review(models.Model):
     review_id = models.AutoField(primary_key=True)
     karil_id = models.ForeignKey(KaryaIlmiah, on_delete=models.CASCADE)
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -80,11 +83,3 @@ class Review(models.Model):
     score_proposer = models.DecimalField(max_digits=5, decimal_places=2)
 
     REQUIRED_FIELDS = []
-
-
-
-
-
-
-
-

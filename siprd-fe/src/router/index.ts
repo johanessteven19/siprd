@@ -1,6 +1,5 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import Home from "../views/Home.vue";
 import Ping from "../views/Ping.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
@@ -8,8 +7,9 @@ import AddAccount from "../views/AddAccount.vue";
 import EditAccount from "../views/EditAccount.vue";
 import Success from "../views/Success.vue";
 import RegisterSuccess from "../views/RegisterSuccess.vue";
-import ForgetPassword from "../views/ForgetPass.vue";
-
+import ForgetPasswordRequest from "../views/ForgetPasswordRequest.vue";
+import ResetPassword from "../views/ResetPassword.vue";
+import TokenError from "../views/TokenError.vue";
 
 Vue.use(VueRouter);
 
@@ -48,9 +48,9 @@ const routes: Array<RouteConfig> = [
     component: Register,
   },
   {
-  path: "/add-account",
-  name: "AddAccount",
-  component: AddAccount,
+    path: "/add-account",
+    name: "AddAccount",
+    component: AddAccount,
   },
   {
     path: "/edit-account",
@@ -70,7 +70,17 @@ const routes: Array<RouteConfig> = [
   {
     path: "/forget",
     name: "Forget",
-    component: ForgetPassword,
+    component: ForgetPasswordRequest,
+  },
+  {
+    path: "/token-error",
+    name: "Token Error",
+    component: TokenError,
+  },
+  {
+    path: "/reset-password/:token/:username/:uidb",
+    name: "Reset Password",
+    component: ResetPassword,
   },
 ];
 

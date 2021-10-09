@@ -5,8 +5,9 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView
 )
 
-app_name = "main"   
+from .views import RequestPasswordResetEmail, PasswordTokenCheckAPI, SetNewPasswordAPIView
 
+app_name = "main"
 
 urlpatterns = [
     path("ping", views.ping, name="ping"),
@@ -17,8 +18,12 @@ urlpatterns = [
     path("api/check-linked-users/", views.CheckLinkedUsers.as_view()),
     path('api/google/', include('rest_social_auth.urls_jwt_pair')),
     path(r'^auth/', include('rest_framework_social_oauth2.urls')),
-    path("api/is-user-exist/", views.IsUserExist.as_view()),
+    path("api/is-user-exists", views.IsUserExist.as_view()),
 
+    # Reset password endpoints
+    path('api/request-reset-email/', RequestPasswordResetEmail.as_view(), name="request-reset-email"),
+    path('api/password-reset/<uidb64>/<token>/<username>', PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
+    path('api/password-reset-complete', SetNewPasswordAPIView.as_view(), name='password-reset-complete'),
 
     # NOTE: Grants users a Refresh-Access token pair.
     # Input: JSON file containing username and password
