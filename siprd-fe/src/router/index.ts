@@ -9,6 +9,7 @@ import EditAccount from "../views/EditAccount.vue";
 import Success from "../views/Success.vue";
 import Dashboard from "../views/Dashboard.vue";
 import RegisterSuccess from "../views/RegisterSuccess.vue";
+import AccountList from "../views/AccountList.vue";
 
 Vue.use(VueRouter);
 
@@ -72,6 +73,11 @@ const routes: Array<RouteConfig> = [
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
+  },
+  {
+    path: "/account-list",
+    name: "AccountList",
+    component: AccountList,
   },
 ];
 
