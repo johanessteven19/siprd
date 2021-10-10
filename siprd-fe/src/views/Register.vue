@@ -192,7 +192,7 @@
 <script>
 import Vue from "vue";
 import axios from "axios";
-import { required,email} from "vee-validate/dist/rules";
+import { required, email } from "vee-validate/dist/rules";
 import {
   extend,
   ValidationObserver,
@@ -280,8 +280,8 @@ export default {
           // Clean string up with a function?
           console.log(err.response);
           var responseErrors = JSON.stringify(err.response.data);
-          console.log(responseErrors)
-          var errMsg = "Login gagal, errors: " + responseErrors
+          console.log(responseErrors);
+          var errMsg = "Login gagal, errors: " + responseErrors;
           alert(errMsg);
         });
     },
@@ -320,7 +320,7 @@ export default {
     },
     onGoogleSignInError(error) {
       console.log("OH NOES", error);
-      alert("Maaf, layanan Google tidak dapat dihubungi.")
+      alert("Maaf, layanan Google tidak dapat dihubungi.");
     },
     isEmpty(obj) {
       return Object.keys(obj).length === 0;
