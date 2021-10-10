@@ -11,10 +11,13 @@
           >
         </li>
         <li>
-          <router-link class="link" :to="{ name: '' }">Daftar Akun</router-link>
+          <router-link class="link" :to="{ name: 'AccountList' }">Daftar Akun</router-link>
         </li>
         <li>
-          <router-link class="link" :to="{ name: '' }">Panduan</router-link>
+          <router-link class="link" :to="{ name: 'Success' }">Panduan</router-link>
+        </li>
+        <li>
+          <router-link class="link" :to="{ name: 'Success' }">Profil Anda</router-link>
         </li>
       </ul>
       <div class="icon">
@@ -33,12 +36,15 @@
             >
           </li>
           <li>
-            <router-link class="link" :to="{ name: '' }"
+            <router-link class="link" :to="{ name: 'AccountList' }"
               >Daftar Akun</router-link
             >
           </li>
           <li>
             <router-link class="link" :to="{ name: '' }">Panduan</router-link>
+          </li>
+          <li>
+            <router-link class="link" :to="{ name: 'Success' }">Profil Anda</router-link>
           </li>
         </ul>
       </transition>
