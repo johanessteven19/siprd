@@ -89,7 +89,26 @@
           </template>
 
           <v-card>
-            <v-card-text> Test </v-card-text>
+            <v-card-title class="text-justify"> Silahkan pilih akun </v-card-title>
+            <v-layout column align-center justify-center>
+              <div class="text-center" v-if="usernameList === undefined">
+                <v-progress-circular
+                  indeterminate
+                  color="primary"
+                ></v-progress-circular>
+              </div>
+
+              <div class="options" v-for="option in usernameList" :key="option" style="padding-bottom: 10px;">
+                <v-btn
+                  @click.stop="
+                    username = option;
+                    dialog = false
+                  "
+                >
+                  {{ option }}
+                </v-btn>
+              </div>
+            </v-layout>
 
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -127,24 +146,7 @@ export default {
   components: {
     GoogleLogin,
   },
-  beforeMount() {
-    // if (Vue.isLoggedIn("http://localhost:8000/api/token/refresh/")) {
-    //   this.$router.push("/success");
-    // } else {
-    //   console.log("No valid auth token found");
-    // }
-    Vue.GoogleAuth.then((auth2) => {
-      if (auth2.isSignedIn.get()) {
-        // TODO: Display select user dialog
-        console.log("Signed in via Google.");
-        console.log("Signing out...");
-        auth2.disconnect();
-        console.log("Signed out.");
-      } else {
-        console.log("Not signed in via Google");
-      }
-    });
-  },
+  // TODO: auto redirect to home page if already authenticated
   data() {
     return {
       errors: [],
@@ -163,6 +165,7 @@ export default {
         longtitle: true,
       },
       dialog: false,
+      usernameList: undefined,
     };
   },
   methods: {
@@ -186,8 +189,45 @@ export default {
         username: this.username,
         password: this.password,
       };
+      Vue.axios.post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/token/", data).then((res) => {
+        if (res.status === 200) {
+          window.localStorage.setItem("refresh", res.data.refresh);
+          window.localStorage.setItem("access", res.data.access);
+          alert("Login berhasil!");
+          this.$router.push("/Success");
+        } else {
+          alert("Login gagal");
+          return
+        }
+      })
+      .catch((err) => {
+        // NOTE: Do not make this more specific, for security reasons.
+        console.log(err.response);
+        if (typeof err.response !== "undefined") {
+          // Backend accessible, but credentials incorrect
+          alert("Login gagal! Username atau Password salah.");
+        }
+        else {
+          // Backend inaccessible (no response)
+          alert("Maaf, server SIPEERKI tidak dapat dihubungi.");
+        }
+      });
+    },
+    onSuccess(googleUser) {
+      console.log(googleUser);
+      // This only gets the user information: id, name, imageUrl and email
+      const userProfile = googleUser.getBasicProfile()
+      console.log(userProfile);
+      const data = {
+        provider: "google-oauth2",
+        code: userProfile.getId()
+      };
+
+      console.log(data)
+      // TODO: Add account selector for Google login
+
       Vue.axios
-        .post("http://localhost:8000/api/token/", data)
+        .post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/google/social/jwt-pair/", data)
         .then((res) => {
           if (res.status === 200) {
             window.localStorage.setItem("refresh", res.data.refresh);
@@ -216,47 +256,36 @@ export default {
       // This only gets the user information: id, name, imageUrl and email
       const userProfile = googleUser.getBasicProfile();
       console.log(userProfile);
-      const data = {
-        provider: "google-oauth2",
-        code: userProfile.getId(),
-      };
-
-      console.log(data);
-      // TODO: Add account selector for Google login
-
-      Vue.axios
-        .post("http://localhost:8000/api/google/social/jwt-pair/", data)
-        .then((res) => {
-          if (res.status === 200) {
-            window.localStorage.setItem("refresh", res.data.refresh);
-            window.localStorage.setItem("access", res.data.token);
-            alert("Login berhasil!");
-            this.$router.push("/Success");
-          } else {
-            alert("login gagal");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          alert("Login gagal, ada masalah pada server");
-        });
-
       const config = {
-        headers: { Authorization: "Bearer " + localStorage.access },
-        email: userProfile.getEmail(),
+        params: {
+          "email": userProfile.getEmail()
+        }
       };
       // Get users linked to this Google account
+      console.log(config)
       Vue.axios
-        .get("http://localhost:8000/api/check-linked-users/", config)
+        .get("http://localhost:8000/api/get-linked-users/", config)
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
+            // usernames found
+            this.usernameList = res.data.usernames;
+            console.log(this.usernameList);
+          } else if (res.status === 204) {
+            // usernames not found
+            alert(
+              "Maaf, tidak ada akun yang terhubung dengan email tersebut. Apakah anda sudah daftar?"
+            );
           }
+        })
+        .catch((err) => {
+          // something went horribly wrong!
+          console.log(err.response);
+          alert("Maaf, server SIPEERKI tidak dapat dihubungi.");
         });
     },
     onFailure(googleUser) {
       console.log("Google Login failed!");
-    },
+    }
   },
 };
 </script>

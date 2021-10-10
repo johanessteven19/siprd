@@ -5,13 +5,37 @@ from django.urls import resolve
 
 # NOTE: These tests suck, feel free to refactor.
 class SIPRDUnitTest(TestCase):
-	global Register_URL, Email, Full_Name
-	Register_URL= "/api/register"
-	Email = "test.user@example.com"
-	Full_Name = "Test User"
+	register_url = "/api/register"
+	manage_users_url = "/api/manage-users/"
+	email = "test.user@example.com"
+	full_name = "Test User"
+	username = "tester"
+	password = "test"
 
 	def setUp(self):
 		self.client = APIClient()
+
+		self.tester = User.objects.create_user(
+				username = self.username,
+				email = self.email,
+				password = self.password,
+				full_name = self.full_name,
+				university = 'UI',
+				field_of_study = 'Art',
+				position = 'Lektor',
+				role = 'Admin'
+		)
+
+	def login(self):
+		response = self.client.post(
+			'/api/token/',
+			{
+				'username': self.username,
+				'password': self.password
+			}, format='json')
+
+		_, access = response.json().values()
+		return access
 
 	def test_ping_url_exists(self):
 		response = self.client.get('/ping')
@@ -24,12 +48,12 @@ class SIPRDUnitTest(TestCase):
 	
 	def test_api_register_new_user_returns_HTTP_Status_201_CREATED(self):
 		response = self.client.post(
-			Register_URL,
+			self.register_url,
 			{
 				'username': 'test',
-				'email': Email,
+				'email': self.email,
 				'password': 'test',
-				'full_name': Full_Name,
+				'full_name': self.full_name,
 				'university': 'UI',
 				'expertise': 'Art',
 				'position': 'Lektor',
@@ -40,7 +64,7 @@ class SIPRDUnitTest(TestCase):
 
 	def test_api_register_new_user_incomplete_returns_HTTP_Status_400_BAD_REQUEST(self):
 		response = self.client.post(
-			Register_URL,
+			self.register_url,
 			{
 				'username': 'test'
 			})
@@ -48,12 +72,12 @@ class SIPRDUnitTest(TestCase):
 
 	def test_login_new_user_returns_HTTP_Status_OK(self):
 		self.client.post(
-			Register_URL,
+			self.register_url,
 			{
 				'username': 'test',
-				'email': Email,
+				'email': self.email,
 				'password': 'test',
-				'full_name': Full_Name,
+				'full_name': self.full_name,
 				'university': 'UI',
 				'expertise': 'Art',
 				'position': 'Lektor',
@@ -72,12 +96,12 @@ class SIPRDUnitTest(TestCase):
 		
 	def test_login_new_user_returns_JWT_token_pair(self):
 		self.client.post(
-			Register_URL,
+			self.register_url,
 			{
 				'username': 'test',
-				'email': Email,
+				'email': self.email,
 				'password': 'test',
-				'full_name': Full_Name,
+				'full_name': self.full_name,
 				'university': 'UI',
 				'expertise': 'Art',
 				'position': 'Lektor',
@@ -95,3 +119,89 @@ class SIPRDUnitTest(TestCase):
 		access, refresh = response.json().values()
 		self.assertIsNotNone(access)
 		self.assertIsNotNone(refresh)
+
+	
+	## == Edit Data Tests == ##
+	def test_edit_user_data_returns_HTTP_OK(self):
+		access = self.login()
+
+		self.client.credentials(HTTP_AUTHORIZATION="Bearer " + access)
+		response = self.client.put(
+			self.manage_users_url,
+			{
+				'username': self.username,
+				'email': self.email,
+				'password': self.password,
+				'full_name': self.full_name,
+				'university': 'UGM',
+				'expertise': 'Art',
+				'position': 'Lektor',
+				'role': 'Admin'
+			},
+			format='json'
+		)
+
+		self.assertEqual(response.status_code, 200)
+
+	def test_edit_user_data_user_not_found_returns_HTTP_NOT_FOUND(self):
+		access = self.login()
+
+		self.client.credentials(HTTP_AUTHORIZATION="Bearer " + access)
+		response = self.client.put(
+			self.manage_users_url,
+			{
+				'username': 'doesnotexist',
+				'email': self.email,
+				'password': 'test',
+				'full_name': self.full_name,
+				'university': 'UGM',
+				'expertise': 'Art',
+				'position': 'Lektor',
+				'role': 'Admin'
+			},
+			format='json'
+		)
+
+		self.assertEqual(response.status_code, 404)
+
+	def test_edit_user_data_incomplete_request_returns_HTTP_BAD_REQUEST(self):
+		access = self.login()
+
+		self.client.credentials(HTTP_AUTHORIZATION="Bearer " + access)
+		response = self.client.put(
+			self.manage_users_url,
+			{
+				'username': 'tester',
+				'university': 'UGM',
+			},
+			format='json'
+		)
+
+		self.assertEqual(response.status_code, 400)
+	
+	## == Delete Dosen Tests == ##
+	def test_successful_delete_user_data_returns_HTTP_OK(self):
+		access = self.login()
+
+		self.client.credentials(HTTP_AUTHORIZATION="Bearer " + access)
+		response = self.client.delete(
+			self.manage_users_url,
+			{
+				'username': self.username
+			}
+		)
+
+		self.assertEqual(response.status_code, 200)
+
+	def test_delete_user_data_not_found_returns_HTTP_NOT_FOUND(self):
+		access = self.login()
+
+		self.client.credentials(HTTP_AUTHORIZATION="Bearer " + access)
+		response = self.client.delete(
+			self.manage_users_url,
+			{
+				'username': 'doesnotexist'
+			}
+		)
+
+		self.assertEqual(response.status_code, 404)

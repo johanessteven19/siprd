@@ -192,7 +192,7 @@
 <script>
 import Vue from "vue";
 import axios from "axios";
-import { required,email} from "vee-validate/dist/rules";
+import { required, email } from "vee-validate/dist/rules";
 import {
   extend,
   ValidationObserver,
@@ -265,7 +265,7 @@ export default {
         role: this.role,
       };
       Vue.axios
-        .post("http://localhost:8000/api/register", data)
+        .post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/register", data)
         .then((res) => {
           if (res.status === 201) {
             alert("Akun berhasil dibuat.");
@@ -280,8 +280,8 @@ export default {
           // Clean string up with a function?
           console.log(err.response);
           var responseErrors = JSON.stringify(err.response.data);
-          console.log(responseErrors)
-          var errMsg = "Login gagal, errors: " + responseErrors
+          console.log(responseErrors);
+          var errMsg = "Login gagal, errors: " + responseErrors;
           alert(errMsg);
         });
     },
@@ -308,7 +308,7 @@ export default {
     onGoogleSignInSuccess(resp) {
       const token = resp.Zi.access_token;
       axios
-        .post("http://localhost:8000/auth/google/", {
+        .post(( process.env.VUE_APP_BACKEND_URL || "" )+"/auth/google/", {
           access_token: token,
         })
         .then((resp) => {
@@ -320,7 +320,7 @@ export default {
     },
     onGoogleSignInError(error) {
       console.log("OH NOES", error);
-      alert("Maaf, layanan Google tidak dapat dihubungi.")
+      alert("Maaf, layanan Google tidak dapat dihubungi.");
     },
     isEmpty(obj) {
       return Object.keys(obj).length === 0;
@@ -329,7 +329,7 @@ export default {
 
   beforeMount() {
     console.log("test");
-    Vue.axios.post("http://localhost:8000/api/register").then((res) => {
+    Vue.axios.post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/register").then((res) => {
       this.register = res.data;
       console.log(res);
     });
