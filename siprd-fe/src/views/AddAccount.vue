@@ -1,7 +1,7 @@
 <template>
-  <v-container style="margin: auto; width: 60%; padding: 70px 0">
+  <v-container style="margin-top: 2rem; width: 60%; padding: 80px 0">
     <validation-observer ref="observer" v-slot="{ invalid }">
-      <h3><a v-on:click="backRedir">Back</a></h3>
+      <h3><a v-on:click="backRedir" style="color:black">Back</a></h3>
       <h2>Tambah Akun Baru</h2>
       <br />
       <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
@@ -19,7 +19,7 @@
             <div v-else>
               <validation-provider
                 v-slot="{ errors }"
-                name="email"
+                name="Email"
                 rules="required|email"
               >
                 <v-text-field
@@ -34,7 +34,7 @@
 
             <validation-provider
               v-slot="{ errors }"
-              name="username"
+              name="Username"
               rules="required"
             >
               <v-text-field
@@ -48,7 +48,7 @@
 
             <validation-provider
               v-slot="{ errors }"
-              name="university"
+              name="Universitas"
               rules="required"
             >
               <v-text-field
@@ -60,7 +60,7 @@
               </v-text-field>
             </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="fieldOfStudy">
+            <validation-provider v-slot="{ errors }" name="Bidang Keahlian">
               <v-text-field
                 v-model="fieldOfStudy"
                 :error-messages="errors"
@@ -70,7 +70,7 @@
               </v-text-field>
             </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="position">
+            <validation-provider v-slot="{ errors }" name="Jabatan">
               <v-select
                 v-model="position"
                 :items="posSelect"
@@ -86,7 +86,7 @@
           <v-col md="5" class="ml-auto">
             <validation-provider
               v-slot="{ errors }"
-              name="fullname"
+              name="Nama Lengkap"
               rules="required"
             >
               <v-text-field
@@ -100,7 +100,7 @@
 
             <validation-provider
               v-slot="{ errors }"
-              name="password"
+              name="Password"
               rules="required"
             >
               <v-text-field
@@ -113,19 +113,19 @@
               </v-text-field>
             </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="nip">
+            <validation-provider v-slot="{ errors }" name="NIP" rules="numeric">
               <v-text-field
                 v-model="nip"
                 :error-messages="errors"
                 label="NIP"
-                required
+                numeric
               >
               </v-text-field>
             </validation-provider>
 
             <validation-provider
               v-slot="{ errors }"
-              name="role"
+              name="Role"
               rules="required"
             >
               <v-select
@@ -157,10 +157,9 @@
           <v-col md="5" class="ml-auto">
             <v-btn
               class="ml-auto white--text"
-              :disabled="invalid"
-              type="submit"
-              color="#8D38E3"
+              color="#2D3748"
               width="100%"
+              v-on:click="backRedir"
             >
               Cancel
             </v-btn>
@@ -173,7 +172,7 @@
 
 <script>
 import Vue from "vue";
-import { required, email } from "vee-validate/dist/rules";
+import { required, email, numeric } from "vee-validate/dist/rules";
 import {
   extend,
   ValidationObserver,
@@ -185,13 +184,19 @@ setInteractionMode("eager");
 
 extend("required", {
   ...required,
-  message: "{_field_} can not be empty",
+  message: "{_field_} tidak boleh kosong",
 });
 
 extend("email", {
   ...email,
-  message: "Email must be valid",
+  message: "Email harus valid",
 });
+
+extend("numeric", {
+  ...numeric,
+  message: "{_field_} hanya berupa angka.",
+});
+
 export default {
   name: "AddAccount",
   components: {
@@ -256,7 +261,7 @@ export default {
     },
 
     backRedir: function (e) {
-      this.$router.push("/user");
+      this.$router.push("/account-list");
     },
 
     isEmpty(obj) {

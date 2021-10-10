@@ -1,6 +1,20 @@
 <template>
-  <v-container style="margin: auto; width: 80%; padding: 70px 10px">
+  <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
+    <v-row>
+    <v-col>
     <h1>Daftar Akun</h1>
+    </v-col>
+    <v-col md="2" class="mr-auto">
+      <v-btn
+        class="mr-4 white--text"
+        :disabled="false"
+        color="blue"
+        width="100%"
+        v-on:click="addRedir"
+      > + Tambah Akun
+      </v-btn>
+    </v-col>
+    </v-row>
     <br>
     <v-data-table
       :page="page"
@@ -78,6 +92,11 @@ export default {
       users:[],
       search:""
     }
+  },
+  methods:{
+    addRedir: function (e) {
+      this.$router.push("/add-account");
+    },
   },
   beforeMount() {
     if (localStorage.access){

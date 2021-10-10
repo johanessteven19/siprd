@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <h1>Hello {{ userData.full_name }}</h1>
+  <v-container style="margin: auto; width: 60%; padding: 70px 0">
+    <h1>Welcome, {{ userData.full_name }}</h1>
     <v-btn depressed color="error" v-on:click="logoutUser"> Logout </v-btn>
     <v-btn depressed color="success" v-on:click="editUser"> Edit Akun </v-btn>
   </v-container>
