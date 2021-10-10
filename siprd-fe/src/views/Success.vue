@@ -40,7 +40,7 @@ export default {
       const config = {
         headers: { Authorization: "Bearer " + accessToken },
       };
-      Vue.axios.get("http://localhost:8000/api/user", config).then((res) => {
+      Vue.axios.get(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/user", config).then((res) => {
         console.log(res.data);
         if (res.status === 200) {
           this.userData = res.data;

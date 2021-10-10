@@ -20,7 +20,7 @@ export default {
   method: {},
   beforeMount() {
     console.log("test");
-    Vue.axios.get("http://localhost:8000/ping").then((res) => {
+    Vue.axios.get(( process.env.VUE_APP_BACKEND_URL || "" )+"/ping").then((res) => {
       this.ping = res.data;
       console.log(res);
     });

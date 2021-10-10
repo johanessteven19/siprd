@@ -1,6 +1,5 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import Home from "../views/Home.vue";
 import Ping from "../views/Ping.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
@@ -10,6 +9,9 @@ import Success from "../views/Success.vue";
 import Dashboard from "../views/Dashboard.vue";
 import RegisterSuccess from "../views/RegisterSuccess.vue";
 import AccountList from "../views/AccountList.vue";
+import ForgetPasswordRequest from "../views/ForgetPasswordRequest.vue";
+import ResetPassword from "../views/ResetPassword.vue";
+import TokenError from "../views/TokenError.vue";
 
 Vue.use(VueRouter);
 
@@ -17,9 +19,14 @@ const routes: Array<RouteConfig> = [
   {
     path: "/",
     redirect: (to) => {
+      if(localStorage.access){
+        return "/dashboard";
+      } else{
+        return "/login";
+      }
       // TODO: check if user is logged in
       // If not, then
-      return "/login";
+      //return "/login";
       // Else display their home screen
     },
     //name: "Dashboard",
@@ -68,6 +75,21 @@ const routes: Array<RouteConfig> = [
     path: "/welcome",
     name: "Welcome",
     component: RegisterSuccess,
+  },
+  {
+    path: "/forget",
+    name: "Forget",
+    component: ForgetPasswordRequest,
+  },
+  {
+    path: "/token-error",
+    name: "Token Error",
+    component: TokenError,
+  },
+  {
+    path: "/reset-password/:token/:username/:uidb",
+    name: "Reset Password",
+    component: ResetPassword,
   },
   {
     path: "/dashboard",
