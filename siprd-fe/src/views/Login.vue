@@ -132,14 +132,10 @@ import axios from "axios";
 import VueAxios from "vue-axios";
 import Vuetify from "vuetify";
 
-import { GoogleLogin, LoaderPlugin } from "vue-google-login";
+import { GoogleLogin } from "vue-google-login";
 
 Vue.use(VueAxios, axios);
 Vue.use(Vuetify);
-Vue.use(LoaderPlugin, {
-  client_id:
-    "7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com",
-});
 
 export default {
   name: "Login",
@@ -212,44 +208,6 @@ export default {
           alert("Maaf, server SIPEERKI tidak dapat dihubungi.");
         }
       });
-    },
-    onSuccess(googleUser) {
-      console.log(googleUser);
-      // This only gets the user information: id, name, imageUrl and email
-      const userProfile = googleUser.getBasicProfile()
-      console.log(userProfile);
-      const data = {
-        provider: "google-oauth2",
-        code: userProfile.getId()
-      };
-
-      console.log(data)
-      // TODO: Add account selector for Google login
-
-      Vue.axios
-        .post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/google/social/jwt-pair/", data)
-        .then((res) => {
-          if (res.status === 200) {
-            window.localStorage.setItem("refresh", res.data.refresh);
-            window.localStorage.setItem("access", res.data.access);
-            alert("Login berhasil!");
-            this.$router.push("/Success");
-          } else {
-            alert("Login gagal");
-            return;
-          }
-        })
-        .catch((err) => {
-          // NOTE: Do not make this more specific, for security reasons.
-          console.log(err.response);
-          if (typeof err.response !== "undefined") {
-            // Backend accessible, but credentials incorrect
-            alert("Login gagal! Username atau Password salah.");
-          } else {
-            // Backend inaccessible (no response)
-            alert("Maaf, server SIPEERKI tidak dapat dihubungi.");
-          }
-        });
     },
     onSuccess(googleUser) {
       console.log(googleUser);
