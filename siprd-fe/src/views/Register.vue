@@ -154,6 +154,7 @@
               type="submit"
               color="#8D38E3"
               width="100%"
+              v-on:click="submitForm"
             >
               Daftar
             </v-btn>
@@ -285,7 +286,7 @@ export default {
 
     checkForm: function (e) {
       this.$refs.observer.validate();
-      this.submitForm();
+      // this.submitForm();
       return;
     },
 
@@ -299,7 +300,7 @@ export default {
       // This only gets the user information: id, name, imageUrl and email
       console.log(googleUser.getBasicProfile());
       this.google_signed = "true";
-      this.full_name = googleUser.getBasicProfile().getName();
+      this.fullName = googleUser.getBasicProfile().getName();
       this.email = googleUser.getBasicProfile().getEmail();
     },
     onGoogleSignInSuccess(resp) {
