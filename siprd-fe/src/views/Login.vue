@@ -222,7 +222,7 @@ export default {
       // Get users linked to this Google account
       console.log(config)
       Vue.axios
-        .get("http://localhost:8000/api/get-linked-users/", config)
+        .get(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/get-linked-users/", config)
         .then((res) => {
           if (res.status === 200) {
             // usernames found

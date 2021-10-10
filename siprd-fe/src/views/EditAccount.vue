@@ -224,7 +224,7 @@ export default {
     };
 
     Vue.axios
-      .put("http://localhost:8000/api/manage-users/",data,config)
+      .put(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/manage-users/",data,config)
       .then((res) => {
         console.log(res.data)
         if (res.status === 200) {
@@ -264,7 +264,7 @@ export default {
       const config = {
         headers: { Authorization: "Bearer " + accessToken },
       };
-      Vue.axios.get("http://localhost:8000/api/user", config).then((res) => {
+      Vue.axios.get(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/user", config).then((res) => {
         if (res.status === 200) {
           this.userData = res.data;
           this.email=res.data.email;

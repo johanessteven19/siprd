@@ -54,6 +54,7 @@
         <v-btn
       depressed
       color="error"
+      @click.stop=""
     >
       Delete
     </v-btn>
@@ -97,6 +98,9 @@ export default {
     addRedir: function (e) {
       this.$router.push("/add-account");
     },
+    deleteAccount() {
+
+    }
   },
   beforeMount() {
     if (localStorage.access){
@@ -105,7 +109,7 @@ export default {
         headers : { Authorization: "Bearer " + accessToken },
       };
 
-      Vue.axios.get("http://localhost:8000/api/manage-users/", config).then((res) => {
+      Vue.axios.get(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/manage-users/", config).then((res) => {
         if (res.status === 200){
           console.log(res.data)
           this.users = res.data;

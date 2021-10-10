@@ -66,7 +66,7 @@ export default {
         username: this.username
       };
       console.log(data);
-      axios.post("http://localhost:8000/api/request-reset-email/", data).then(
+      axios.post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/request-reset-email/", data).then(
         (res) => {
           console.log(res.data)
         }

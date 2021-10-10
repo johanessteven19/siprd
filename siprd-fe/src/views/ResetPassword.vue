@@ -85,7 +85,7 @@ export default {
         token: this.$route.params.token,
         uidb64: this.$route.params.uidb
       };
-      axios.patch("http://localhost:8000/api/password-reset-complete", data).then(
+      axios.patch(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/password-reset-complete", data).then(
         (res) => {
           if (res.status === 200) {
             alert("pergantian password berhasil");

@@ -239,7 +239,7 @@ export default {
         role: this.role,
       };
       Vue.axios
-        .post("http://localhost:8000/api/manage-users/", data)
+        .post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/manage-users/", data)
         .then((res) => {
           if (res.status === 201) {
             alert("Akun berhasil dibuat.");
