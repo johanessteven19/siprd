@@ -98,9 +98,6 @@ export default {
     addRedir: function (e) {
       this.$router.push("/add-account");
     },
-    deleteAccount() {
-
-    }
   },
   beforeMount() {
     if (localStorage.access){
