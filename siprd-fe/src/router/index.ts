@@ -16,9 +16,14 @@ const routes: Array<RouteConfig> = [
   {
     path: "/",
     redirect: (to) => {
+      if(localStorage.access){
+        return "/dashboard";
+      } else{
+        return "/login";
+      }
       // TODO: check if user is logged in
       // If not, then
-      return "/login";
+      //return "/login";
       // Else display their home screen
     },
     //name: "Dashboard",
