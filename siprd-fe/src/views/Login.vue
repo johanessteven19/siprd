@@ -28,14 +28,14 @@
         >
           <v-text-field
             v-model="username"
-            label="username"
+            label="Username"
             :rules="usernameRules"
             required
           ></v-text-field>
 
           <v-text-field
             v-model="password"
-            label="password"
+            label="Password"
             :type="'password'"
             :rules="passRules"
             required
@@ -195,7 +195,7 @@ export default {
           if (res.status === 200) {
             window.localStorage.setItem("refresh", res.data.refresh);
             window.localStorage.setItem("access", res.data.access);
-            alert("Login berhasil!");
+            // alert("Login berhasil!");
             this.$router.push("/Success");
           } else {
             alert("Login gagal");

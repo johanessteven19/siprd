@@ -1,14 +1,14 @@
 <template>
-  <v-container style="margin: auto; width: 60%; padding: 70px 0">
-    <h3> <a v-on:click="backRedir">Back </a></h3>
+  <v-container style="margin-top: 2rem; width: 60%; padding: 80px 0">
+    <h3> <a v-on:click="backRedir" style="color:black">Back </a></h3> <br>
     <validation-observer ref="observer" v-slot="{ invalid }">
-      <h2>Edit Akun</h2>
+      <h2>Edit Akun</h2> <br>
       <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
         <v-row>
           <v-col md="5">
               <validation-provider
                 v-slot="{ errors }"
-                name="email"
+                name="Email"
                 rules="required|email"
               >
                 <v-text-field
@@ -24,7 +24,7 @@
 
             <validation-provider
               v-slot="{ errors }"
-              name="username"
+              name="Username"
               rules="required"
             >
               <v-text-field
@@ -38,7 +38,7 @@
 
             <validation-provider
               v-slot="{ errors }"
-              name="university"
+              name="Universitas"
               rules="required"
             >
               <v-text-field
@@ -50,7 +50,7 @@
               </v-text-field>
             </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="fieldOfStudy">
+            <validation-provider v-slot="{ errors }" name="Bidang Keahlian">
               <v-text-field
                 v-model="fieldOfStudy"
                 :error-messages="errors"
@@ -60,7 +60,7 @@
               </v-text-field>
             </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="position">
+            <validation-provider v-slot="{ errors }" name="Jabatan">
               <v-select
                 v-model="position"
                 :items="posSelect"
@@ -76,7 +76,7 @@
           <v-col md="5" class="ml-auto">
               <validation-provider
                 v-slot="{ errors }"
-                name="fullname"
+                name="Nama Lengkap"
                 rules="required"
               >
                 <v-text-field
@@ -90,7 +90,7 @@
 
             <validation-provider
               v-slot="{ errors }"
-              name="password"
+              name="Password"
               rules="required"
             >
               <v-text-field
@@ -103,19 +103,19 @@
               </v-text-field>
             </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="nip">
+            <validation-provider v-slot="{ errors }" name="NIP" rules="numeric">
               <v-text-field
                 v-model="nip"
                 :error-messages="errors"
                 label="NIP"
-                required
+                numeric
               >
               </v-text-field>
             </validation-provider>
 
             <validation-provider
               v-slot="{ errors }"
-              name="role"
+              name="Role"
               rules="required"
             >
               <v-select
@@ -150,6 +150,7 @@
               :disabled="false"
               color="#2D3748"
               width="100%"
+              v-on:click="backRedir"
             > Cancel
             </v-btn>
           </v-col>
@@ -162,7 +163,7 @@
 <script>
 import Vue from "vue";
 import axios from "axios";
-import { required, email } from "vee-validate/dist/rules";
+import { required, email , numeric} from "vee-validate/dist/rules";
 import {
   extend,
   ValidationObserver,
@@ -174,12 +175,17 @@ setInteractionMode("eager");
 
 extend("required", {
   ...required,
-  message: "{_field_} can not be empty",
+  message: "{_field_} tidak boleh kosong",
 });
 
 extend("email", {
   ...email,
-  message: "Email must be valid",
+  message: "Email harus valid",
+});
+
+extend("numeric", {
+  ...numeric,
+  message: "{_field_} hanya berupa angka.",
 });
 export default {
   name: "EditAccount",
@@ -237,8 +243,8 @@ export default {
       .then((res) => {
         console.log(res.data)
         if (res.status === 200) {
-          alert("Akun berhasil diedit.");
-          this.$router.push("/login");
+          // alert("Akun berhasil diedit.");
+          this.$router.push("/Success");
         } else {
           alert("Gagal");
         }
@@ -263,7 +269,7 @@ export default {
     },
 
     backRedir: function (e) {
-      this.$router.push("/login");
+      this.$router.push("/Success");
     },
   },
 
