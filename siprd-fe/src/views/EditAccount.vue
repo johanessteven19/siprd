@@ -88,21 +88,6 @@
                 </v-text-field>
               </validation-provider>
 
-            <validation-provider
-              v-slot="{ errors }"
-              name="Password"
-              rules="required"
-            >
-              <v-text-field
-                v-model="password"
-                :error-messages="errors"
-                label="Password*"
-                :type="'password'"
-                required
-              >
-              </v-text-field>
-            </validation-provider>
-
             <validation-provider v-slot="{ errors }" name="NIP" rules="numeric">
               <v-text-field
                 v-model="nip"
