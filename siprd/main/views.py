@@ -35,30 +35,58 @@ class ViewUserData(APIView):
 
 		return Response(serializer.data)
 
-# Will return all user data for the given email
-# only succeeds if the authenticated user's email
-# is the one being queried
+# Gets the user data with a certain username --> Edits according to the request
+# Takes URL /api/edit/<username>
+class EditUserData(APIView):
+	# permission_classes = [IsAuthenticated]
+
+	def put(self, request, uname):
+		try:
+			user = User.objects.get(username=uname)
+		except User.DoesNotExist: 
+        		return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND)
+		user = User.objects.get(username=uname)
+
+		serializer = UserSerializer(user, data=request.data)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+# Fetches data with a certain username, then deletes it.
+# Takes URL /api/delete/<username>
+class DeleteDosen(APIView):
+	# permission_classes = [IsAuthenticated]
+
+	def delete(self, request, uname):
+		# if request.method == 'DELETE' & request.user.role == 'Admin':
+		try:
+			user = User.objects.get(username=uname)
+		except User.DoesNotExist: 
+        		return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+		user.delete()
+		return Response({uname + ' was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
+
+# Will return usernames linked to the given email
 # For use with Google auth, to check for similar emails
-class CheckLinkedUsers(APIView):
-	permission_classes = [IsAuthenticated]
-	
+class GetLinkedUsers(APIView):
 	def get(self, request):
 		logger.info("Checking for linked users...")
-		username = request.user.username
-		user = User.objects.filter(username=username).first()
-		user = UserSerializer(user)
-		logger.info("User found!")
+		requested_email = request.query_params['email']
 
-		user_email = user.data.get('email')
-		logger.info("User email: " + user_email)
-		requested_email = UserSerializer(data=request.data).data.get('email')
-		logger.info("Requested email: " + requested_email)
-		if user_email == requested_email:
-			matches = User.objects.filter(email=user_email).all()
-			serializer = UserSerializer(matches, many=True)
-			logger.info("Matches found!")
-			return Response(serializer.data)
-		else: return Response("You are not authorized!", status=status.HTTP_401_UNAUTHORIZED)
+		matches = User.objects.filter(email=requested_email)
+		usernames = []
+		for user in matches:
+			usernames.append(user.username)
+		logger.info(f"{len(usernames)} Matches found!")
+
+		if len(usernames) != 0:
+			response = {}
+			response['usernames'] =  usernames
+			return Response(response, status=status.HTTP_200_OK)
+		else:
+			# No matching usernames
+			return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Get user data
 # For use with getting user roles for authorization and others.

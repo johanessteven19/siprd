@@ -7,6 +7,7 @@ import Register from "../views/Register.vue";
 import AddAccount from "../views/AddAccount.vue";
 import EditAccount from "../views/EditAccount.vue";
 import Success from "../views/Success.vue";
+import Dashboard from "../views/Dashboard.vue";
 import RegisterSuccess from "../views/RegisterSuccess.vue";
 
 Vue.use(VueRouter);
@@ -15,11 +16,18 @@ const routes: Array<RouteConfig> = [
   {
     path: "/",
     redirect: (to) => {
+      if(localStorage.access){
+        return "/dashboard";
+      } else{
+        return "/login";
+      }
       // TODO: check if user is logged in
       // If not, then
-      return "/login";
+      //return "/login";
       // Else display their home screen
     },
+    //name: "Dashboard",
+    //component: Dashboard,
   },
   {
     path: "/about",
@@ -46,9 +54,9 @@ const routes: Array<RouteConfig> = [
     component: Register,
   },
   {
-  path: "/add-account",
-  name: "AddAccount",
-  component: AddAccount,
+    path: "/add-account",
+    name: "AddAccount",
+    component: AddAccount,
   },
   {
     path: "/edit-account",
@@ -64,6 +72,11 @@ const routes: Array<RouteConfig> = [
     path: "/welcome",
     name: "Welcome",
     component: RegisterSuccess,
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: Dashboard,
   },
 ];
 

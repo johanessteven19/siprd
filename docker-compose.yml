@@ -12,7 +12,6 @@ services:
       POSTGRES_DB: siprd
       POSTGRES_USER: siprd
       POSTGRES_PASSWORD: supersecure
-  
   backend:
     container_name: backend
     build:
