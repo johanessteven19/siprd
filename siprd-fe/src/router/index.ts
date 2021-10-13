@@ -17,17 +17,13 @@ const routes: Array<RouteConfig> = [
     path: "/",
     redirect: (to) => {
       if(localStorage.access){
+        //If user is logged in, "/" redirects to their dashboard or home screen
         return "/dashboard";
       } else{
+        //If not, "/" redirects to login for logging in
         return "/login";
       }
-      // TODO: check if user is logged in
-      // If not, then
-      //return "/login";
-      // Else display their home screen
     },
-    //name: "Dashboard",
-    //component: Dashboard,
   },
   {
     path: "/about",
