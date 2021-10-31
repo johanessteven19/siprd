@@ -6,7 +6,9 @@ from django.urls import resolve
 # NOTE: These tests suck, feel free to refactor.
 class SIPRDUnitTest(TestCase):
 	register_url = "/api/register"
+	login_url = "/api/token/"
 	manage_users_url = "/api/manage-users/"
+	header_prefix = "Bearer "
 	email = "test.user@example.com"
 	full_name = "Test User"
 	username = "tester"
@@ -28,7 +30,7 @@ class SIPRDUnitTest(TestCase):
 
 	def login(self):
 		response = self.client.post(
-			'/api/token/',
+			self.login_url,
 			{
 				'username': self.username,
 				'password': self.password
@@ -86,7 +88,7 @@ class SIPRDUnitTest(TestCase):
 			format='json')
 
 		response = self.client.post(
-			'/api/token/',
+			self.login_url,
 			{
 				'username': 'test',
 				'password': 'test'
@@ -110,7 +112,7 @@ class SIPRDUnitTest(TestCase):
 			format='json')
 
 		response = self.client.post(
-			'/api/token/',
+			self.login_url,
 			{
 				'username': 'test',
 				'password': 'test'
@@ -125,7 +127,7 @@ class SIPRDUnitTest(TestCase):
 	def test_edit_user_data_returns_HTTP_OK(self):
 		access = self.login()
 
-		self.client.credentials(HTTP_AUTHORIZATION="Bearer " + access)
+		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
 		response = self.client.put(
 			self.manage_users_url,
 			{
@@ -146,7 +148,7 @@ class SIPRDUnitTest(TestCase):
 	def test_edit_user_data_user_not_found_returns_HTTP_NOT_FOUND(self):
 		access = self.login()
 
-		self.client.credentials(HTTP_AUTHORIZATION="Bearer " + access)
+		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
 		response = self.client.put(
 			self.manage_users_url,
 			{
@@ -167,7 +169,7 @@ class SIPRDUnitTest(TestCase):
 	def test_edit_user_data_incomplete_request_returns_HTTP_BAD_REQUEST(self):
 		access = self.login()
 
-		self.client.credentials(HTTP_AUTHORIZATION="Bearer " + access)
+		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
 		response = self.client.put(
 			self.manage_users_url,
 			{
@@ -183,7 +185,7 @@ class SIPRDUnitTest(TestCase):
 	def test_successful_delete_user_data_returns_HTTP_OK(self):
 		access = self.login()
 
-		self.client.credentials(HTTP_AUTHORIZATION="Bearer " + access)
+		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
 		response = self.client.delete(
 			self.manage_users_url,
 			{
@@ -196,7 +198,7 @@ class SIPRDUnitTest(TestCase):
 	def test_delete_user_data_not_found_returns_HTTP_NOT_FOUND(self):
 		access = self.login()
 
-		self.client.credentials(HTTP_AUTHORIZATION="Bearer " + access)
+		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
 		response = self.client.delete(
 			self.manage_users_url,
 			{
