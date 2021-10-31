@@ -217,7 +217,11 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'f0cmsWyo3bFj1xvjt0n7U7jM'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/userinfo.profile','openid']
 SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['name']
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8080',
+    'http://localhost:8000'
+]
 CORS_ALLOW_CREDENTIALS = True
 
 AUTH_USER_MODEL = 'main.User'
