@@ -19,6 +19,7 @@ lint:
     # Install ESLint in this docker container
     - npm install -g eslint
     - npm install eslint-plugin-vue@latest --save-dev
+    - npm install @typescript-eslint/eslint-plugin@latest --save-dev
     - npm install npm install --save eslint-config-airbnb
     # Configure ESLint (will read your .eslintrc file)
     - cd siprd-fe
