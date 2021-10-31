@@ -36,9 +36,8 @@
       >
       </v-text-field>
     </v-container>
-    
-    </template>
 
+    </template>
 
     <template v-slot:item.no="{ index }">
       {{ index + 1 }}
@@ -59,69 +58,64 @@
       Delete
     </v-btn>
       </template>
-    
+
     </v-data-table>
   </v-container>
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
-import Vuetify from "vuetify";
-
+import Vue from 'vue';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+import Vuetify from 'vuetify';
 
 Vue.use(Vuetify);
-Vue.use(VueAxios, axios)
+Vue.use(VueAxios, axios);
 
 export default {
-  name: "table-list",
+  name: 'table-list',
   data() {
     return {
       headers: [
-        { text: "No.", sortable: false, value: "no" },
-        { text: "Email", value: "email", sortable: false },
-        { text: "Username", value: "username", sortable: false },
-        { text: "Nama", value: "full_name", sortable: false },
-        { text: "Universitas", value: "university", sortable: false },
-        { text: "NIP", value: "nip", sortable: false },
-        { text: "Bidang Keahlian", value: "field_of_study", sortable: false },
-        { text: "Jabatan Akademik", value: "position", sortable: false },
-        { text: "Role", value: "role", sortable: false },
-        { text: "Action", value: "action", sortable: false },
+        { text: 'No.', sortable: false, value: 'no' },
+        { text: 'Email', value: 'email', sortable: false },
+        { text: 'Username', value: 'username', sortable: false },
+        { text: 'Nama', value: 'full_name', sortable: false },
+        { text: 'Universitas', value: 'university', sortable: false },
+        { text: 'NIP', value: 'nip', sortable: false },
+        { text: 'Bidang Keahlian', value: 'field_of_study', sortable: false },
+        { text: 'Jabatan Akademik', value: 'position', sortable: false },
+        { text: 'Role', value: 'role', sortable: false },
+        { text: 'Action', value: 'action', sortable: false },
       ],
-      users:[],
-      search:""
-    }
+      users: [],
+      search: '',
+    };
   },
-  methods:{
-    addRedir: function (e) {
-      this.$router.push("/add-account");
+  methods: {
+    addRedir() {
+      this.$router.push('/add-account');
     },
   },
   beforeMount() {
-    if (localStorage.access){
+    if (localStorage.access) {
       const accessToken = localStorage.access;
       const config = {
-        headers : { Authorization: "Bearer " + accessToken },
+        headers: { Authorization: `Bearer ${accessToken}` },
       };
 
-      Vue.axios.get(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/manage-users/", config).then((res) => {
-        if (res.status === 200){
-          console.log(res.data)
+      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-users/`, config).then((res) => {
+        if (res.status === 200) {
+          console.log(res.data);
           this.users = res.data;
-        }else{
-          this.$router.push("/");
+        } else {
+          this.$router.push('/');
         }
-
       }).catch((err) => {
         console.log(err);
       });
-
     }
-    
-    
   },
-  
-}
+
+};
 </script>

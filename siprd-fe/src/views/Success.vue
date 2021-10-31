@@ -7,29 +7,29 @@
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
+import Vue from 'vue';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
 // import Vuetify from "vuetify";
 
 Vue.use(VueAxios, axios);
 
 export default {
-  name: "Success",
+  name: 'Success',
   data() {
     return {
-      userData: "",
+      userData: '',
     };
   },
   methods: {
     logoutUser() {
-      console.log("enter");
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
-      this.$router.push("/");
+      console.log('enter');
+      localStorage.removeItem('access');
+      localStorage.removeItem('refresh');
+      this.$router.push('/');
     },
     editUser() {
-      this.$router.push("/edit-account");
+      this.$router.push('/edit-account');
     },
   },
   beforeMount() {
@@ -38,16 +38,16 @@ export default {
       console.log(localStorage.refresh);
       const accessToken = localStorage.access;
       const config = {
-        headers: { Authorization: "Bearer " + accessToken },
+        headers: { Authorization: `Bearer ${accessToken}` },
       };
-      Vue.axios.get(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/user", config).then((res) => {
+      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, config).then((res) => {
         console.log(res.data);
         if (res.status === 200) {
           this.userData = res.data;
         }
       });
     } else {
-      this.$router.push("/");
+      this.$router.push('/');
     }
   },
 };

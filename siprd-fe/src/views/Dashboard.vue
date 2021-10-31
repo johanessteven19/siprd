@@ -149,22 +149,22 @@
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
-import Vuetify from "vuetify";
+import Vue from 'vue';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+import Vuetify from 'vuetify';
 
 Vue.use(VueAxios, axios);
 Vue.use(Vuetify);
 
 export default {
-  name: "Success",
+  name: 'Success',
   data() {
     return null;
   },
   methods: {
     proceed() {
-      this.$router.push("/");
+      this.$router.push('/');
     },
   },
 };

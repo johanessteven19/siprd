@@ -98,7 +98,12 @@
                 ></v-progress-circular>
               </div>
 
-              <div class="options" v-for="option in usernameList" :key="option" style="padding-bottom: 10px;">
+              <div
+                class="options"
+                v-for="option in usernameList"
+                :key="option"
+                style="padding-bottom: 10px;"
+              >
                 <v-btn
                   @click.stop="
                     username = option;
@@ -127,18 +132,18 @@
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
-import Vuetify from "vuetify";
+import Vue from 'vue';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+import Vuetify from 'vuetify';
 
-import { GoogleLogin } from "vue-google-login";
+import { GoogleLogin } from 'vue-google-login';
 
 Vue.use(VueAxios, axios);
 Vue.use(Vuetify);
 
 export default {
-  name: "Login",
+  name: 'Login',
   components: {
     GoogleLogin,
   },
@@ -146,14 +151,14 @@ export default {
   data() {
     return {
       errors: [],
-      username: "",
-      password: "",
+      username: '',
+      password: '',
       valid: true,
-      usernameRules: [(v) => !!v || "Username is required"],
-      passRules: [(v) => !!v || "Kata sandi tidak sesuai"],
+      usernameRules: [(v) => !!v || 'Username is required'],
+      passRules: [(v) => !!v || 'Kata sandi tidak sesuai'],
       params: {
         client_id:
-          "7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com",
+          '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com',
       },
       renderParams: {
         width: 460,
@@ -167,16 +172,16 @@ export default {
   methods: {
     submitForm() {
       if (!this.username) {
-        this.errors.push("Username required.");
+        this.errors.push('Username required.');
       }
       if (!this.password) {
-        this.errors.push("Kata sandi tidak sesuai");
+        this.errors.push('Kata sandi tidak sesuai');
       }
       console.log(this.errors);
       if (this.errors.length) {
-        let message = "";
+        let message = '';
         for (let i = 0; i < this.errors.length; i++) {
-          message += this.errors[i] + " ";
+          message += `${this.errors[i]} `;
         }
         alert(message);
         return;
@@ -185,29 +190,27 @@ export default {
         username: this.username,
         password: this.password,
       };
-      Vue.axios.post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/token/", data).then((res) => {
+      Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/token/`, data).then((res) => {
         if (res.status === 200) {
-          window.localStorage.setItem("refresh", res.data.refresh);
-          window.localStorage.setItem("access", res.data.access);
+          window.localStorage.setItem('refresh', res.data.refresh);
+          window.localStorage.setItem('access', res.data.access);
           // alert("Login berhasil!");
-          this.$router.push("/Success");
+          this.$router.push('/Success');
         } else {
-          alert("Login gagal");
-          return
+          alert('Login gagal');
         }
       })
-      .catch((err) => {
+        .catch((err) => {
         // NOTE: Do not make this more specific, for security reasons.
-        console.log(err.response);
-        if (typeof err.response !== "undefined") {
+          console.log(err.response);
+          if (typeof err.response !== 'undefined') {
           // Backend accessible, but credentials incorrect
-          alert("Login gagal! Username atau Password salah.");
-        }
-        else {
+            alert('Login gagal! Username atau Password salah.');
+          } else {
           // Backend inaccessible (no response)
-          alert("Maaf, server SIPEERKI tidak dapat dihubungi.");
-        }
-      });
+            alert('Maaf, server SIPEERKI tidak dapat dihubungi.');
+          }
+        });
     },
     onSuccess(googleUser) {
       console.log(googleUser);
@@ -216,13 +219,13 @@ export default {
       console.log(userProfile);
       const config = {
         params: {
-          "email": userProfile.getEmail()
-        }
+          email: userProfile.getEmail(),
+        },
       };
       // Get users linked to this Google account
-      console.log(config)
+      console.log(config);
       Vue.axios
-        .get(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/get-linked-users/", config)
+        .get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-linked-users/`, config)
         .then((res) => {
           if (res.status === 200) {
             // usernames found
@@ -231,19 +234,19 @@ export default {
           } else if (res.status === 204) {
             // usernames not found
             alert(
-              "Maaf, tidak ada akun yang terhubung dengan email tersebut. Apakah anda sudah daftar?"
+              'Maaf, tidak ada akun yang terhubung dengan email tersebut. Apakah anda sudah daftar?',
             );
           }
         })
         .catch((err) => {
           // something went horribly wrong!
           console.log(err.response);
-          alert("Maaf, server SIPEERKI tidak dapat dihubungi.");
+          alert('Maaf, server SIPEERKI tidak dapat dihubungi.');
         });
     },
-    onFailure(googleUser) {
-      console.log("Google Login failed!");
-    }
+    onFailure() {
+      console.log('Google Login failed!');
+    },
   },
 };
 </script>

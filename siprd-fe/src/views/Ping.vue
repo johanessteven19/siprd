@@ -5,22 +5,22 @@
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
+import Vue from 'vue';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
 // import Vuetify from "vuetify";
 
 Vue.use(VueAxios, axios);
 
 export default {
-  name: "Ping",
+  name: 'Ping',
   data() {
-    return { ping: "" };
+    return { ping: '' };
   },
   method: {},
   beforeMount() {
-    console.log("test");
-    Vue.axios.get(( process.env.VUE_APP_BACKEND_URL || "" )+"/ping").then((res) => {
+    console.log('test');
+    Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/ping`).then((res) => {
       this.ping = res.data;
       console.log(res);
     });

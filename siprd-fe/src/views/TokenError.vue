@@ -5,18 +5,18 @@
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
+import Vue from 'vue';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
 // import Vuetify from "vuetify";
 
 Vue.use(VueAxios, axios);
 
 export default {
-  name: "TokenError",
+  name: 'TokenError',
   data() {
-    return { ping: "" };
+    return { ping: '' };
   },
-  method: {}
+  method: {},
 };
 </script>

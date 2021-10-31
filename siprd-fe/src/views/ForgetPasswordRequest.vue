@@ -38,45 +38,43 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { setInteractionMode, ValidationObserver, ValidationProvider } from "vee-validate";
-import VueAxios from "vue-axios";
-import axios from "axios";
-import Vuetify from "vuetify";
+import Vue from 'vue';
+import { setInteractionMode, ValidationObserver, ValidationProvider } from 'vee-validate';
+import VueAxios from 'vue-axios';
+import axios from 'axios';
+import Vuetify from 'vuetify';
 
 Vue.use(VueAxios, axios);
 Vue.use(Vuetify);
-setInteractionMode("eager");
+setInteractionMode('eager');
 export default {
-  name: "Forget",
+  name: 'Forget',
   components: {
     ValidationProvider,
-    ValidationObserver
+    ValidationObserver,
   },
   data() {
     return {
       errors: [],
-      username: null
+      username: null,
     };
   },
   methods: {
     submitForm() {
-
       const data = {
-        username: this.username
+        username: this.username,
       };
       console.log(data);
-      axios.post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/request-reset-email/", data).then(
+      axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/request-reset-email/`, data).then(
         (res) => {
-          console.log(res.data)
-        }
+          console.log(res.data);
+        },
       );
     },
-    checkForm: function(e) {
+    checkForm() {
       this.$refs.observer.validate();
       this.submitForm();
-      return;
-    }
-  }
+    },
+  },
 };
 </script>

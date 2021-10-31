@@ -52,25 +52,25 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { setInteractionMode, ValidationObserver, ValidationProvider } from "vee-validate";
-import VueAxios from "vue-axios";
-import axios from "axios";
-import Vuetify from "vuetify";
+import Vue from 'vue';
+import { setInteractionMode, ValidationObserver, ValidationProvider } from 'vee-validate';
+import VueAxios from 'vue-axios';
+import axios from 'axios';
+import Vuetify from 'vuetify';
 
 Vue.use(VueAxios, axios);
 Vue.use(Vuetify);
-setInteractionMode("eager");
+setInteractionMode('eager');
 export default {
-  name: "Reset Password",
+  name: 'Reset Password',
   components: {
     ValidationProvider,
-    ValidationObserver
+    ValidationObserver,
   },
   data() {
     return {
       password: null,
-      confirmPassword: null
+      confirmPassword: null,
     };
   },
   methods: {
@@ -83,25 +83,24 @@ export default {
       const data = {
         password: this.confirmPassword,
         token: this.$route.params.token,
-        uidb64: this.$route.params.uidb
+        uidb64: this.$route.params.uidb,
       };
-      axios.patch(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/password-reset-complete", data).then(
+      axios.patch(`${process.env.VUE_APP_BACKEND_URL || ''}/api/password-reset-complete`, data).then(
         (res) => {
           if (res.status === 200) {
-            alert("pergantian password berhasil");
-            this.$router.push("/Success");
+            alert('pergantian password berhasil');
+            this.$router.push('/Success');
           } else {
-            alert("terjadi kesalahan pada server");
-            this.$router.push("/");
+            alert('terjadi kesalahan pada server');
+            this.$router.push('/');
           }
-        }
+        },
       );
     },
-    checkForm: function(e) {
+    checkForm() {
       this.$refs.observer.validate();
       this.submitForm();
-      return;
-    }
-  }
+    },
+  },
 };
 </script>
