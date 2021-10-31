@@ -1,7 +1,6 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true,
   },
   extends: [
     'plugin:vue/essential',
@@ -17,5 +16,8 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
+    "no-console":"off",
+    "no-alert":"off",
+    "no-plusplus":"off",
   },
 };

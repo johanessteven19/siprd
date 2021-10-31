@@ -19,9 +19,11 @@ lint:
     # Install ESLint in this docker container
     - npm install -g eslint
     # Configure ESLint (will read your .eslintrc file)
+    - cd siprd-fe
     - eslint -c .eslintrc.js
     # Run ESLint
-    - eslint ./siprd-fe/
+    - eslint --ext .js,.vue src
+    - if [ $? -eq 0 ] then exit 0 else exit 1 fi
 
 connect:
   stage: build
