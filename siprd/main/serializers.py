@@ -75,6 +75,5 @@ class SetNewPasswordSerializer(serializers.Serializer):
             user.save()
 
             return user
-        except Exception as e:
+        except Exception:
             raise AuthenticationFailed('The reset link is invalid', 401)
-        return super().validate(attrs)

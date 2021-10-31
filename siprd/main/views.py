@@ -188,11 +188,11 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
                 token = PasswordResetTokenGenerator().make_token(user)
                 current_site = get_current_site(
                     request=request).domain
-                relativeLink = reverse('main:password-reset-confirm',
+                relative_link = reverse('main:password-reset-confirm',
                                        kwargs={'uidb64': uidb64, 'token': token, 'username': username})
 
                 redirect_url = request.data.get('redirect_url', '')
-                absurl = 'http://' + current_site + relativeLink
+                absurl = 'http://' + current_site + relative_link
                 email_body = 'Hello, \n Use link below to reset your password  \n' + \
                              absurl + "?redirect_url=" + redirect_url
                 data = {'email_body': email_body, 'to_email': user.email,
@@ -228,7 +228,7 @@ class PasswordTokenCheckAPI(generics.GenericAPIView):
                     # TODO change for production
                     return HttpResponseRedirect("http://localhost:8080/token-error")
 
-            except UnboundLocalError as e:
+            except UnboundLocalError:
                 # TODO change for production
                 return HttpResponseRedirect("http://localhost:8080/token-error")
 

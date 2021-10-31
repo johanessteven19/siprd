@@ -21,12 +21,12 @@
         </li>
       </ul>
       <div class="icon">
-        <i
+        <em
           @click="toggleMobileNav"
           v-show="mobile"
           class="far fa-bars"
           :class="{ 'icon-active': mobileNav }"
-        ></i>
+        ></em>
       </div>
       <transition name="mobile-nav">
         <ul v-show="mobileNav" class="dropdown-nav">

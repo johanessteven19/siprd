@@ -244,7 +244,7 @@ export default {
           if (res.status === 201) {
             alert("Akun berhasil dibuat.");
             console.log("YES");
-            this.backRedir;
+            this.backRedir();
           } else {
             alert("Gagal");
           }

@@ -78,15 +78,6 @@
           </v-col>
 
           <v-col md="5" class="ml-auto">
-            <!-- <div v-if="google_signed != null">
-              <v-text-field
-                :value="full_name"
-                label="Nama lengkap (Filled)"
-                filled
-              >
-              </v-text-field>
-            </div>
-            <div v-else> -->
               <validation-provider
                 v-slot="{ errors }"
                 name="Nama Lengkap"
@@ -100,7 +91,6 @@
                 >
                 </v-text-field>
               </validation-provider>
-            <!-- </div> -->
 
             <validation-provider
               v-slot="{ errors }"
@@ -309,8 +299,8 @@ export default {
         .post(( process.env.VUE_APP_BACKEND_URL || "" )+"/auth/google/", {
           access_token: token,
         })
-        .then((resp) => {
-          this.user = resp.data.user;
+        .then((res) => {
+          this.user = res.data.user;
         })
         .catch((err) => {
           console.log(err.response);
