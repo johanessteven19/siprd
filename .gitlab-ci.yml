@@ -13,6 +13,7 @@ variables:
 
 lint:
   stage: lint
+  image: node:lts-alpine
   script:
     # lint script adapted from https://stackoverflow.com/questions/43318464/gitlab-ci-with-js-linting 
     # Install ESLint in this docker container
@@ -20,7 +21,7 @@ lint:
     # Configure ESLint (will read your .eslintrc file)
     - eslint -c .eslintrc.js
     # Run ESLint
-    - eslint .
+    - eslint ./siprd-fe/
 
 connect:
   stage: build
