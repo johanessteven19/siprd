@@ -10,6 +10,7 @@ import Success from "../views/Success.vue";
 import Dashboard from "../views/Dashboard.vue";
 import RegisterSuccess from "../views/RegisterSuccess.vue";
 import AccountList from "../views/AccountList.vue";
+import AddKaril from "../views/AddKaril.vue";
 
 Vue.use(VueRouter);
 
@@ -78,6 +79,11 @@ const routes: Array<RouteConfig> = [
     path: "/account-list",
     name: "AccountList",
     component: AccountList,
+  },
+  {
+    path: "/add-karil",
+    name: "AddKaril",
+    component: AddKaril,
   },
 ];
 
