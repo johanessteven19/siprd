@@ -34,7 +34,7 @@
     </v-row>
     <br>
 
-    <div class="identitas" style="margin-top: 2rem; width: 100%;" align="center" justify="center">
+    <div class="identitas" style="margin-top: 2rem; width: 100%;" justify="center">
         <v-row align="center" justify="center" row-gap="10px">
             <v-col md="5" align="right">
                 <h1>Identitas Karya Ilmiah</h1> <br>
@@ -148,7 +148,7 @@
 
     </div>
 
-    <div class="reviewer" style="margin-top: 2rem; width: 100%;" align="center" justify="center">
+    <div class="reviewer" style="margin-top: 2rem; width: 100%;" justify="center">
         <v-row align="center" justify="center" row-gap="10px">
             <v-col md="3" align="right">
                 <h1>Reviewer</h1> <br>
@@ -227,7 +227,7 @@ export default {
           if (res.status === 201) {
             alert("Karil berhasil di submit.");
             console.log("YES");
-            this.backRedir;
+            // this.backRedir;
           } else {
             alert("Gagal");
           }
