@@ -237,6 +237,7 @@ export default {
         field_of_study: this.fieldOfStudy,
         position: this.position,
         role: this.role,
+        approved: true,
       };
       if (localStorage.access) {
         const accessToken = localStorage.access;
