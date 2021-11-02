@@ -35,7 +35,7 @@
         <h2 class="text-center"><strong>Summary Karya Ilmiah</strong></h2>
         <v-row>
             <v-col>
-                <v-card outlined>
+              <v-card outlined>
                     <v-card-text>
                         <v-progress-circular
                         :rotate="-90"
@@ -48,40 +48,6 @@
                         </v-progress-circular>
                     </v-card-text>
                 </v-card>
-            </v-col>
-            <v-col>
-                <v-card outlined>
-                    <v-card-text>
-                        <v-progress-circular
-                        :rotate="-90"
-                        :size="130"
-                        :width="15"
-                        :value="33"
-                        color="blue"
-                        >
-                            <strong>33%</strong>
-                        </v-progress-circular>
-                    </v-card-text>
-                </v-card>
-            </v-col>
-            <v-col>
-                <v-card outlined>
-                    <v-card-text>
-                        <v-progress-circular
-                        :rotate="-90"
-                        :size="130"
-                        :width="15"
-                        :value="75"
-                        color="amber"
-                        >
-                            <strong>75%</strong>
-                        </v-progress-circular>
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
                 <v-card outlined>
                     <v-card-title>
                         Judul Karya 1
@@ -99,6 +65,19 @@
                 </v-card>
             </v-col>
             <v-col>
+              <v-card outlined>
+                    <v-card-text>
+                        <v-progress-circular
+                        :rotate="-90"
+                        :size="130"
+                        :width="15"
+                        :value="33"
+                        color="blue"
+                        >
+                            <strong>33%</strong>
+                        </v-progress-circular>
+                    </v-card-text>
+                </v-card>
                 <v-card outlined>
                     <v-card-title>
                         Judul Karya 2
@@ -116,6 +95,19 @@
                 </v-card>
             </v-col>
             <v-col>
+              <v-card outlined>
+                    <v-card-text>
+                        <v-progress-circular
+                        :rotate="-90"
+                        :size="130"
+                        :width="15"
+                        :value="75"
+                        color="amber"
+                        >
+                            <strong>75%</strong>
+                        </v-progress-circular>
+                    </v-card-text>
+                </v-card>
                 <v-card outlined>
                     <v-card-title>
                         Judul Karya 3
