@@ -238,22 +238,27 @@ export default {
         position: this.position,
         role: this.role,
       };
-      Vue.axios
-        .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-users/`, data)
-        .then((res) => {
-          if (res.status === 201) {
-            alert('Akun berhasil dibuat.');
-            console.log('YES');
-            this.backRedir();
-          } else {
-            alert('Gagal');
-          }
-        })
-        .catch((err) => {
-          console.log(err.response);
-        });
+      if (localStorage.access) {
+        const accessToken = localStorage.access;
+        const config = {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        };
+        Vue.axios
+          .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-users/`, data, config)
+          .then((res) => {
+            if (res.status === 201) {
+              alert('Akun berhasil dibuat.');
+              console.log('YES');
+              this.backRedir();
+            } else {
+              alert('Gagal');
+            }
+          })
+          .catch((err) => {
+            console.log(err.response);
+          });
+      }
     },
-
     checkForm() {
       this.$refs.observer.validate();
       this.submitForm();
