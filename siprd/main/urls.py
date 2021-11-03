@@ -7,9 +7,7 @@ from rest_framework_simplejwt.views import (
 
 from .views import RequestPasswordResetEmail, PasswordTokenCheckAPI, SetNewPasswordAPIView
 
-
-app_name = "main"   
-
+app_name = "main"
 
 urlpatterns = [
     path("ping", views.ping, name="ping"),

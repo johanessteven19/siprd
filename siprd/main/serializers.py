@@ -1,5 +1,11 @@
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
 from rest_framework import serializers
+from rest_framework.exceptions import AuthenticationFailed
+
 from .models import User, KaryaIlmiah, Review
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+
 
 class UserSerializer(serializers.ModelSerializer):
     date_joined = serializers.DateTimeField(required=False)
@@ -71,7 +77,6 @@ class SetNewPasswordSerializer(serializers.Serializer):
             return user
         except Exception:
             raise AuthenticationFailed('The reset link is invalid', 401)
-
 
 class KaryaIlmiahSerializer(serializers.ModelSerializer):
     link_origin = serializers.HyperlinkedIdentityField(view_name='link_origin')

@@ -11,6 +11,22 @@ variables:
   POSTGRES_PASSWORD: supersecure
   POSTGRES_HOST_AUTH_METHOD: md5
 
+lint:
+  stage: lint
+  image: node:lts-alpine
+  script:
+    # lint script adapted from https://stackoverflow.com/questions/43318464/gitlab-ci-with-js-linting 
+    # Install ESLint in this docker container
+    - npm install -g eslint
+    - npm install eslint-plugin-vue@latest --save-dev
+    - npm install @typescript-eslint/eslint-plugin@latest --save-dev
+    - npm install npm install --save eslint-config-airbnb
+    # Configure ESLint (will read your .eslintrc file)
+    - cd siprd-fe
+    - eslint -c .eslintrc.js
+    # Run ESLint
+    - eslint --ext .js,.vue src
+
 connect:
   stage: build
   image: postgres:12
@@ -49,3 +65,48 @@ sonar-prod:
   only:
     - master
     - staging
+
+# staging-backend:
+#   image: docker:git
+#   stage: staging
+#   tags:
+#     - docker
+#   environment:
+#     name: staging
+#   dependencies: []
+#   services:
+#     - name: docker:dind
+#       command: ["dockerd-entrypoint.sh"]
+#   variables:
+#     DOCKER_HOST: tcp://docker:2375/
+#     DOCKER_DRIVER: overlay2
+#     DOCKER_TLS_CERTDIR: ""
+#   script:
+#     - docker pull $CI_REGISTRY_IMAGE:be-staging || true
+#     - docker build --cache-from $CI_REGISTRY_IMAGE/backend:be-staging --tag $CI_REGISTRY_IMAGE:be-staging siprd
+#     - docker push $CI_REGISTRY_IMAGE:be-staging
+#   when: manual
+
+# staging-frontend:
+#   image: docker:git
+#   stage: staging
+#   tags:
+#     - docker
+#   environment:
+#     name: staging
+#   dependencies: []
+#   services:
+#     - name: docker:dind
+#       command: ["dockerd-entrypoint.sh"]
+#   variables:
+#     DOCKER_HOST: tcp://docker:2375/
+#     DOCKER_DRIVER: overlay2
+#     DOCKER_TLS_CERTDIR: ""
+#   script:
+#     - docker pull $CI_REGISTRY_IMAGE:fe-staging || true
+#     - docker build --cache-from $CI_REGISTRY_IMAGE/frontend:fe-staging --tag $CI_REGISTRY_IMAGE:fe-staging siprd
+#     - docker push $CI_REGISTRY_IMAGE:fe-staging
+#   when: manual
+  
+#   # production:
+#   #   only: production

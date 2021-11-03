@@ -102,6 +102,7 @@
               >
               </v-text-field>
             </validation-provider>
+          </v-col>
 
             <validation-provider v-slot="{ errors }" name="NIP" rules="numeric">
               <v-text-field

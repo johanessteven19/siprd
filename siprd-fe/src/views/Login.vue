@@ -127,22 +127,18 @@
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
-import Vuetify from "vuetify";
+import Vue from 'vue';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+import Vuetify from 'vuetify';
 
-import { GoogleLogin, LoaderPlugin } from "vue-google-login";
+import { GoogleLogin } from 'vue-google-login';
 
 Vue.use(VueAxios, axios);
 Vue.use(Vuetify);
-Vue.use(LoaderPlugin, {
-  client_id:
-    "7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com",
-});
 
 export default {
-  name: "Login",
+  name: 'Login',
   components: {
     GoogleLogin,
   },
@@ -150,14 +146,14 @@ export default {
   data() {
     return {
       errors: [],
-      username: "",
-      password: "",
+      username: '',
+      password: '',
       valid: true,
-      usernameRules: [(v) => !!v || "Username is required"],
-      passRules: [(v) => !!v || "Kata sandi tidak sesuai"],
+      usernameRules: [(v) => !!v || 'Username is required'],
+      passRules: [(v) => !!v || 'Kata sandi tidak sesuai'],
       params: {
         client_id:
-          "7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com",
+          '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com',
       },
       renderParams: {
         width: 460,
@@ -171,16 +167,16 @@ export default {
   methods: {
     submitForm() {
       if (!this.username) {
-        this.errors.push("Username required.");
+        this.errors.push('Username required.');
       }
       if (!this.password) {
-        this.errors.push("Kata sandi tidak sesuai");
+        this.errors.push('Kata sandi tidak sesuai');
       }
       console.log(this.errors);
       if (this.errors.length) {
-        let message = "";
+        let message = '';
         for (let i = 0; i < this.errors.length; i++) {
-          message += this.errors[i] + " ";
+          message += `${this.errors[i]} `;
         }
         alert(message);
         return;
@@ -246,9 +242,9 @@ export default {
           alert("Maaf, server SIPEERKI tidak dapat dihubungi.");
         });
     },
-    onFailure(googleUser) {
-      console.log("Google Login failed!");
-    }
+    onFailure() {
+      console.log('Google Login failed!');
+    },
   },
 };
 </script>

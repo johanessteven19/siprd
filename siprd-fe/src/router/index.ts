@@ -1,6 +1,5 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import Home from "../views/Home.vue";
 import Ping from "../views/Ping.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
@@ -18,9 +17,14 @@ const routes: Array<RouteConfig> = [
   {
     path: "/",
     redirect: (to) => {
+      if(localStorage.access){
+        return "/dashboard";
+      } else{
+        return "/login";
+      }
       // TODO: check if user is logged in
       // If not, then
-      return "/login";
+      //return "/login";
       // Else display their home screen
     },
     //name: "Dashboard",

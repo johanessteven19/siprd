@@ -10,7 +10,6 @@ POSITIONS = (
 )
 
 class User(AbstractUser):
-
     POSITION_CHOICES = POSITIONS
 
     ROLE_CHOICES = (
@@ -24,17 +23,17 @@ class User(AbstractUser):
     email = models.EmailField(max_length=254, blank=False)
     password = models.CharField(max_length=254, blank=False)
     full_name = models.CharField(max_length=254, blank=False)
-    university = models.CharField(max_length=254, blank=True)
+    university = models.CharField(max_length=254, blank=True, null=True)
     nip = models.PositiveIntegerField(null=True, blank=True)
-    field_of_study = models.CharField(max_length=254, blank=True)
+    field_of_study = models.CharField(max_length=254, blank=True, null=True)
     position = models.CharField(max_length=254, choices=POSITION_CHOICES, blank=False)
     role = models.CharField(max_length=254, choices=ROLE_CHOICES, blank=False)
     approved = models.BooleanField(default=False)
 
     REQUIRED_FIELDS = []
 
-class KaryaIlmiah(models.Model):
 
+class KaryaIlmiah(models.Model):
     STATUS_CHOICES = (
         ('Not Reviewed Yet', 'Not_Reviewed_Yet'),
         ('In Review', 'In_Review'),
@@ -62,8 +61,8 @@ class KaryaIlmiah(models.Model):
 
     REQUIRED_FIELDS = []
 
-class Review(models.Model):
 
+class Review(models.Model):
     review_id = models.AutoField(primary_key=True)
     karil_id = models.ForeignKey(KaryaIlmiah, on_delete=models.CASCADE)
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -80,11 +79,3 @@ class Review(models.Model):
     score_proposer = models.DecimalField(max_digits=5, decimal_places=2)
 
     REQUIRED_FIELDS = []
-
-
-
-
-
-
-
-

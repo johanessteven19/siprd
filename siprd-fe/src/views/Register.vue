@@ -154,6 +154,7 @@
               type="submit"
               color="#8D38E3"
               width="100%"
+              v-on:click="submitForm"
             >
               Daftar
             </v-btn>
@@ -192,17 +193,17 @@ import {
   ValidationObserver,
   ValidationProvider,
   setInteractionMode,
-} from "vee-validate";
-import GoogleLogin from "vue-google-login";
+} from 'vee-validate';
+import GoogleLogin from 'vue-google-login';
 
-setInteractionMode("eager");
+setInteractionMode('eager');
 
-extend("required", {
+extend('required', {
   ...required,
   message: "{_field_} tidak boleh kosong",
 });
 
-extend("email", {
+extend('email', {
   ...email,
   message: "Pastikan Email anda benar",
 });
@@ -212,7 +213,7 @@ extend("numeric", {
   message: "{_field_} hanya berupa angka.",
 });
 export default {
-  name: "Register",
+  name: 'Register',
   components: {
     ValidationProvider,
     ValidationObserver,
@@ -230,17 +231,17 @@ export default {
       fieldOfStudy: null,
       position: null,
       posSelect: [
-        "Asisten Ahli",
-        "Lektor",
-        "Lektor Kepala",
-        "Guru Besar/Professor",
+        'Asisten Ahli',
+        'Lektor',
+        'Lektor Kepala',
+        'Guru Besar/Professor',
       ],
       role: null,
-      roleSelect: ["Dosen", "Reviewer", "SDM PT", "Admin"],
+      roleSelect: ['Dosen', 'Reviewer', 'SDM PT', 'Admin'],
       user: {},
       params: {
         client_id:
-          "7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com",
+          '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com',
       },
       renderParams: {
         width: 357,
@@ -263,13 +264,13 @@ export default {
         role: this.role,
       };
       Vue.axios
-        .post("http://localhost:8000/api/register", data)
+        .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/register`, data)
         .then((res) => {
           if (res.status === 201) {
             console.log("YES");
             this.$router.push("/welcome");
           } else {
-            alert("Gagal");
+            alert('Gagal');
           }
         })
         .catch((err) => {
@@ -283,14 +284,13 @@ export default {
         });
     },
 
-    checkForm: function (e) {
+    checkForm() {
       this.$refs.observer.validate();
-      this.submitForm();
-      return;
+      // this.submitForm();
     },
 
-    loginRedir: function (e) {
-      this.$router.push("/login");
+    loginRedir() {
+      this.$router.push('/login');
     },
 
     onSuccess(googleUser) {
@@ -298,18 +298,18 @@ export default {
 
       // This only gets the user information: id, name, imageUrl and email
       console.log(googleUser.getBasicProfile());
-      this.google_signed = "true";
-      this.full_name = googleUser.getBasicProfile().getName();
+      this.google_signed = 'true';
+      this.fullName = googleUser.getBasicProfile().getName();
       this.email = googleUser.getBasicProfile().getEmail();
     },
     onGoogleSignInSuccess(resp) {
       const token = resp.Zi.access_token;
       axios
-        .post("http://localhost:8000/auth/google/", {
+        .post(`${process.env.VUE_APP_BACKEND_URL || ''}/auth/google/`, {
           access_token: token,
         })
-        .then((resp) => {
-          this.user = resp.data.user;
+        .then((res) => {
+          this.user = res.data.user;
         })
         .catch((err) => {
           console.log(err.response);
@@ -325,8 +325,8 @@ export default {
   },
 
   beforeMount() {
-    console.log("test");
-    Vue.axios.post("http://localhost:8000/api/register").then((res) => {
+    console.log('test');
+    Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/register`).then((res) => {
       this.register = res.data;
       console.log(res);
     });
