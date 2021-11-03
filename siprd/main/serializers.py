@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, KaryaIlmiah, Review
 
 class UserSerializer(serializers.ModelSerializer):
     date_joined = serializers.DateTimeField(required=False)
@@ -33,3 +33,88 @@ class UserSerializer(serializers.ModelSerializer):
     def get_validation_exclusions(self):
         exclusions = super(UserSerializer, self).get_validation_exclusions()
         return exclusions + ['date_joined']
+
+class ResetPasswordEmailRequestSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=25)
+
+    redirect_url = serializers.CharField(max_length=500, required=False)
+
+    class Meta:
+        fields = ['username', 'redirect_url']
+
+
+class SetNewPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(
+        min_length=6, max_length=68, write_only=True)
+    token = serializers.CharField(
+        min_length=1, write_only=True)
+    uidb64 = serializers.CharField(
+        min_length=1, write_only=True)
+
+    class Meta:
+        fields = ['password', 'token', 'uidb64']
+
+    def validate(self, attrs):
+        try:
+            password = attrs.get('password')
+            token = attrs.get('token')
+            uidb64 = attrs.get('uidb64')
+
+            id = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=id)
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                raise AuthenticationFailed('The reset link is invalid', 401)
+
+            user.set_password(password)
+            user.save()
+
+            return user
+        except Exception:
+            raise AuthenticationFailed('The reset link is invalid', 401)
+
+
+class KaryaIlmiahSerializer(serializers.ModelSerializer):
+    link_origin = serializers.HyperlinkedIdentityField(view_name='link_origin')
+    link_repo = serializers.HyperlinkedIdentityField(view_name='link_repo')
+    link_indexer = serializers.HyperlinkedIdentityField(view_name='link_indexer')
+    link_simcheck = serializers.HyperlinkedIdentityField(view_name='link_simcheck')
+    link_correspondence = serializers.HyperlinkedIdentityField(view_name='link_correspondence')
+
+    class Meta:
+        model = KaryaIlmiah
+        fields = [
+            'karil_id',
+            'pemilik',
+            'judul',
+            'journal_data',
+            'link_origin',
+            'link_repo',
+            'link_indexer',
+            'link_simcheck',
+            'link_correspondence',
+            'indexer',
+            'category',
+            'status',
+            'promotion'
+        ]
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = [
+            'review_id',
+            'karil_id',
+            'reviewer',
+            'plagiarism_percentage',
+            'linearity',
+            'score_1',
+            'score_2',
+            'score_3',
+            'score_4',
+            'comment_1',
+            'comment_2',
+            'comment_3',
+            'comment_4',
+            'score_proposer'
+        ]
+
