@@ -5,6 +5,9 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView
 )
 
+from .views import RequestPasswordResetEmail, PasswordTokenCheckAPI, SetNewPasswordAPIView
+
+
 app_name = "main"   
 
 
