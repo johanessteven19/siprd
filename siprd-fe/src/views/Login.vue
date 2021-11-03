@@ -98,7 +98,12 @@
                 ></v-progress-circular>
               </div>
 
-              <div class="options" v-for="option in usernameList" :key="option" style="padding-bottom: 10px;">
+              <div
+                class="options"
+                v-for="option in usernameList"
+                :key="option"
+                style="padding-bottom: 10px;"
+              >
                 <v-btn
                   @click.stop="
                     username = option;
@@ -185,28 +190,25 @@ export default {
         username: this.username,
         password: this.password,
       };
-      Vue.axios
-        .post("http://localhost:8000/api/token/", data)
-        .then((res) => {
-          if (res.status === 200) {
-            window.localStorage.setItem("refresh", res.data.refresh);
-            window.localStorage.setItem("access", res.data.access);
-            // alert("Login berhasil!");
-            this.$router.push("/Success");
-          } else {
-            alert("Login gagal");
-            return;
-          }
-        })
+      Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/token/`, data).then((res) => {
+        if (res.status === 200) {
+          window.localStorage.setItem('refresh', res.data.refresh);
+          window.localStorage.setItem('access', res.data.access);
+          // alert("Login berhasil!");
+          this.$router.push('/Success');
+        } else {
+          alert('Login gagal');
+        }
+      })
         .catch((err) => {
-          // NOTE: Do not make this more specific, for security reasons.
+        // NOTE: Do not make this more specific, for security reasons.
           console.log(err.response);
-          if (typeof err.response !== "undefined") {
-            // Backend accessible, but credentials incorrect
-            alert("Login gagal! Username atau Password salah.");
+          if (typeof err.response !== 'undefined') {
+          // Backend accessible, but credentials incorrect
+            alert('Login gagal! Username atau Password salah.');
           } else {
-            // Backend inaccessible (no response)
-            alert("Maaf, server SIPEERKI tidak dapat dihubungi.");
+          // Backend inaccessible (no response)
+            alert('Maaf, server SIPEERKI tidak dapat dihubungi.');
           }
         });
     },
@@ -217,13 +219,13 @@ export default {
       console.log(userProfile);
       const config = {
         params: {
-          "email": userProfile.getEmail()
-        }
+          email: userProfile.getEmail(),
+        },
       };
       // Get users linked to this Google account
-      console.log(config)
+      console.log(config);
       Vue.axios
-        .get("http://localhost:8000/api/get-linked-users/", config)
+        .get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-linked-users/`, config)
         .then((res) => {
           if (res.status === 200) {
             // usernames found
@@ -232,14 +234,14 @@ export default {
           } else if (res.status === 204) {
             // usernames not found
             alert(
-              "Maaf, tidak ada akun yang terhubung dengan email tersebut. Apakah anda sudah daftar?"
+              'Maaf, tidak ada akun yang terhubung dengan email tersebut. Apakah anda sudah daftar?',
             );
           }
         })
         .catch((err) => {
           // something went horribly wrong!
           console.log(err.response);
-          alert("Maaf, server SIPEERKI tidak dapat dihubungi.");
+          alert('Maaf, server SIPEERKI tidak dapat dihubungi.');
         });
     },
     onFailure() {

@@ -31,9 +31,6 @@ export default {
     editUser() {
       this.$router.push('/edit-account');
     },
-    editUser() {
-      this.$router.push("/edit-account");
-    },
   },
   beforeMount() {
     if (localStorage.access) {

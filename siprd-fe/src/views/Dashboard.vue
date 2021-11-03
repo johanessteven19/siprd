@@ -1,5 +1,5 @@
 <template>
-  <v-container fill-height>
+  <v-container style="padding: 140px 0">
     <v-row>
       <v-layout column align-center justify-center>
         <div style="padding-left: 320px">
@@ -39,7 +39,7 @@
                     <v-card-text>
                         <v-progress-circular
                         :rotate="-90"
-                        :size="100"
+                        :size="130"
                         :width="15"
                         :value="10"
                         color="blue"
@@ -54,7 +54,7 @@
                     <v-card-text>
                         <v-progress-circular
                         :rotate="-90"
-                        :size="100"
+                        :size="130"
                         :width="15"
                         :value="33"
                         color="blue"
@@ -69,7 +69,7 @@
                     <v-card-text>
                         <v-progress-circular
                         :rotate="-90"
-                        :size="100"
+                        :size="130"
                         :width="15"
                         :value="75"
                         color="amber"
@@ -149,22 +149,22 @@
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
-import Vuetify from "vuetify";
+import Vue from 'vue';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+import Vuetify from 'vuetify';
 
 Vue.use(VueAxios, axios);
 Vue.use(Vuetify);
 
 export default {
-  name: "Success",
+  name: 'Success',
   data() {
     return null;
   },
   methods: {
     proceed() {
-      this.$router.push("/");
+      this.$router.push('/');
     },
   },
 };

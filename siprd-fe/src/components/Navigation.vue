@@ -11,16 +11,6 @@
           >
         </li>
         <li>
-<<<<<<< HEAD
-          <router-link class="link" :to="{ name: '' }">Daftar Akun</router-link>
-        </li>
-        <li>
-          <router-link class="link" :to="{ name: '' }">Panduan</router-link>
-        </li>
-      </ul>
-      <div class="icon">
-        <i
-=======
           <router-link class="link" :to="{ name: 'AccountList' }">Daftar Akun</router-link>
         </li>
         <li>
@@ -32,16 +22,11 @@
       </ul>
       <div class="icon">
         <em
->>>>>>> 10b800c39cb15ec0e7bea5a047c40b955d0ae438
           @click="toggleMobileNav"
           v-show="mobile"
           class="far fa-bars"
           :class="{ 'icon-active': mobileNav }"
-<<<<<<< HEAD
-        ></i>
-=======
         ></em>
->>>>>>> 10b800c39cb15ec0e7bea5a047c40b955d0ae438
       </div>
       <transition name="mobile-nav">
         <ul v-show="mobileNav" class="dropdown-nav">
@@ -51,23 +36,16 @@
             >
           </li>
           <li>
-<<<<<<< HEAD
-            <router-link class="link" :to="{ name: '' }"
-=======
             <router-link class="link" :to="{ name: 'AccountList' }"
->>>>>>> 10b800c39cb15ec0e7bea5a047c40b955d0ae438
               >Daftar Akun</router-link
             >
           </li>
           <li>
             <router-link class="link" :to="{ name: '' }">Panduan</router-link>
           </li>
-<<<<<<< HEAD
-=======
           <li>
             <router-link class="link" :to="{ name: 'Success' }">Profil Anda</router-link>
           </li>
->>>>>>> 10b800c39cb15ec0e7bea5a047c40b955d0ae438
         </ul>
       </transition>
     </nav>
@@ -76,11 +54,7 @@
 
 <script>
 export default {
-<<<<<<< HEAD
-  name: "navigation",
-=======
   name: 'navigation',
->>>>>>> 10b800c39cb15ec0e7bea5a047c40b955d0ae438
   data() {
     return {
       scrolledNav: null,
@@ -90,19 +64,11 @@ export default {
     };
   },
   created() {
-<<<<<<< HEAD
-    window.addEventListener("resize", this.checkScreen);
-    this.checkScreen();
-  },
-  mounted() {
-    window.addEventListener("scroll", this.updateScroll);
-=======
     window.addEventListener('resize', this.checkScreen);
     this.checkScreen();
   },
   mounted() {
     window.addEventListener('scroll', this.updateScroll);
->>>>>>> 10b800c39cb15ec0e7bea5a047c40b955d0ae438
   },
   methods: {
     toggleMobileNav() {
@@ -125,10 +91,6 @@ export default {
       }
       this.mobile = false;
       this.mobileNav = false;
-<<<<<<< HEAD
-      return;
-=======
->>>>>>> 10b800c39cb15ec0e7bea5a047c40b955d0ae438
     },
   },
 };

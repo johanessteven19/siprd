@@ -16,7 +16,7 @@
                   :error-messages="errors"
                   label="Email*"
                   :value="email"
-                  
+
                   required
                 >
                 </v-text-field>
@@ -88,22 +88,6 @@
                 </v-text-field>
               </validation-provider>
 
-            <validation-provider
-              v-slot="{ errors }"
-              name="Password"
-              rules="required"
-            >
-              <v-text-field
-                v-model="password"
-                :error-messages="errors"
-                label="Password*"
-                :type="'password'"
-                required
-              >
-              </v-text-field>
-            </validation-provider>
-          </v-col>
-
             <validation-provider v-slot="{ errors }" name="NIP" rules="numeric">
               <v-text-field
                 v-model="nip"
@@ -162,34 +146,33 @@
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import { required, email , numeric} from "vee-validate/dist/rules";
+import Vue from 'vue';
+import { required, email, numeric } from 'vee-validate/dist/rules';
 import {
   extend,
   ValidationObserver,
   ValidationProvider,
   setInteractionMode,
-} from "vee-validate";
+} from 'vee-validate';
 
-setInteractionMode("eager");
+setInteractionMode('eager');
 
-extend("required", {
+extend('required', {
   ...required,
-  message: "{_field_} tidak boleh kosong",
+  message: '{_field_} tidak boleh kosong',
 });
 
-extend("email", {
+extend('email', {
   ...email,
-  message: "Email harus valid",
+  message: 'Email harus valid',
 });
 
-extend("numeric", {
+extend('numeric', {
   ...numeric,
-  message: "{_field_} hanya berupa angka.",
+  message: '{_field_} hanya berupa angka.',
 });
 export default {
-  name: "EditAccount",
+  name: 'EditAccount',
   components: {
     ValidationProvider,
     ValidationObserver,
@@ -206,15 +189,15 @@ export default {
       fieldOfStudy: null,
       position: null,
       posSelect: [
-        "Asisten Ahli",
-        "Lektor",
-        "Lektor Kepala",
-        "Guru Besar/Professor",
+        'Asisten Ahli',
+        'Lektor',
+        'Lektor Kepala',
+        'Guru Besar/Professor',
       ],
       role: null,
-      roleSelect: ["Dosen", "Reviewer", "SDM PT", "Admin"],
-      userData: "",
-      config:null,
+      roleSelect: ['Dosen', 'Reviewer', 'SDM PT', 'Admin'],
+      userData: '',
+      config: null,
     };
   },
   methods: {
@@ -230,73 +213,72 @@ export default {
         position: this.position,
         role: this.role,
       };
-    if (localStorage.access) {
-      const accessToken = localStorage.access;
-      console.log("something")
-    const config={
-      headers: {
-          'Authorization': 'Bearer ' + accessToken,
+      if (localStorage.access) {
+        const accessToken = localStorage.access;
+        console.log('something');
+        const config = {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        };
+
+        Vue.axios
+          .put(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-users/`, data, config)
+          .then((res) => {
+            console.log(res.data);
+            if (res.status === 200) {
+              // alert("Akun berhasil diedit.");
+              this.$router.push('/Success');
+            } else {
+              alert('Gagal');
+            }
+          })
+
+          .catch((err) => {
+            // TODO: Make this output more user-friendly!!!
+            // Clean string up with a function?
+            console.log(err);
+            // var responseErrors = JSON.stringify(err.response.data);
+            // console.log(responseErrors);
+            // var errMsg = "Edit gagal, errors: " + responseErrors;
+            // alert(errMsg);
+          });
       }
-    };
-
-    Vue.axios
-      .put("http://localhost:8000/api/manage-users/",data,config)
-      .then((res) => {
-        console.log(res.data)
-        if (res.status === 200) {
-          // alert("Akun berhasil diedit.");
-          this.$router.push("/Success");
-        } else {
-          alert("Gagal");
-        }
-      })
-      
-          
-      .catch((err) => {
-        // TODO: Make this output more user-friendly!!!
-        // Clean string up with a function?
-        console.log(err);
-        // var responseErrors = JSON.stringify(err.response.data);
-        // console.log(responseErrors);
-        // var errMsg = "Edit gagal, errors: " + responseErrors;
-        // alert(errMsg);
-      });
-    }},
-
-    checkForm: function (e) {
-      this.$refs.observer.validate();
-      this.submitForm();
-      return;
     },
 
-    backRedir: function (e) {
-      this.$router.push("/Success");
+    checkForm() {
+      this.$refs.observer.validate();
+      this.submitForm();
+    },
+
+    backRedir() {
+      this.$router.push('/Success');
     },
   },
 
   beforeMount() {
-      if (localStorage.access) {
+    if (localStorage.access) {
       const accessToken = localStorage.access;
       const config = {
-        headers: { Authorization: "Bearer " + accessToken },
+        headers: { Authorization: `Bearer ${accessToken}` },
       };
-      Vue.axios.get("http://localhost:8000/api/user", config).then((res) => {
+      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, config).then((res) => {
         if (res.status === 200) {
           this.userData = res.data;
-          this.email=res.data.email;
-          this.username=res.data.username;
-          this.fullName=res.data.full_name;
-          this.password=res.data.password;
-          this.university=res.data.university;
-          this.nip=res.data.nip;
-          this.fieldOfStudy=res.data.field_of_study;
-          this.role=res.data.role;
-          this.position=res.data.position;
+          this.email = res.data.email;
+          this.username = res.data.username;
+          this.fullName = res.data.full_name;
+          this.password = res.data.password;
+          this.university = res.data.university;
+          this.nip = res.data.nip;
+          this.fieldOfStudy = res.data.field_of_study;
+          this.role = res.data.role;
+          this.position = res.data.position;
         }
       });
-      } else {
-      this.$router.push("/");
-      } 
+    } else {
+      this.$router.push('/');
+    }
   },
 };
 </script>

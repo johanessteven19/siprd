@@ -171,34 +171,34 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { required, email, numeric } from "vee-validate/dist/rules";
+import Vue from 'vue';
+import { required, email, numeric } from 'vee-validate/dist/rules';
 import {
   extend,
   ValidationObserver,
   ValidationProvider,
   setInteractionMode,
-} from "vee-validate";
+} from 'vee-validate';
 
-setInteractionMode("eager");
+setInteractionMode('eager');
 
-extend("required", {
+extend('required', {
   ...required,
-  message: "{_field_} tidak boleh kosong",
+  message: '{_field_} tidak boleh kosong',
 });
 
-extend("email", {
+extend('email', {
   ...email,
-  message: "Email harus valid",
+  message: 'Email harus valid',
 });
 
-extend("numeric", {
+extend('numeric', {
   ...numeric,
-  message: "{_field_} hanya berupa angka.",
+  message: '{_field_} hanya berupa angka.',
 });
 
 export default {
-  name: "AddAccount",
+  name: 'AddAccount',
   components: {
     ValidationProvider,
     ValidationObserver,
@@ -215,13 +215,13 @@ export default {
       fieldOfStudy: null,
       position: null,
       posSelect: [
-        "Asisten Ahli",
-        "Lektor",
-        "Lektor Kepala",
-        "Guru Besar/Professor",
+        'Asisten Ahli',
+        'Lektor',
+        'Lektor Kepala',
+        'Guru Besar/Professor',
       ],
       role: null,
-      roleSelect: ["Dosen", "Reviewer", "SDM PT", "Admin"],
+      roleSelect: ['Dosen', 'Reviewer', 'SDM PT', 'Admin'],
       user: {},
     };
   },
@@ -239,14 +239,14 @@ export default {
         role: this.role,
       };
       Vue.axios
-        .post("http://localhost:8000/api/manage-users/", data)
+        .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-users/`, data)
         .then((res) => {
           if (res.status === 201) {
-            alert("Akun berhasil dibuat.");
-            console.log("YES");
-            this.backRedir;
+            alert('Akun berhasil dibuat.');
+            console.log('YES');
+            this.backRedir();
           } else {
-            alert("Gagal");
+            alert('Gagal');
           }
         })
         .catch((err) => {
@@ -254,14 +254,13 @@ export default {
         });
     },
 
-    checkForm: function (e) {
+    checkForm() {
       this.$refs.observer.validate();
       this.submitForm();
-      return;
     },
 
-    backRedir: function (e) {
-      this.$router.push("/account-list");
+    backRedir() {
+      this.$router.push('/account-list');
     },
 
     isEmpty(obj) {

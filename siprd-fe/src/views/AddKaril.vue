@@ -171,25 +171,22 @@
         </v-row>
 
     </div>
-    
-
 
   </v-container>
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
-import Vuetify from "vuetify";
-
+import Vue from 'vue';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+import Vuetify from 'vuetify';
 
 Vue.use(Vuetify);
-Vue.use(VueAxios, axios)
+Vue.use(VueAxios, axios);
 
 export default {
-  name: "AddKaril",
-    data() {
+  name: 'AddKaril',
+  data() {
     return {
       namaPenulis: null,
       judulKaril: null,
@@ -198,38 +195,38 @@ export default {
       linkRepo: null,
       linkIndexer: null,
       linkCheck: null,
-      linkBukti:null,
+      linkBukti: null,
       pengIndex: null,
       kategori: null,
-      kategoriSelect: ["A", "B", "C", "D"],
-      revieweer:null,
-      reviewerSelect: ["A", "B", "C", "D"],
+      kategoriSelect: ['A', 'B', 'C', 'D'],
+      revieweer: null,
+      reviewerSelect: ['A', 'B', 'C', 'D'],
     };
   },
   methods: {
     submitForm() {
       const data = {
-      namaPenulis: this.namaPenulis,
-      judulKaril: this.judulKaril,
-      dataJurnal: this.dataJurnal,
-      linkAsli: this.linkAsli,
-      linkRepo: this.linkRepo,
-      linkIndexer: this.linkIndexer,
-      linkCheck: this.linkCheck,
-      linkBukti:this.linkBukti,
-      pengIndex: this.pengIndex,
-      kategori: this.kategori,
-      reviewer: this.reviewer,
+        namaPenulis: this.namaPenulis,
+        judulKaril: this.judulKaril,
+        dataJurnal: this.dataJurnal,
+        linkAsli: this.linkAsli,
+        linkRepo: this.linkRepo,
+        linkIndexer: this.linkIndexer,
+        linkCheck: this.linkCheck,
+        linkBukti: this.linkBukti,
+        pengIndex: this.pengIndex,
+        kategori: this.kategori,
+        reviewer: this.reviewer,
       };
       Vue.axios
-        .post("http://localhost:8000/api/add-karil/", data)
+        .post('http://localhost:8000/api/add-karil/', data)
         .then((res) => {
           if (res.status === 201) {
-            alert("Karil berhasil di submit.");
-            console.log("YES");
+            alert('Karil berhasil di submit.');
+            console.log('YES');
             // this.backRedir;
           } else {
-            alert("Gagal");
+            alert('Gagal');
           }
         })
         .catch((err) => {
@@ -237,7 +234,7 @@ export default {
         });
     },
 
-  }
-  
-}
+  },
+
+};
 </script>

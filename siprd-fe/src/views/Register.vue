@@ -78,15 +78,6 @@
           </v-col>
 
           <v-col md="5" class="ml-auto">
-            <!-- <div v-if="google_signed != null">
-              <v-text-field
-                :value="full_name"
-                label="Nama lengkap (Filled)"
-                filled
-              >
-              </v-text-field>
-            </div>
-            <div v-else> -->
               <validation-provider
                 v-slot="{ errors }"
                 name="Nama Lengkap"
@@ -100,7 +91,6 @@
                 >
                 </v-text-field>
               </validation-provider>
-            <!-- </div> -->
 
             <validation-provider
               v-slot="{ errors }"
@@ -185,9 +175,9 @@
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import { required, email, numeric } from "vee-validate/dist/rules";
+import Vue from 'vue';
+import axios from 'axios';
+import { required, email, numeric } from 'vee-validate/dist/rules';
 import {
   extend,
   ValidationObserver,
@@ -200,17 +190,17 @@ setInteractionMode('eager');
 
 extend('required', {
   ...required,
-  message: "{_field_} tidak boleh kosong",
+  message: '{_field_} tidak boleh kosong',
 });
 
 extend('email', {
   ...email,
-  message: "Pastikan Email anda benar",
+  message: 'Pastikan Email anda benar',
 });
 
-extend("numeric", {
+extend('numeric', {
   ...numeric,
-  message: "{_field_} hanya berupa angka.",
+  message: '{_field_} hanya berupa angka.',
 });
 export default {
   name: 'Register',
@@ -267,8 +257,8 @@ export default {
         .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/register`, data)
         .then((res) => {
           if (res.status === 201) {
-            console.log("YES");
-            this.$router.push("/welcome");
+            console.log('YES');
+            this.$router.push('/welcome');
           } else {
             alert('Gagal');
           }
@@ -277,9 +267,9 @@ export default {
           // TODO: Make this output more user-friendly!!!
           // Clean string up with a function?
           console.log(err.response);
-          var responseErrors = JSON.stringify(err.response.data);
+          const responseErrors = JSON.stringify(err.response.data);
           console.log(responseErrors);
-          var errMsg = "Register gagal, errors: " + responseErrors;
+          const errMsg = `Register gagal, errors: ${responseErrors}`;
           alert(errMsg);
         });
     },
@@ -316,8 +306,8 @@ export default {
         });
     },
     onGoogleSignInError(error) {
-      console.log("OH NOES", error);
-      alert("Maaf, layanan Google tidak dapat dihubungi.");
+      console.log('OH NOES', error);
+      alert('Maaf, layanan Google tidak dapat dihubungi.');
     },
     isEmpty(obj) {
       return Object.keys(obj).length === 0;
