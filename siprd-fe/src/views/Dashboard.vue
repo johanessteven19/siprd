@@ -33,6 +33,7 @@
         <br>
         <br>
         <h2 class="text-center"><strong>Summary Karya Ilmiah</strong></h2>
+        <br>
         <v-row>
             <v-col>
               <v-card outlined>
@@ -48,6 +49,7 @@
                         </v-progress-circular>
                     </v-card-text>
                 </v-card>
+                <br>
                 <v-card outlined>
                     <v-card-title>
                         Judul Karya 1
@@ -78,6 +80,7 @@
                         </v-progress-circular>
                     </v-card-text>
                 </v-card>
+                <br>
                 <v-card outlined>
                     <v-card-title>
                         Judul Karya 2
@@ -108,6 +111,7 @@
                         </v-progress-circular>
                     </v-card-text>
                 </v-card>
+                <br>
                 <v-card outlined>
                     <v-card-title>
                         Judul Karya 3
