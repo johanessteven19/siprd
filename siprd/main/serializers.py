@@ -79,11 +79,6 @@ class SetNewPasswordSerializer(serializers.Serializer):
             raise AuthenticationFailed('The reset link is invalid', 401)
 
 class KaryaIlmiahSerializer(serializers.ModelSerializer):
-    link_origin = serializers.HyperlinkedIdentityField(view_name='link_origin')
-    link_repo = serializers.HyperlinkedIdentityField(view_name='link_repo')
-    link_indexer = serializers.HyperlinkedIdentityField(view_name='link_indexer')
-    link_simcheck = serializers.HyperlinkedIdentityField(view_name='link_simcheck')
-    link_correspondence = serializers.HyperlinkedIdentityField(view_name='link_correspondence')
 
     class Meta:
         model = KaryaIlmiah

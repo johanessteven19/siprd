@@ -20,6 +20,8 @@ urlpatterns = [
     path(r'^auth/', include('rest_framework_social_oauth2.urls')),
     path("api/is-user-exists", views.IsUserExist.as_view()),
     path("api/review/submit", views.ReviewForm.as_view()),
+    path("api/review/delete", views.ReviewFormDelete.as_view()),
+    path("api/review/all", views.DisplayKaril.as_view()),
 
     # Reset password endpoints
     path('api/request-reset-email/', RequestPasswordResetEmail.as_view(), name="request-reset-email"),
