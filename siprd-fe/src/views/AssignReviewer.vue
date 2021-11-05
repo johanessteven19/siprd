@@ -1,7 +1,7 @@
 <template>
   <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
     <validation-observer ref="observer" v-slot="{ invalid }">
-      <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
+      <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
         <v-row>
         <v-col>
         <h1>Tambah Karya Ilmiah</h1>
@@ -27,21 +27,16 @@
         </v-col>
         </v-row>
 
-        <v-row>
+        <v-row >
             <v-col md="3" class="mr-auto">
-              <v-select
-                v-model="promotion"
-                :items="promotionSelect"
-                label="Pilih jabatan yang dituju"
-                data-vv-name="select"
-                outlined
-              >
-                  </v-select>
+                Dosen: Doni <br>
+                Jabatan: Asisten Ahli <br>
+                Kenaikan Jabatan: Lektor Kepala
             </v-col>
         </v-row>
         <br>
 
-        <div class="identitas" justify="center">
+        <div class="identitas" style="margin-top: 2rem; width: 100%;" justify="center">
             <v-row align="center" justify="center" row-gap="10px">
                 <v-col md="5" align="right">
                     <h1>Identitas Karya Ilmiah</h1> <br>
@@ -152,9 +147,36 @@
                   </v-select>
                 </v-col>
             </v-row>
+
+        </div>
+
+        <div class="reviewer" style="margin-top: 2rem; width: 100%;" justify="center">
+            <v-row align="center" justify="center" row-gap="10px">
+                <v-col md="3" align="right">
+                    <h1>Reviewer</h1> <br>
+                </v-col>
+            </v-row>
+            <v-row align="center" justify="center">
+                <v-col md="3" align="right">
+                    Nama Reviewer 1
+                </v-col>
+                <v-col md="2">
+                  <v-select
+                    v-model="reviewer"
+                    :items="reviewerSelect"
+                    label="Reviewer"
+                    data-vv-name="select"
+                    outlined
+                  >
+                  </v-select>
+                </v-col>
+            </v-row>
+
         </div>
       </v-form>
+  
     </validation-observer>
+
   </v-container>
 </template>
 
@@ -163,18 +185,12 @@ import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import Vuetify from 'vuetify';
-import {
-  ValidationObserver,
-} from 'vee-validate';
 
 Vue.use(Vuetify);
 Vue.use(VueAxios, axios);
 
 export default {
   name: 'AddKaril',
-  components: {
-    ValidationObserver,
-  },
   data() {
     return {
       namaPenulis: null,
@@ -187,37 +203,34 @@ export default {
       linkBukti: null,
       pengIndex: null,
       kategori: null,
-      kategoriSelect: ['Buku', 'Jurnal'],
-      promotion: null,
-      promotionSelect: ['Lektor', 'Guru Besar'],
-      status:'Not Assigned Yet'
+      kategoriSelect: ['A', 'B', 'C', 'D'],
+      revieweer: null,
+      reviewerSelect: ['A', 'B', 'C', 'D'],
     };
   },
   methods: {
     submitForm() {
       const data = {
-        pemilik : this.namaPenulis,
-        judul: this.judulKaril,
-        journal_data: this.dataJurnal,
-        link_origin: this.linkAsli,
-        link_repo: this.linkRepo,
-        link_indexer: this.linkIndexer,
-        link_simheck: this.linkCheck,
-        link_correspondence: this.linkBukti,
-        indexer: this.pengIndex,
-        category: this.kategori,
-        promotion:this.promotion,
-        status:this.status
+        namaPenulis: this.namaPenulis,
+        judulKaril: this.judulKaril,
+        dataJurnal: this.dataJurnal,
+        linkAsli: this.linkAsli,
+        linkRepo: this.linkRepo,
+        linkIndexer: this.linkIndexer,
+        linkCheck: this.linkCheck,
+        linkBukti: this.linkBukti,
+        pengIndex: this.pengIndex,
+        kategori: this.kategori,
+        reviewer: this.reviewer,
       };
       Vue.axios
-        .post('http://localhost:8000/api/review/submit', data)
-        console.log(data)
+        .post('http://localhost:8000/api/add-karil/', data)
         .then((res) => {
           if (res.status === 201) {
-            alert('Karil berhasil disubmit');
+            alert('Karil berhasil di submit.');
             console.log('YES');
+            // this.backRedir;
           } else {
-            console.log(data);
             alert('Gagal');
           }
         })
