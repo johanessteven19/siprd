@@ -294,6 +294,31 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)
 
+# Review form management endpoint
+# For Stage 1 and Stage 2 review form creation
+class ManageReviewForm(APIView):
+    permission_classes = [IsAuthenticated]
+    forbidden_role_msg = {'message': 'You are not authorized to modify this review form.'}
+
+    def put(self, request):
+        """
+        Stage 2 Review Form
+        Admin and SDMPT can edit the review form and assign reviewers
+
+        :param request.data['review']: existing stage 1 review form
+        :return: updated stage 1 -> stage 2 review form
+        """
+
+        user_data = get_user_data(request)
+        user_role = user_data['role']
+
+        if ( user_role == "Admin" or user_role == "SDM PT" ):
+            try:
+                # stage 2 review form creation
+                pass
+            except:
+                return Response({"message": 'Something went wrong'}, status=status.HTTP_404_NOT_FOUND)
+        else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
 # Test view for user authentication
 @api_view(['GET'])
