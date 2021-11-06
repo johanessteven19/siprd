@@ -58,7 +58,7 @@ class KaryaIlmiah(models.Model):
     category = models.CharField(max_length=254)
     status = models.CharField(max_length=254, choices=STATUS_CHOICES)
     promotion = models.CharField(max_length=254, choices=PROMOTION_LEVELS)
-    reviewers = models.ManyToManyField(User, blank=True)
+    reviewers = models.ManyToManyField(User, blank=True, related_name='assigned_reviewers')
     reviews = models.ManyToManyField('Review', blank=True)
 
     REQUIRED_FIELDS = []
