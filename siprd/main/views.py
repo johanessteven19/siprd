@@ -172,27 +172,17 @@ class ManageUsers(APIView):
             return Response({request.data['username'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
         else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
-
-## Displays ALL submitted karils
-## Used for debugging
-## Can be deleted if unneeded
-class DisplayKaril(APIView):
-    # permission_classes = [IsAuthenticated]
-    serializer_class = KaryaIlmiahSerializer
-
-    def get(self, request):
-        karil_list = KaryaIlmiah.objects.all()
-
-        serializer = KaryaIlmiahSerializer(karil_list, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-## Passes request data to serializer
-## Works just like register API
-class ReviewForm(APIView):
+# Review form management endpoint
+# For Stage 1 and Stage 2 review form creation
+# NOTE: This is NOT for reviews! Only for review forms, which are basically karil entries.
+class ManageReviewForm(APIView):
     permission_classes = [IsAuthenticated]
+    forbidden_role_msg = {'message': 'You are not authorized to modify this review form.'}
     serializer_class = KaryaIlmiahSerializer
 
+    # Passes request data to serializer
+    # Works just like register API
+    # Creates Stage 1 review form 
     def post(self, request):
         if request.method == 'POST':
             serializer = KaryaIlmiahSerializer(data = request.data)
@@ -203,21 +193,45 @@ class ReviewForm(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else: return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-## Deletes karil with a requested karil_id
-## Needs karil data that wants to be deleted in the request body
-class ReviewFormDelete(APIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = KaryaIlmiahSerializer
-    forbidden_warning = {'message': 'You are not authorized to delete this paper.'}
+    # Displays ALL submitted karils
+    # Used for debugging
+    # Can be deleted if unneeded
+    def get(self, request):
+        karil_list = KaryaIlmiah.objects.all()
 
+        serializer = KaryaIlmiahSerializer(karil_list, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # Updates Stage 1 review form into stage 2
+    def put(self, request):
+        """
+        Stage 2 Review Form
+        Admin and SDMPT can edit the review form and assign reviewers
+
+        :param request.data['review']: existing stage 1 review form
+        :return: updated stage 1 -> stage 2 review form
+        """
+
+        user_data = get_user_data(request)
+        user_role = user_data['role']
+
+        if ( user_role == "Admin" or user_role == "SDM PT" ):
+            try:
+                # stage 2 review form creation
+                pass
+            except:
+                return Response({"message": 'Something went wrong'}, status=status.HTTP_404_NOT_FOUND)
+        else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
+
+    # Deletes karil with a requested karil_id
+    # Needs karil data that wants to be deleted in the request body
     def delete(self, request):
         if request.method == 'DELETE':
             user_data = get_user_data(request)
             user_role = user_data['role']
 
-            ## Checks if a dosen is trying to delete their own karil
-            # if ( user_data['username'] == request.data['pemilik'] and user_role == "Dosen"):
-            if 1>0: # Throwaway statement for debug purposes --> DELETE THIS, USE ABOVE
+            # Checks if a dosen is trying to delete their own karil
+            if ( user_data['username'] == request.data['pemilik'] and user_role == "Dosen"):
                 try:
                     karil = KaryaIlmiah.objects.get(karil_id = request.data['karil_id'])
                 except KaryaIlmiah.DoesNotExist: 
@@ -293,32 +307,6 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response({'success': True, 'message': 'Password reset success'}, status=status.HTTP_200_OK)
-
-# Review form management endpoint
-# For Stage 1 and Stage 2 review form creation
-class ManageReviewForm(APIView):
-    permission_classes = [IsAuthenticated]
-    forbidden_role_msg = {'message': 'You are not authorized to modify this review form.'}
-
-    def put(self, request):
-        """
-        Stage 2 Review Form
-        Admin and SDMPT can edit the review form and assign reviewers
-
-        :param request.data['review']: existing stage 1 review form
-        :return: updated stage 1 -> stage 2 review form
-        """
-
-        user_data = get_user_data(request)
-        user_role = user_data['role']
-
-        if ( user_role == "Admin" or user_role == "SDM PT" ):
-            try:
-                # stage 2 review form creation
-                pass
-            except:
-                return Response({"message": 'Something went wrong'}, status=status.HTTP_404_NOT_FOUND)
-        else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
 # Test view for user authentication
 @api_view(['GET'])
