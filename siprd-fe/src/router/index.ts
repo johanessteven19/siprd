@@ -20,7 +20,12 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'Landing',
-    redirect: 'Dashboard',
+    redirect: () => {
+      if (localStorage.access) {
+        return '/dashboard';
+      }
+      return '/login';
+    },
   },
   {
     path: '/about',
@@ -88,42 +93,44 @@ const router = new VueRouter({
   routes,
 });
 
-async function isAuthenticated(): Promise<boolean> {
-  let authenticated = false;
-  if (localStorage.access) {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${localStorage.access}`,
-      },
-    };
-    await Vue.axios
-      .get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/ping`, config)
-      .then((res: { status: number; }) => {
-        if (res.status === 200) {
-          console.log('Authenticated!');
-          authenticated = true;
-        }
-      }).catch(() => false);
-  }
-  console.log(`Authenticated = ${authenticated}`);
-  return authenticated;
-}
+// async function isAuthenticated(): Promise<boolean> {
+//   let authenticated = false;
+//   if (localStorage.access) {
+//     const config = {
+//       headers: {
+//         Authorization: `Bearer ${localStorage.access}`,
+//       },
+//     };
+//     await Vue.axios
+//       .get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/ping`, config)
+//       .then((res: { status: number; }) => {
+//         if (res.status === 200) {
+//           console.log('Authenticated!');
+//           authenticated = true;
+//         }
+//       }).catch(() => false);
+//   }
+//   console.log(`Authenticated = ${authenticated}`);
+//   return authenticated;
+// }
 
-const authExceptions = [
-  'Login', 'Register', 'AddAccount', 'Welcome',
-];
-router.beforeEach(async (to, from, next) => {
-  console.log(`Going to ${to.name}`);
-  if (from.name !== null && from.name !== undefined && authExceptions.includes(from.name)) {
-    next();
-  } else if (to.name !== 'Login') {
-    const authenticated = await isAuthenticated();
-    if (authenticated) {
-      next();
-    } else {
-      next('/login');
-    }
-  } else next();
-});
+// // No need to check authentication when redirecting from here
+// const authExceptions = [
+//   '/', '/login', '/register', '/welcome',
+// ];
+// router.beforeEach(async (to, from, next) => {
+//   console.log(`Going from ${from.path}`);
+//   console.log(`Going to ${to.name}`);
+//   if (from.path !== null && from.path !== undefined && authExceptions.includes(from.path)) {
+//     next();
+//   } else if (to.name !== 'Login') {
+//     const authenticated = await isAuthenticated();
+//     if (authenticated) {
+//       next();
+//     } else {
+//       next('/login');
+//     }
+//   } else next();
+// });
 
 export default router;
