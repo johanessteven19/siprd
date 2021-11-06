@@ -210,20 +210,22 @@ export default {
         status:this.status
       };
       Vue.axios
-        .post('http://localhost:8000/api/review/submit', data)
-        console.log(data)
+        .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/review/submit`, data)
         .then((res) => {
           if (res.status === 201) {
-            alert('Karil berhasil disubmit');
-            console.log('YES');
+            console.log('Karil berhasil dibuat.');
           } else {
-            console.log(data);
             alert('Gagal');
           }
         })
         .catch((err) => {
           console.log(err.response);
         });
+    },
+
+    checkForm() {
+      this.$refs.observer.validate();
+      this.submitForm();
     },
 
   },

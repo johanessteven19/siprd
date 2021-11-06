@@ -1,10 +1,10 @@
 <template>
   <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
     <validation-observer ref="observer" v-slot="{ invalid }">
-      <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
+      <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
         <v-row>
         <v-col>
-        <h1>Tambah Karya Ilmiah</h1>
+        <h1>Daftar Karya Ilmiah</h1>
         </v-col>
         <v-col md="1" class="mr-auto">
           <v-btn
@@ -13,7 +13,7 @@
             type="submit"
             color="success"
             width="100%"
-          > Submit
+          > Accept
           </v-btn>
         </v-col>
         <v-col md="1" class="mr-auto">
@@ -47,7 +47,7 @@
                     Nama Penulis
                 </v-col>
                 <v-col md="2">
-                    <v-text-field v-model="namaPenulis" placeholder="Nama Penulis" outlined>
+                    <v-text-field v-model="namaPenulis" placeholder="Nama Penulis" readonly>
                     </v-text-field>
                 </v-col>
             </v-row>
@@ -185,12 +185,18 @@ import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import Vuetify from 'vuetify';
+import {
+  ValidationObserver,
+} from 'vee-validate';
 
 Vue.use(Vuetify);
 Vue.use(VueAxios, axios);
 
 export default {
-  name: 'AddKaril',
+  name: 'AssignReviewer',
+  components: {
+    ValidationObserver,
+  },
   data() {
     return {
       namaPenulis: null,
@@ -203,40 +209,53 @@ export default {
       linkBukti: null,
       pengIndex: null,
       kategori: null,
-      kategoriSelect: ['A', 'B', 'C', 'D'],
-      revieweer: null,
-      reviewerSelect: ['A', 'B', 'C', 'D'],
+      status:'Requested'
     };
   },
   methods: {
     submitForm() {
       const data = {
-        namaPenulis: this.namaPenulis,
-        judulKaril: this.judulKaril,
-        dataJurnal: this.dataJurnal,
-        linkAsli: this.linkAsli,
-        linkRepo: this.linkRepo,
-        linkIndexer: this.linkIndexer,
-        linkCheck: this.linkCheck,
-        linkBukti: this.linkBukti,
-        pengIndex: this.pengIndex,
-        kategori: this.kategori,
-        reviewer: this.reviewer,
+        pemilik : this.namaPenulis,
+        judul: this.judulKaril,
+        journal_data: this.dataJurnal,
+        link_origin: this.linkAsli,
+        link_repo: this.linkRepo,
+        link_indexer: this.linkIndexer,
+        link_simheck: this.linkCheck,
+        link_correspondence: this.linkBukti,
+        indexer: this.pengIndex,
+        category: this.kategori,
+        status:this.status
+      };
+      if (localStorage.access) {
+        const accessToken = localStorage.access;
+        console.log('something');
+        const config = {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
       };
       Vue.axios
-        .post('http://localhost:8000/api/add-karil/', data)
-        .then((res) => {
-          if (res.status === 201) {
-            alert('Karil berhasil di submit.');
-            console.log('YES');
-            // this.backRedir;
-          } else {
-            alert('Gagal');
-          }
-        })
-        .catch((err) => {
-          console.log(err.response);
-        });
+          .put(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user/`, data, config)
+          .then((res) => {
+            console.log(res.data);
+            if (res.status === 200) {
+              this.$router.push('/Success');
+            } else {
+              alert('Gagal');
+            }
+          })
+
+          .catch((err) => {
+            // TODO: Make this output more user-friendly!!!
+            // Clean string up with a function?
+            console.log(err);
+            // var responseErrors = JSON.stringify(err.response.data);
+            // console.log(responseErrors);
+            // var errMsg = "Edit gagal, errors: " + responseErrors;
+            // alert(errMsg);
+          });
+      }
     },
 
   },
