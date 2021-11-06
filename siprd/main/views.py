@@ -172,6 +172,39 @@ class ManageUsers(APIView):
             return Response({request.data['username'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
         else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
+# Reviewer management endpoint
+# For use with Stage 2 review form creation
+class ManageReviewers(APIView):
+    permission_classes = [IsAuthenticated]
+    forbidden_role_msg = {'message': 'You must be an Admin or SDM PT to perform this action.'}
+    position_exclusions = {
+        'Asisten Ahli': [],
+        'Lektor': ['Asisten Ahli'],
+        'Lektor Kepala': ['Asisten Ahli', 'Lektor'],
+        'Guru Besar/Professor': ['Asisten Ahli', 'Lektor', 'Lektor Kepala']
+    }
+
+    # Fetches all reviewers
+    # Reviewers must be positioned equal to or higher than selected promotion rank.
+    # e.g. dosen wants to be promoted to Lektor, reviewer cannot be Asisten Ahli.
+    def get(self, request):
+        user_data = get_user_data(request)
+        user_role = user_data['role']
+
+        if ( user_role == "Admin" or user_role == "SDM PT" ):
+            # Selected promotion rank
+            selected_role = request.data['position']
+            user_list = (
+                User.objects
+                .filter(role='Reviewer')
+                .exclude(position__in=self.position_exclusions[selected_role])
+                .order_by("date_joined")
+                .reverse()
+            )
+            serializer = UserSerializer(user_list, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
+
 # Review form management endpoint
 # For Stage 1 and Stage 2 review form creation
 # NOTE: This is NOT for reviews! Only for review forms, which are basically karil entries.
