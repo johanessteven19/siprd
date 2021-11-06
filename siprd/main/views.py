@@ -222,11 +222,22 @@ class ManageReviewForm(APIView):
         user_role = user_data['role']
 
         if ( user_role == "Admin" or user_role == "SDM PT" ):
+            # Verification: Admin or SDMPT must assign at least 2 reviewers.
+            reviewer_count = len(request.data['reviewers'])
+            if reviewer_count < 2:
+                return Response({'message': 'You must assign at least 2 reviewers!'}, status=status.HTTP_400_BAD_REQUEST)
+
+            karil = None
             try:
-                # stage 2 review form creation
-                pass
-            except:
-                return Response({"message": 'Something went wrong'}, status=status.HTTP_404_NOT_FOUND)
+                karil = KaryaIlmiah.objects.get(username=request.data['username'])
+            except KaryaIlmiah.DoesNotExist:
+                return Response({'message': 'This review form does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = KaryaIlmiahSerializer(karil, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
     # Deletes karil with a requested karil_id
