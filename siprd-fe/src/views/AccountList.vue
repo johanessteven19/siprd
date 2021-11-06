@@ -1,19 +1,49 @@
 <template>
   <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
     <v-row>
-    <v-col>
-    <h1>Daftar Akun</h1>
-    </v-col>
-    <v-col md="2" class="mr-auto">
-      <v-btn
-        class="mr-4 white--text"
-        :disabled="false"
-        color="blue"
-        width="100%"
-        v-on:click="addRedir"
-      > + Tambah Akun
-      </v-btn>
-    </v-col>
+      <v-col md="2">
+      <h1>Daftar Akun</h1>
+      </v-col>
+      <v-col md="2">
+        <v-btn
+          class="mr-4 white--text"
+          :disabled="false"
+          color="blue"
+          width="100%"
+          v-on:click="addRedir"
+        > + Tambah Akun
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col md="2">
+        <v-btn
+          class="mr-4"
+          :class="{
+            'disable-events': !show_only_unapproved,
+            'white--text': !show_only_unapproved
+            }"
+          :outlined="show_only_unapproved"
+          color="#8D38E3"
+          width="100%"
+          v-on:click="toggleListTab"
+        > Belum Disetujui
+        </v-btn>
+      </v-col>
+      <v-col md="2">
+        <v-btn
+          class="mr-4"
+          :class="{
+            'disable-events': show_only_unapproved,
+            'white--text': show_only_unapproved
+            }"
+          :outlined="!show_only_unapproved"
+          color="#8D38E3"
+          width="100%"
+          v-on:click="toggleListTab"
+        > Semua Akun
+        </v-btn>
+      </v-col>
     </v-row>
     <br>
     <v-data-table
@@ -43,21 +73,38 @@
       {{ index + 1 }}
     </template>
 
-      <template v-slot:item.action>
-    <v-btn
-      depressed
-      color="success"
-    >
-      Approve
-    </v-btn>
+    <template v-slot:item.action>
+      <template v-if="show_only_unapproved">
         <v-btn
-      depressed
-      color="error"
-      @click.stop=""
-    >
-      Delete
-    </v-btn>
+          depressed
+          color="success"
+        >
+          Setujui
+        </v-btn>
+        <v-btn
+          depressed
+          color="error"
+          @click.stop=""
+        >
+          Hapus
+        </v-btn>
       </template>
+      <template v-else>
+        <v-btn
+          depressed
+          color="success"
+        >
+          Ubah
+        </v-btn>
+        <v-btn
+          depressed
+          color="error"
+          @click.stop=""
+        >
+          Hapus
+        </v-btn>
+      </template>
+    </template>
 
     </v-data-table>
   </v-container>
@@ -86,15 +133,31 @@ export default {
         { text: 'Bidang Keahlian', value: 'field_of_study', sortable: false },
         { text: 'Jabatan Akademik', value: 'position', sortable: false },
         { text: 'Role', value: 'role', sortable: false },
+        {
+          text: 'Disetujui',
+          value: 'approved',
+          filter: (value) => {
+            // not shown if tab is
+            if (!this.show_only_unapproved && value) {
+              return false;
+            } return true;
+          },
+          // Used to hide column from table
+          align: ' d-none',
+        },
         { text: 'Action', value: 'action', sortable: false },
       ],
       users: [],
       search: '',
+      show_only_unapproved: false,
     };
   },
   methods: {
     addRedir() {
       this.$router.push('/add-account');
+    },
+    toggleListTab() {
+      this.show_only_unapproved = !this.show_only_unapproved;
     },
   },
   beforeMount() {
@@ -116,6 +179,8 @@ export default {
       });
     }
   },
-
 };
 </script>
+<style>
+  @import '../assets/styles/button.css';
+</style>
