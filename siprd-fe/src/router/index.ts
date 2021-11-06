@@ -88,28 +88,42 @@ const router = new VueRouter({
   routes,
 });
 
-function isAuthenticated(): boolean {
+async function isAuthenticated(): Promise<boolean> {
+  let authenticated = false;
   if (localStorage.access) {
     const config = {
       headers: {
         Authorization: `Bearer ${localStorage.access}`,
       },
     };
-    Vue.axios
-      .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/ping`, config)
+    await Vue.axios
+      .get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/ping`, config)
       .then((res: { status: number; }) => {
-        if (res.status === 401) {
-          return false;
+        if (res.status === 200) {
+          console.log('Authenticated!');
+          authenticated = true;
         }
-        return true;
       }).catch(() => false);
   }
-  return false;
+  console.log(`Authenticated = ${authenticated}`);
+  return authenticated;
 }
 
-router.beforeEach((to, from, next) => {
-  if (to.name !== 'Login' && !isAuthenticated()) next({ name: 'Login' });
-  else next();
+const authExceptions = [
+  'Login', 'Register', 'AddAccount', 'Welcome',
+];
+router.beforeEach(async (to, from, next) => {
+  console.log(`Going to ${to.name}`);
+  if (from.name !== null && from.name !== undefined && authExceptions.includes(from.name)) {
+    next();
+  } else if (to.name !== 'Login') {
+    const authenticated = await isAuthenticated();
+    if (authenticated) {
+      next();
+    } else {
+      next('/login');
+    }
+  } else next();
 });
 
 export default router;

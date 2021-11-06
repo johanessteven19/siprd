@@ -5,4 +5,4 @@
 /src/shims-vue.d.ts
 /src/shims-vuetify.d.ts
 /src/plugins/*
-/src/node_modules/*
+/node_modules/*
