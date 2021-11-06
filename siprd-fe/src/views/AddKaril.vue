@@ -190,13 +190,13 @@ export default {
       kategoriSelect: ['Buku', 'Jurnal'],
       promotion: null,
       promotionSelect: ['Lektor', 'Guru Besar'],
-      status:'Not Assigned Yet'
+      status: 'Not Assigned Yet',
     };
   },
   methods: {
     submitForm() {
       const data = {
-        pemilik : this.namaPenulis,
+        pemilik: this.namaPenulis,
         judul: this.judulKaril,
         journal_data: this.dataJurnal,
         link_origin: this.linkAsli,
@@ -206,12 +206,12 @@ export default {
         link_correspondence: this.linkBukti,
         indexer: this.pengIndex,
         category: this.kategori,
-        promotion:this.promotion,
-        status:this.status
+        promotion: this.promotion,
+        status: this.status,
       };
       Vue.axios
-        .post('http://localhost:8000/api/review/submit', data)
-        console.log(data)
+        .post('http://localhost:8000/api/review/submit', data);
+      console.log(data)
         .then((res) => {
           if (res.status === 201) {
             alert('Karil berhasil disubmit');
