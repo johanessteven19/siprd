@@ -184,14 +184,20 @@ class ManageReviewForm(APIView):
     # Works just like register API
     # Creates Stage 1 review form 
     def post(self, request):
-        if request.method == 'POST':
-            serializer = KaryaIlmiahSerializer(data = request.data)
-            if serializer.is_valid():
-                review = serializer.save()
-                if review:
-                    return Response({request.data['judul'] + ' was queued for review succesfully!'}, status=status.HTTP_201_CREATED)
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            else: return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        user_data = get_user_data(request)
+        user_role = user_data['role']
+
+        # Reviewers are not allowed to create review forms!
+        if (user_role == "Reviewer"):
+            return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
+        
+        serializer = KaryaIlmiahSerializer(data = request.data)
+        if serializer.is_valid():
+            review = serializer.save()
+            if review:
+                return Response({request.data['judul'] + ' was queued for review succesfully!'}, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # Displays ALL submitted karils
     # Used for debugging
@@ -226,19 +232,18 @@ class ManageReviewForm(APIView):
     # Deletes karil with a requested karil_id
     # Needs karil data that wants to be deleted in the request body
     def delete(self, request):
-        if request.method == 'DELETE':
-            user_data = get_user_data(request)
-            user_role = user_data['role']
+        user_data = get_user_data(request)
+        user_role = user_data['role']
 
-            # Checks if a dosen is trying to delete their own karil
-            if ( user_data['username'] == request.data['pemilik'] and user_role == "Dosen"):
-                try:
-                    karil = KaryaIlmiah.objects.get(karil_id = request.data['karil_id'])
-                except KaryaIlmiah.DoesNotExist: 
-                    return Response({'message': 'The paper you are trying to delete does not exist'}, status=status.HTTP_404_NOT_FOUND) 
-                karil.delete()
-                return Response({request.data['judul'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
-            else: return Response(self.forbidden_warning, status=status.HTTP_401_UNAUTHORIZED)
+        # Checks if a dosen is trying to delete their own karil
+        if ( user_data['username'] == request.data['pemilik'] and user_role == "Dosen"):
+            try:
+                karil = KaryaIlmiah.objects.get(karil_id = request.data['karil_id'])
+            except KaryaIlmiah.DoesNotExist: 
+                return Response({'message': 'The paper you are trying to delete does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+            karil.delete()
+            return Response({request.data['judul'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
+        else: return Response(self.forbidden_warning, status=status.HTTP_401_UNAUTHORIZED)
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
