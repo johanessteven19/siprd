@@ -14,12 +14,14 @@ urlpatterns = [
     path("api/register", views.Register.as_view()),
     path("api/user", views.ViewUserData.as_view()),
     path("api/ping", views.ping_auth),
-    path("api/pings", views.ping),
-    path("api/manage-users/", views.ManageUsers.as_view()),
     path("api/get-linked-users/", views.GetLinkedUsers.as_view()),
+    path("api/manage-users/", views.ManageUsers.as_view()),
     path('api/google/', include('rest_social_auth.urls_jwt_pair')),
     path(r'^auth/', include('rest_framework_social_oauth2.urls')),
     path("api/is-user-exists", views.IsUserExist.as_view()),
+    path("api/review/submit", views.ReviewForm.as_view()),
+    path("api/review/delete", views.ReviewFormDelete.as_view()),
+    path("api/review/all", views.DisplayKaril.as_view()),
 
     # Reset password endpoints
     path('api/request-reset-email/', RequestPasswordResetEmail.as_view(), name="request-reset-email"),

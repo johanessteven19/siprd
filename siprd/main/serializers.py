@@ -3,7 +3,7 @@ from django.utils.http import urlsafe_base64_decode
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 
-from .models import User
+from .models import User, KaryaIlmiah, Review
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
@@ -77,3 +77,44 @@ class SetNewPasswordSerializer(serializers.Serializer):
             return user
         except Exception:
             raise AuthenticationFailed('The reset link is invalid', 401)
+
+class KaryaIlmiahSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = KaryaIlmiah
+        fields = [
+            'karil_id',
+            'pemilik',
+            'judul',
+            'journal_data',
+            'link_origin',
+            'link_repo',
+            'link_indexer',
+            'link_simcheck',
+            'link_correspondence',
+            'indexer',
+            'category',
+            'status',
+            'promotion'
+        ]
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = [
+            'review_id',
+            'karil_id',
+            'reviewer',
+            'plagiarism_percentage',
+            'linearity',
+            'score_1',
+            'score_2',
+            'score_3',
+            'score_4',
+            'comment_1',
+            'comment_2',
+            'comment_3',
+            'comment_4',
+            'score_proposer'
+        ]
+

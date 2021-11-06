@@ -6,7 +6,7 @@ from django.utils.encoding import smart_bytes, smart_str, DjangoUnicodeDecodeErr
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework.generics import UpdateAPIView
 from .util import Util
-from .serializers import UserSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer
+from .serializers import KaryaIlmiahSerializer, ReviewSerializer, UserSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer
 from django.http import JsonResponse, HttpResponse, HttpResponsePermanentRedirect, HttpResponseRedirect
 from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.decorators import api_view, permission_classes
-from .models import User
+from .models import KaryaIlmiah, User
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 import logging
@@ -172,6 +172,59 @@ class ManageUsers(APIView):
             return Response({request.data['username'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
         else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
+
+## Displays ALL submitted karils
+## Used for debugging
+## Can be deleted if unneeded
+class DisplayKaril(APIView):
+    # permission_classes = [IsAuthenticated]
+    serializer_class = KaryaIlmiahSerializer
+
+    def get(self, request):
+        karil_list = KaryaIlmiah.objects.all()
+
+        serializer = KaryaIlmiahSerializer(karil_list, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+## Passes request data to serializer
+## Works just like register API
+class ReviewForm(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = KaryaIlmiahSerializer
+
+    def post(self, request):
+        if request.method == 'POST':
+            serializer = KaryaIlmiahSerializer(data = request.data)
+            if serializer.is_valid():
+                review = serializer.save()
+                if review:
+                    return Response({request.data['judul'] + ' was queued for review succesfully!'}, status=status.HTTP_201_CREATED)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else: return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+## Deletes karil with a requested karil_id
+## Needs karil data that wants to be deleted in the request body
+class ReviewFormDelete(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = KaryaIlmiahSerializer
+    forbidden_warning = {'message': 'You are not authorized to delete this paper.'}
+
+    def delete(self, request):
+        if request.method == 'DELETE':
+            user_data = get_user_data(request)
+            user_role = user_data['role']
+
+            ## Checks if a dosen is trying to delete their own karil
+            # if ( user_data['username'] == request.data['pemilik'] and user_role == "Dosen"):
+            if 1>0: # Throwaway statement for debug purposes --> DELETE THIS, USE ABOVE
+                try:
+                    karil = KaryaIlmiah.objects.get(karil_id = request.data['karil_id'])
+                except KaryaIlmiah.DoesNotExist: 
+                    return Response({'message': 'The paper you are trying to delete does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+                karil.delete()
+                return Response({request.data['judul'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
+            else: return Response(self.forbidden_warning, status=status.HTTP_401_UNAUTHORIZED)
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer

@@ -9,9 +9,7 @@ import Success from "../views/Success.vue";
 import Dashboard from "../views/Dashboard.vue";
 import RegisterSuccess from "../views/RegisterSuccess.vue";
 import AccountList from "../views/AccountList.vue";
-import ForgetPasswordRequest from "../views/ForgetPasswordRequest.vue";
-import ResetPassword from "../views/ResetPassword.vue";
-import TokenError from "../views/TokenError.vue";
+import AddKaril from "../views/AddKaril.vue";
 
 Vue.use(VueRouter);
 
@@ -77,21 +75,6 @@ const routes: Array<RouteConfig> = [
     component: RegisterSuccess,
   },
   {
-    path: "/forget",
-    name: "Forget",
-    component: ForgetPasswordRequest,
-  },
-  {
-    path: "/token-error",
-    name: "Token Error",
-    component: TokenError,
-  },
-  {
-    path: "/reset-password/:token/:username/:uidb",
-    name: "Reset Password",
-    component: ResetPassword,
-  },
-  {
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
@@ -100,6 +83,11 @@ const routes: Array<RouteConfig> = [
     path: "/account-list",
     name: "AccountList",
     component: AccountList,
+  },
+  {
+    path: "/add-karil",
+    name: "AddKaril",
+    component: AddKaril,
   },
 ];
 
