@@ -4,46 +4,52 @@
       <Navigation />
     </div>
     <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
-      <validation-observer ref="observer" v-slot="{ invalid }">
+      <validation-observer ref="observer">
         <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
           <v-row>
           <v-col>
-          <h1>Detail Karya Ilmiah</h1>
+          <h1>Daftar Karya Ilmiah</h1>
           </v-col>
-          <v-col md="1" class="mr-auto">
+          <v-col md="2" class="mr-auto">
             <v-btn
               class="mr-4 white--text"
-              :disabled="invalid"
-              type=""
-              color="success"
+              color="blue"
               width="100%"
-            >
+            > Download to Excel
             </v-btn>
           </v-col>
-          <v-col md="1" class="mr-auto">
+          <v-col md="2" class="mr-auto">
             <v-btn
               class="mr-4 white--text"
-              :disabled="false"
-              color="red"
+              color="purple"
+              v-on:click="editKaril"
               width="100%"
-            > Cancel
+            > Edit Karya Ilmiah
+            </v-btn>
+          </v-col>
+          <v-col md="2" class="mr-auto">
+            <v-btn
+              class="mr-4 white--text"
+              v-on:click="assignReviewer"
+              color="success"
+              width="100%"
+            > Assign Reviewer
             </v-btn>
           </v-col>
           </v-row>
 
           <v-row >
               <v-col md="3" class="mr-auto">
-                  Dosen:Doni <br>
-                  Jabatan:Lektor <br>
-                  Kenaikan Jabatan: Lektor Kepala
+                  Dosen : {{ karilData.pemilik }} <br>
+                  Jabatan: {{ karilData.position }} <br>
+                  Kenaikan Jabatan: {{ karilData.promotion }}
               </v-col>
           </v-row>
-          <br>
 
           <div class="identitas" style="margin-top: 2rem; width: 100%;" justify="center">
               <v-row align="center" justify="center" row-gap="10px">
                   <v-col md="5" align="right">
-                      <h1>Identitas Karya Ilmiah</h1> <br>
+                      <h1>Identitas Karya Ilmiah</h1>
                   </v-col>
               </v-row>
               <v-row align="center" justify="center">
@@ -51,8 +57,7 @@
                       Nama Penulis
                   </v-col>
                   <v-col md="2">
-                      <v-text-field v-model="namaPenulis" placeholder="Nama Penulis" readonly>
-                      </v-text-field>
+                      {{ karilData.pemilik }}
                   </v-col>
               </v-row>
 
@@ -61,8 +66,7 @@
                       Judul Karya Ilmiah
                   </v-col>
                   <v-col md="2">
-                      <v-text-field v-model="judulKaril" placeholder="Judul Karil" outlined>
-                      </v-text-field>
+                      {{ karilData.judul }}
                   </v-col>
               </v-row>
 
@@ -71,8 +75,7 @@
                       Data Jurnal
                   </v-col>
                   <v-col md="2">
-                      <v-text-field v-model="dataJurnal" placeholder="Data Jurnal" outlined>
-                      </v-text-field>
+                      {{karilData.journal_data}}
                   </v-col>
               </v-row>
 
@@ -81,8 +84,7 @@
                       Link Asli Jurnal
                   </v-col>
                   <v-col md="2">
-                      <v-text-field v-model="linkAsli" placeholder="Link Asli" outlined>
-                      </v-text-field>
+                      {{ karilData.link_origin }}
                   </v-col>
               </v-row>
 
@@ -91,8 +93,7 @@
                       Link Repository
                   </v-col>
                   <v-col md="2">
-                      <v-text-field v-model="linkRepo" placeholder="Link Repository" outlined>
-                      </v-text-field>
+                      {{ karilData.link_repo }}
                   </v-col>
               </v-row>
 
@@ -101,8 +102,7 @@
                       Link Indexer
                   </v-col>
                   <v-col md="2">
-                      <v-text-field v-model="linkIndexer" placeholder="Link Indexer" outlined>
-                      </v-text-field>
+                      {{ karilData.link_indexer }}
                   </v-col>
               </v-row>
 
@@ -111,8 +111,7 @@
                       Link Check Similarity
                   </v-col>
                   <v-col md="2">
-                      <v-text-field v-model="linkCheck" placeholder="Link Check" outlined>
-                      </v-text-field>
+                      {{ karilData.link_simcheck }}
                   </v-col>
               </v-row>
 
@@ -121,8 +120,7 @@
                       Link Bukti Korespondensi
                   </v-col>
                   <v-col md="2">
-                      <v-text-field v-model="linkBukti" placeholder="Link Bukti" outlined>
-                      </v-text-field>
+                      {{ karilData.link_correspondence }}
                   </v-col>
               </v-row>
 
@@ -131,8 +129,7 @@
                       Peng-index
                   </v-col>
                   <v-col md="2">
-                      <v-text-field v-model="pengIndex" placeholder="Peng-Index" outlined>
-                      </v-text-field>
+                      {{ karilData.indexer }}
                   </v-col>
               </v-row>
 
@@ -141,38 +138,7 @@
                       Kategori Karya Ilmiah
                   </v-col>
                   <v-col md="2">
-                    <v-select
-                      v-model="kategori"
-                      :items="kategoriSelect"
-                      label="Kategori Karil"
-                      data-vv-name="select"
-                      outlined
-                    >
-                    </v-select>
-                  </v-col>
-              </v-row>
-
-          </div>
-
-          <div class="reviewer" style="margin-top: 2rem; width: 100%;" justify="center">
-              <v-row align="center" justify="center" row-gap="10px">
-                  <v-col md="3" align="right">
-                      <h1>Reviewer</h1> <br>
-                  </v-col>
-              </v-row>
-              <v-row align="center" justify="center">
-                  <v-col md="3" align="right">
-                      Nama Reviewer 1
-                  </v-col>
-                  <v-col md="2">
-                    <v-select
-                      v-model="reviewer"
-                      :items="reviewerSelect"
-                      label="Reviewer"
-                      data-vv-name="select"
-                      outlined
-                    >
-                    </v-select>
+                    {{ karilData.category }}
                   </v-col>
               </v-row>
 
@@ -199,13 +165,14 @@ Vue.use(Vuetify);
 Vue.use(VueAxios, axios);
 
 export default {
-  name: 'ViewKaril',
+  name: 'AssignReviewer',
   components: {
     ValidationObserver,
     Navigation,
   },
   data() {
     return {
+      karilData: '',
       namaPenulis: null,
       judulKaril: null,
       dataJurnal: null,
@@ -220,55 +187,18 @@ export default {
     };
   },
   methods: {
-    submitForm() {
-      const data = {
-
-        pemilik: this.namaPenulis,
-        judul: this.judulKaril,
-        journal_data: this.dataJurnal,
-        link_origin: this.linkAsli,
-        link_repo: this.linkRepo,
-        link_indexer: this.linkIndexer,
-        link_simcheck: this.linkCheck,
-        link_correspondence: this.linkBukti,
-        indexer: this.pengIndex,
-        category: this.kategori,
-        status: this.status,
-      };
-      if (localStorage.access) {
-        const accessToken = localStorage.access;
-        console.log('something');
-        const config = {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        };
-        Vue.axios
-          .put(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, data, config)
-          .then((res) => {
-            console.log(res.data);
-            if (res.status === 200) {
-              this.$router.push('/Success');
-            } else {
-              alert('Gagal');
-            }
-          })
-
-          .catch((err) => {
-            // TODO: Make this output more user-friendly!!!
-            // Clean string up with a function?
-            console.log(err);
-            // var responseErrors = JSON.stringify(err.response.data);
-            // console.log(responseErrors);
-            // var errMsg = "Edit gagal, errors: " + responseErrors;
-            // alert(errMsg);
-          });
-      }
-    },
 
     checkForm() {
       this.$refs.observer.validate();
       this.submitForm();
+    },
+
+    editKaril() {
+      this.$router.push('/edit-karil');
+    },
+
+    assignReviewer() {
+      this.$router.push('/assign-reviewer');
     },
 
   },
@@ -282,9 +212,7 @@ export default {
       Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, config).then((res) => {
         console.log(res.data);
         if (res.status === 200) {
-          this.userData = res.data;
-          // this.namaPenulis = res.data.pemilik;
-          // this.position = res.data.position;
+          this.karilData = res.data;
         }
       });
     } else {
