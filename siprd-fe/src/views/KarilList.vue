@@ -82,6 +82,7 @@
         :page="page"
         :headers="headers"
         :items="karilList"
+        :item-key="karil_id"
         :search="search"
         class="elevation-1"
       >
@@ -105,37 +106,14 @@
         {{ index + 1 }}
       </template>
 
-      <template v-slot:item.action>
-        <template v-if="show_only_unapproved">
-          <v-btn
-            depressed
-            color="success"
-          >
-            Setujui
-          </v-btn>
-          <v-btn
-            depressed
-            color="error"
-            @click.stop=""
-          >
-            Hapus
-          </v-btn>
-        </template>
-        <template v-else>
-          <v-btn
-            depressed
-            color="success"
-          >
-            Ubah
-          </v-btn>
-          <v-btn
-            depressed
-            color="error"
-            @click.stop=""
-          >
-            Hapus
-          </v-btn>
-        </template>
+      <template v-slot:item.action="row">
+        <v-btn
+        depressed
+        color="success"
+        v-on:click="assign(row.item.karil_id)"
+        >
+        Lihat
+        </v-btn>
       </template>
 
       </v-data-table>
@@ -172,15 +150,8 @@ export default {
         { text: 'Reviewer', value: 'reviewer', sortable: false },
         { text: 'Reviewed', value: 'status', sortable: false },
         {
-          text: 'Disetujui',
-          value: 'approved',
-          filter: (value) => {
-            // not shown if tab is
-            if (!this.show_only_unapproved && value) {
-              return false;
-            } return true;
-          },
-          // Used to hide column from table
+          text: 'Karil Id',
+          value: 'karilId',
           align: ' d-none',
         },
         { text: 'Action', value: 'action', sortable: false },
@@ -201,6 +172,10 @@ export default {
     },
     setTab(tabNo) {
       this.tab = tabNo;
+    },
+    assign(karilId) {
+      console.log(karilId);
+      this.$router.push(`/view-karil?id=${karilId}`);
     },
   },
   beforeMount() {

@@ -184,6 +184,7 @@ export default {
       pengIndex: null,
       kategori: null,
       status: 'Requested',
+      karilId: null,
     };
   },
   methods: {
@@ -204,15 +205,22 @@ export default {
   },
 
   beforeMount() {
+    this.karilId = this.$route.query.id;
+    console.log(this.karilId);
     if (localStorage.access) {
       const accessToken = localStorage.access;
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
+        data: {
+          karil_id: this.karilId,
+        },
       };
       Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, config).then((res) => {
         console.log(res.data);
         if (res.status === 200) {
-          this.karilData = res.data;
+          console.log(res.data);
+          this.karilData = res.data[0];
+          console.log(this.karilData);
         }
       });
     } else {
