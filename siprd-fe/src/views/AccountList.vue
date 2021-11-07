@@ -1,113 +1,118 @@
 <template>
-  <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
-    <v-row>
-      <v-col md="2">
-      <h1>Daftar Akun</h1>
-      </v-col>
-      <v-col md="2">
-        <v-btn
-          class="mr-4 white--text"
-          :disabled="false"
-          color="blue"
-          width="100%"
-          v-on:click="addRedir"
-        > + Tambah Akun
-        </v-btn>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col md="2">
-        <v-btn
-          class="mr-4"
-          :class="{
-            'disable-events': !show_only_unapproved,
-            'white--text': !show_only_unapproved
-            }"
-          :outlined="show_only_unapproved"
-          color="#8D38E3"
-          width="100%"
-          v-on:click="toggleListTab"
-        > Belum Disetujui
-        </v-btn>
-      </v-col>
-      <v-col md="2">
-        <v-btn
-          class="mr-4"
-          :class="{
-            'disable-events': show_only_unapproved,
-            'white--text': show_only_unapproved
-            }"
-          :outlined="!show_only_unapproved"
-          color="#8D38E3"
-          width="100%"
-          v-on:click="toggleListTab"
-        > Semua Akun
-        </v-btn>
-      </v-col>
-    </v-row>
-    <br>
-    <v-data-table
-      :page="page"
-      :headers="headers"
-      :items="users"
-      :search="search"
-      class="elevation-1"
-    >
-
-    <template v-slot:top>
-    <v-container>
-      <v-spacer></v-spacer>
-      <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Search"
-        single-line
-        hide-details
+  <div>
+    <div style="position: fixed; top: 0;">
+    <Navigation />
+    </div>
+    <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
+      <v-row>
+        <v-col md="2">
+        <h1>Daftar Akun</h1>
+        </v-col>
+        <v-col md="2">
+          <v-btn
+            class="mr-4 white--text"
+            :disabled="false"
+            color="blue"
+            width="100%"
+            v-on:click="addRedir"
+          > + Tambah Akun
+          </v-btn>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col md="2">
+          <v-btn
+            class="mr-4"
+            :class="{
+              'disable-events': !show_only_unapproved,
+              'white--text': !show_only_unapproved
+              }"
+            :outlined="show_only_unapproved"
+            color="#8D38E3"
+            width="100%"
+            v-on:click="toggleListTab"
+          > Belum Disetujui
+          </v-btn>
+        </v-col>
+        <v-col md="2">
+          <v-btn
+            class="mr-4"
+            :class="{
+              'disable-events': show_only_unapproved,
+              'white--text': show_only_unapproved
+              }"
+            :outlined="!show_only_unapproved"
+            color="#8D38E3"
+            width="100%"
+            v-on:click="toggleListTab"
+          > Semua Akun
+          </v-btn>
+        </v-col>
+      </v-row>
+      <br>
+      <v-data-table
+        :page="page"
+        :headers="headers"
+        :items="users"
+        :search="search"
+        class="elevation-1"
       >
-      </v-text-field>
+
+      <template v-slot:top>
+      <v-container>
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        >
+        </v-text-field>
+      </v-container>
+
+      </template>
+
+      <template v-slot:item.no="{ index }">
+        {{ index + 1 }}
+      </template>
+
+      <template v-slot:item.action>
+        <template v-if="show_only_unapproved">
+          <v-btn
+            depressed
+            color="success"
+          >
+            Setujui
+          </v-btn>
+          <v-btn
+            depressed
+            color="error"
+            @click.stop=""
+          >
+            Hapus
+          </v-btn>
+        </template>
+        <template v-else>
+          <v-btn
+            depressed
+            color="success"
+          >
+            Ubah
+          </v-btn>
+          <v-btn
+            depressed
+            color="error"
+            @click.stop=""
+          >
+            Hapus
+          </v-btn>
+        </template>
+      </template>
+
+      </v-data-table>
     </v-container>
-
-    </template>
-
-    <template v-slot:item.no="{ index }">
-      {{ index + 1 }}
-    </template>
-
-    <template v-slot:item.action>
-      <template v-if="show_only_unapproved">
-        <v-btn
-          depressed
-          color="success"
-        >
-          Setujui
-        </v-btn>
-        <v-btn
-          depressed
-          color="error"
-          @click.stop=""
-        >
-          Hapus
-        </v-btn>
-      </template>
-      <template v-else>
-        <v-btn
-          depressed
-          color="success"
-        >
-          Ubah
-        </v-btn>
-        <v-btn
-          depressed
-          color="error"
-          @click.stop=""
-        >
-          Hapus
-        </v-btn>
-      </template>
-    </template>
-
-    </v-data-table>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -115,12 +120,16 @@ import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import Vuetify from 'vuetify';
+import Navigation from '../components/Navigation.vue';
 
 Vue.use(Vuetify);
 Vue.use(VueAxios, axios);
 
 export default {
   name: 'table-list',
+  components: {
+    Navigation,
+  },
   data() {
     return {
       headers: [

@@ -87,8 +87,8 @@ const routes: Array<RouteConfig> = [
     component: AddKaril,
   },
   {
-    path: "/assign-reviewer",
-    name: "AssignReviewer",
+    path: '/assign-reviewer',
+    name: 'AssignReviewer',
     component: AssignReviewer,
   },
 ];
