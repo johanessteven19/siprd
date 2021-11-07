@@ -259,6 +259,7 @@ export default {
         category: this.kategori,
         promotion: this.promotion,
         status: this.status,
+        karilId: null,
       };
       if (localStorage.access) {
         const accessToken = localStorage.access;
@@ -300,25 +301,32 @@ export default {
   },
 
   beforeMount() {
+    this.karilId = this.$route.query.id;
     if (localStorage.access) {
       const accessToken = localStorage.access;
+      const data = {
+        karil_id: this.karilId,
+      };
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
-      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, config).then((res) => {
+      Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, data, config).then((res) => {
         if (res.status === 200) {
-          this.userData = res.data;
-          this.namaPenulis = res.data.pemilik;
-          this.judulKaril = res.data.judul;
-          this.dataJurnal = res.data.journal_data;
-          this.linkAsli = res.data.link_origin;
-          this.linkRepo = res.data.link_repo;
-          this.linkIndexer = res.data.link_indexer;
-          this.linkCheck = res.data.link_simcheck;
-          this.linkBukti = res.data.link_correspondence;
-          this.pengIndex = res.data.indexer;
-          this.kategori = res.data.category;
-          this.promotion = res.data.promotion;
+          console.log(res.data);
+          this.karilData = res.data;
+          console.log(this.karilData);
+          this.namaPenulis = this.karilData.pemilik;
+          this.judulKaril = this.karilData.judul;
+          this.dataJurnal = this.karilData.journal_data;
+          this.linkAsli = this.karilData.linkAsli;
+          this.linkRepo = this.karilData.link_repo;
+          this.linkIndexer = this.karilData.link_indexer;
+          this.linkCheck = this.karilData.link_simcheck;
+          this.linkBukti = this.karilData.link_correspondence;
+          this.pengIndex = this.karilData.indexer;
+          this.kategori = this.karilData.category;
+          this.promotion = this.karilData.promotion;
+          this.status = this.karilData.status;
         }
       });
     } else {

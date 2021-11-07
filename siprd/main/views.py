@@ -205,6 +205,16 @@ class ManageReviewers(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
+class GetSpecificReviewForm(APIView):
+    def post(self, request):
+        try:
+            karil_list = KaryaIlmiah.objects.filter(karil_id=request.data['karil_id']).first()
+            serializer = KaryaIlmiahSerializer(karil_list)
+        except KaryaIlmiah.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 # Review form management endpoint
 # For Stage 1 and Stage 2 review form creation
 # NOTE: This is NOT for reviews! Only for review forms, which are basically karil entries.
@@ -242,12 +252,8 @@ class ManageReviewForm(APIView):
     # Used for debugging
     # Can be deleted if unneeded
     def get(self, request):
-        try:
-            karil_list = KaryaIlmiah.objects.filter(karil_id=request.data['karil_id']).first()
-            serializer = KaryaIlmiahSerializer(karil_list)
-        except KeyError:
-            karil_list = KaryaIlmiah.objects.all()
-            serializer = KaryaIlmiahSerializer(karil_list, many=True)
+        karil_list = KaryaIlmiah.objects.all()
+        serializer = KaryaIlmiahSerializer(karil_list, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
