@@ -217,6 +217,7 @@ export default {
       pengIndex: null,
       kategori: null,
       status: 'Requested',
+      karilId: null,
       counter: 0,
       reviewers: [{
         id: 'reviewer0',
@@ -282,7 +283,7 @@ export default {
     },
 
     cancel() {
-      this.$router.push('/view-karil');
+      this.$router.push(`/view-karil?id=${this.karilId}`);
     },
 
     addNew() {
@@ -296,12 +297,16 @@ export default {
   },
 
   beforeMount() {
+    this.karilId = this.$route.query.id;
     if (localStorage.access) {
       const accessToken = localStorage.access;
+      const data = {
+        karil_id: this.karilId,
+      };
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
-      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, config).then((res) => {
+      Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, data, config).then((res) => {
         console.log(res.data);
         if (res.status === 200) {
           this.karilData = res.data;

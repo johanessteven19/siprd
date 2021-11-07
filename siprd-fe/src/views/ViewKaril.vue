@@ -209,17 +209,17 @@ export default {
     console.log(this.karilId);
     if (localStorage.access) {
       const accessToken = localStorage.access;
+      const data = {
+        karil_id: this.karilId,
+      };
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
-        data: {
-          karil_id: this.karilId,
-        },
       };
-      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, config).then((res) => {
+      Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, data, config).then((res) => {
         console.log(res.data);
         if (res.status === 200) {
           console.log(res.data);
-          this.karilData = res.data[0];
+          this.karilData = res.data;
           console.log(this.karilData);
         }
       });
