@@ -268,7 +268,7 @@ class ManageReviewForm(APIView):
 
             karil = None
             try:
-                karil = KaryaIlmiah.objects.get(username=request.data['username'])
+                karil = KaryaIlmiah.objects.get(karil_id=request.data['karil_id'])
             except KaryaIlmiah.DoesNotExist:
                 return Response({'message': 'This review form does not exist!'}, status=status.HTTP_404_NOT_FOUND)
 
