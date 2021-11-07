@@ -224,6 +224,10 @@ class ManageReviewForm(APIView):
         if (user_role == "Reviewer"):
             return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
         
+        data = request.data
+        data['pemilik'] = User.objects.filter(full_name=data['pemilik']).first().username
+        print(data)
+
         serializer = KaryaIlmiahSerializer(data = request.data)
         if serializer.is_valid():
             review = serializer.save()
