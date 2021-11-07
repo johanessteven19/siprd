@@ -225,7 +225,10 @@ class ManageReviewForm(APIView):
             return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
         
         data = request.data
-        data['pemilik'] = User.objects.filter(full_name=data['pemilik']).first().username
+        try:
+            data['pemilik'] = User.objects.filter(full_name=data['pemilik']).first().username
+        except User.DoesNotExist:
+            return Response({'This author does not exist!'}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = KaryaIlmiahSerializer(data = request.data)
         if serializer.is_valid():
@@ -265,7 +268,7 @@ class ManageReviewForm(APIView):
 
             karil = None
             try:
-                karil = KaryaIlmiah.objects.get(username=request.data['username'])
+                karil = KaryaIlmiah.objects.get(karil_id=request.data['karil_id'])
             except KaryaIlmiah.DoesNotExist:
                 return Response({'message': 'This review form does not exist!'}, status=status.HTTP_404_NOT_FOUND)
 
