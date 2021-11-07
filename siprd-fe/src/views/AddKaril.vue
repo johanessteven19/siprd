@@ -1,4 +1,8 @@
 <template>
+  <div>
+        <div style="position: fixed; top: 0;">
+          <Navigation />
+        </div>
   <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
     <validation-observer ref="observer" v-slot="{ invalid }">
       <v-form @submit.prevent="checkForm" ref="form" v-model="valid" lazy-validation>
@@ -190,6 +194,7 @@
       </v-form>
     </validation-observer>
   </v-container>
+  </div>
 </template>
 
 <script>
