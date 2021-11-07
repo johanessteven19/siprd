@@ -15,6 +15,7 @@ import AddKaril from '../views/AddKaril.vue';
 import EditKaril from '../views/EditKaril.vue';
 import AssignReviewer from '../views/AssignReviewer.vue';
 import KarilList from '../views/KarilList.vue';
+import ViewKaril from '../views/ViewKaril.vue';
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
@@ -87,6 +88,11 @@ const routes: Array<RouteConfig> = [
     path: '/karil-list',
     name: 'KarilList',
     component: KarilList,
+  },
+  {
+    path: '/view-karil',
+    name: 'ViewKaril',
+    component: ViewKaril,
   },
   {
     path: '/add-karil',

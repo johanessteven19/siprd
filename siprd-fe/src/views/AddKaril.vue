@@ -278,7 +278,7 @@ export default {
               alert('Karil berhasil disubmit!');
               console.log(res.data);
               console.log('Success');
-              this.$router.push('/Success');
+              this.$router.push('/karil-list');
             }
             // } else {
             //   console.log(res.data);
