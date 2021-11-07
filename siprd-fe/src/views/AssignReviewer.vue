@@ -174,7 +174,7 @@
 
         </div>
       </v-form>
-  
+
     </validation-observer>
 
   </v-container>
@@ -209,13 +209,13 @@ export default {
       linkBukti: null,
       pengIndex: null,
       kategori: null,
-      status:'Requested'
+      status: 'Requested',
     };
   },
   methods: {
     submitForm() {
       const data = {
-        pemilik : this.namaPenulis,
+        pemilik: this.namaPenulis,
         judul: this.judulKaril,
         journal_data: this.dataJurnal,
         link_origin: this.linkAsli,
@@ -225,7 +225,7 @@ export default {
         link_correspondence: this.linkBukti,
         indexer: this.pengIndex,
         category: this.kategori,
-        status:this.status
+        status: this.status,
       };
       if (localStorage.access) {
         const accessToken = localStorage.access;
@@ -234,8 +234,8 @@ export default {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
-      };
-      Vue.axios
+        };
+        Vue.axios
           .put(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user/`, data, config)
           .then((res) => {
             console.log(res.data);
