@@ -21,6 +21,7 @@ module.exports = {
     "no-plusplus":"off",
     "import/no-unresolved":"off",
     "vue/valid-v-slot":"off",
-    "vue/multi-word-component-names":"off"
+    "vue/multi-word-component-names":"off",
+    "prefer-destructuring":"off",
   },
 };

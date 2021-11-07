@@ -242,12 +242,13 @@ class ManageReviewForm(APIView):
     # Used for debugging
     # Can be deleted if unneeded
     def get(self, request):
-        if (request.data['karil_id'] != None | request.data['karil_id'] == ''):
-            karil_list = KaryaIlmiah.objects.filter(karil_id=request.data['karil_id'])
-        else:
+        try:
+            karil_list = KaryaIlmiah.objects.filter(karil_id=request.data['karil_id']).first()
+            serializer = KaryaIlmiahSerializer(karil_list)
+        except KeyError:
             karil_list = KaryaIlmiah.objects.all()
+            serializer = KaryaIlmiahSerializer(karil_list, many=True)
 
-        serializer = KaryaIlmiahSerializer(karil_list, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # Updates Stage 1 review form into stage 2

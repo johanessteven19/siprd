@@ -175,7 +175,7 @@ export default {
     },
     assign(karilId) {
       console.log(karilId);
-      this.$router.push(`/view-karil?q=${karilId}`);
+      this.$router.push(`/view-karil?id=${karilId}`);
     },
   },
   beforeMount() {

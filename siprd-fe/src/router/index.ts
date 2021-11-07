@@ -93,7 +93,6 @@ const routes: Array<RouteConfig> = [
     path: '/view-karil',
     name: 'ViewKaril',
     component: ViewKaril,
-    props: route => ({ karilId: route.query.q }),
   },
   {
     path: '/add-karil',
@@ -109,7 +108,6 @@ const routes: Array<RouteConfig> = [
     path: '/assign-reviewer',
     name: 'AssignReviewer',
     component: AssignReviewer,
-    props: route => ({ karilId: route.query.q }),
   },
 ];
 
