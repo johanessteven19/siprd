@@ -22,7 +22,7 @@
             <v-btn
               class="mr-4 white--text"
               color="purple"
-              v-on:click="editKaril"
+              v-on:click="editKaril(karilData.karil_id)"
               width="100%"
             > Edit Karya Ilmiah
             </v-btn>
@@ -30,7 +30,7 @@
           <v-col md="2" class="mr-auto">
             <v-btn
               class="mr-4 white--text"
-              v-on:click="assignReviewer"
+              v-on:click="assignReviewer(karilData.karil_id)"
               color="success"
               width="100%"
             > Assign Reviewer
@@ -194,12 +194,12 @@ export default {
       this.submitForm();
     },
 
-    editKaril() {
-      this.$router.push('/edit-karil');
+    editKaril(karilId) {
+      this.$router.push(`/edit-karil?id=${karilId}`);
     },
 
-    assignReviewer() {
-      this.$router.push('/assign-reviewer');
+    assignReviewer(karilId) {
+      this.$router.push(`/assign-reviewer?id=${karilId}`);
     },
 
   },
