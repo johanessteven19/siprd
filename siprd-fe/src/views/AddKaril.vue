@@ -215,7 +215,7 @@ export default {
         .then((res) => {
           if (res.status === 201) {
             alert('Karil berhasil disubmit');
-            console.log('YES');
+            console.log('Success');
           } else {
             console.log(data);
             alert('Gagal');
