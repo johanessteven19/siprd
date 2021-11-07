@@ -94,75 +94,75 @@
                 </v-col>
             </v-row>
 
-            <v-row align="center" justify="center">
-                <v-col md="3" align="right">
-                    Data Jurnal
-                </v-col>
-                <v-col md="2">
-                    <v-text-field v-model="dataJurnal" placeholder="Data Jurnal" outlined>
-                    </v-text-field>
-                </v-col>
-            </v-row>
+              <v-row align="center" justify="center">
+                  <v-col md="3" align="right">
+                      Data Jurnal
+                  </v-col>
+                  <v-col md="2">
+                      <v-text-field v-model="dataJurnal" placeholder="Data Jurnal" outlined>
+                      </v-text-field>
+                  </v-col>
+              </v-row>
 
-            <v-row align="center" justify="center">
-                <v-col md="3" align="right">
-                    Link Asli Jurnal
-                </v-col>
-                <v-col md="2">
-                    <v-text-field v-model="linkAsli" placeholder="Link Asli" outlined>
-                    </v-text-field>
-                </v-col>
-            </v-row>
+              <v-row align="center" justify="center">
+                  <v-col md="3" align="right">
+                      Link Asli Jurnal
+                  </v-col>
+                  <v-col md="2">
+                      <v-text-field v-model="linkAsli" placeholder="Link Asli" outlined>
+                      </v-text-field>
+                  </v-col>
+              </v-row>
 
-            <v-row align="center" justify="center">
-                <v-col md="3" align="right">
-                    Link Repository
-                </v-col>
-                <v-col md="2">
-                    <v-text-field v-model="linkRepo" placeholder="Link Repository" outlined>
-                    </v-text-field>
-                </v-col>
-            </v-row>
+              <v-row align="center" justify="center">
+                  <v-col md="3" align="right">
+                      Link Repository
+                  </v-col>
+                  <v-col md="2">
+                      <v-text-field v-model="linkRepo" placeholder="Link Repository" outlined>
+                      </v-text-field>
+                  </v-col>
+              </v-row>
 
-            <v-row align="center" justify="center">
-                <v-col md="3" align="right">
-                    Link Indexer
-                </v-col>
-                <v-col md="2">
-                    <v-text-field v-model="linkIndexer" placeholder="Link Indexer" outlined>
-                    </v-text-field>
-                </v-col>
-            </v-row>
+              <v-row align="center" justify="center">
+                  <v-col md="3" align="right">
+                      Link Indexer
+                  </v-col>
+                  <v-col md="2">
+                      <v-text-field v-model="linkIndexer" placeholder="Link Indexer" outlined>
+                      </v-text-field>
+                  </v-col>
+              </v-row>
 
-            <v-row align="center" justify="center">
-                <v-col md="3" align="right">
-                    Link Check Similarity
-                </v-col>
-                <v-col md="2">
-                    <v-text-field v-model="linkCheck" placeholder="Link Check" outlined>
-                    </v-text-field>
-                </v-col>
-            </v-row>
+              <v-row align="center" justify="center">
+                  <v-col md="3" align="right">
+                      Link Check Similarity
+                  </v-col>
+                  <v-col md="2">
+                      <v-text-field v-model="linkCheck" placeholder="Link Check" outlined>
+                      </v-text-field>
+                  </v-col>
+              </v-row>
 
-            <v-row align="center" justify="center">
-                <v-col md="3" align="right">
-                    Link Bukti Korespondensi
-                </v-col>
-                <v-col md="2">
-                    <v-text-field v-model="linkBukti" placeholder="Link Bukti" outlined>
-                    </v-text-field>
-                </v-col>
-            </v-row>
+              <v-row align="center" justify="center">
+                  <v-col md="3" align="right">
+                      Link Bukti Korespondensi
+                  </v-col>
+                  <v-col md="2">
+                      <v-text-field v-model="linkBukti" placeholder="Link Bukti" outlined>
+                      </v-text-field>
+                  </v-col>
+              </v-row>
 
-            <v-row align="center" justify="center">
-                <v-col md="3" align="right">
-                    Peng-index
-                </v-col>
-                <v-col md="2">
-                    <v-text-field v-model="pengIndex" placeholder="Peng-Index" outlined>
-                    </v-text-field>
-                </v-col>
-            </v-row>
+              <v-row align="center" justify="center">
+                  <v-col md="3" align="right">
+                      Peng-index
+                  </v-col>
+                  <v-col md="2">
+                      <v-text-field v-model="pengIndex" placeholder="Peng-Index" outlined>
+                      </v-text-field>
+                  </v-col>
+              </v-row>
 
             <v-row align="center" justify="center">
                 <v-col md="3" align="right">
@@ -203,6 +203,7 @@ import {
   ValidationObserver,
   ValidationProvider,
 } from 'vee-validate';
+import Navigation from '../components/Navigation.vue';
 
 extend('required', {
   ...required,
@@ -217,6 +218,7 @@ export default {
   components: {
     ValidationProvider,
     ValidationObserver,
+    Navigation,
   },
   data() {
     return {
