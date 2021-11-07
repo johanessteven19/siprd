@@ -226,7 +226,6 @@ class ManageReviewForm(APIView):
         
         data = request.data
         data['pemilik'] = User.objects.filter(full_name=data['pemilik']).first().username
-        print(data)
 
         serializer = KaryaIlmiahSerializer(data = request.data)
         if serializer.is_valid():
