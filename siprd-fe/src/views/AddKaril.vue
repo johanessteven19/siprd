@@ -1,7 +1,7 @@
 <template>
   <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
     <validation-observer ref="observer" v-slot="{ invalid }">
-      <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
+      <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
         <v-row>
         <v-col>
         <h1>Tambah Karya Ilmiah</h1>
@@ -29,6 +29,9 @@
 
         <v-row>
             <v-col md="3" class="mr-auto">
+              <validation-provider
+                name="promotion"
+              >
               <v-select
                 v-model="promotion"
                 :items="promotionSelect"
@@ -36,7 +39,8 @@
                 data-vv-name="select"
                 outlined
               >
-                  </v-select>
+              </v-select>
+              </validation-provider>
             </v-col>
         </v-row>
         <br>
@@ -165,6 +169,7 @@ import VueAxios from 'vue-axios';
 import Vuetify from 'vuetify';
 import {
   ValidationObserver,
+  ValidationProvider,
 } from 'vee-validate';
 
 Vue.use(Vuetify);
@@ -173,6 +178,7 @@ Vue.use(VueAxios, axios);
 export default {
   name: 'AddKaril',
   components: {
+    ValidationProvider,
     ValidationObserver,
   },
   data() {
@@ -189,8 +195,10 @@ export default {
       kategori: null,
       kategoriSelect: ['Buku', 'Jurnal'],
       promotion: null,
-      promotionSelect: ['Lektor', 'Guru Besar'],
-      status: 'Not Assigned Yet',
+      promotionSelect: ['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar/Professor'],
+      status: 'In Review',
+      reviewers: null,
+      reviews: null,
     };
   },
   methods: {
@@ -208,19 +216,35 @@ export default {
         category: this.kategori,
         promotion: this.promotion,
         status: this.status,
+        reviewers: this.reviewers,
+        reviews: this.reviews,
       };
-      Vue.axios
-        .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/review/submit`, data)
-        .then((res) => {
-          if (res.status === 201) {
-            console.log('Karil berhasil dibuat.');
-          } else {
-            alert('Gagal');
-          }
-        })
-        .catch((err) => {
-          console.log(err.response);
-        });
+      if (localStorage.access) {
+        const accessToken = localStorage.access;
+        console.log('something');
+        const config = {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        };
+        Vue.axios
+          .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, data, config)
+          .then((res) => {
+            if (res.status === 201) {
+              console.log(res.data);
+              alert('Karil berhasil disubmit');
+              console.log('Success');
+              this.$router.push('/Success');
+            } else {
+              console.log(res.data);
+              console.log(res.status);
+              alert('Gagal');
+            }
+          })
+          .catch((err) => {
+            console.log(err.response);
+          });
+      }
     },
 
     checkForm() {

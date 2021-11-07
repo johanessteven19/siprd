@@ -3,6 +3,7 @@
     <h1>Welcome, {{ userData.full_name }}</h1>
     <v-btn depressed color="error" v-on:click="logoutUser"> Logout </v-btn>
     <v-btn depressed color="success" v-on:click="editUser"> Edit Akun </v-btn>
+    <v-btn depressed color="blue" v-on:click="addKaril"> Submit Karil </v-btn>
   </v-container>
 </template>
 
@@ -30,6 +31,10 @@ export default {
     },
     editUser() {
       this.$router.push('/edit-account');
+    },
+
+    addKaril() {
+      this.$router.push('/add-karil');
     },
   },
   beforeMount() {
