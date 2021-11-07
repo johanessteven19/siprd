@@ -242,11 +242,13 @@ export default {
       promotion: null,
       promotionSelect: ['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar/Professor'],
       status: 'Not Reviewed Yet',
+      karilId: null,
     };
   },
   methods: {
     submitForm() {
       const data = {
+        karil_id: this.karilId,
         pemilik: this.namaPenulis,
         judul: this.judulKaril,
         journal_data: this.dataJurnal,
@@ -259,7 +261,6 @@ export default {
         category: this.kategori,
         promotion: this.promotion,
         status: this.status,
-        karilId: null,
       };
       if (localStorage.access) {
         const accessToken = localStorage.access;
@@ -273,11 +274,11 @@ export default {
         Vue.axios
           .put(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, data, config)
           .then((res) => {
-            if (res.status === 201) {
+            if (res.status === 200) {
               alert('Karil berhasil diedit!');
               console.log(res.data);
               console.log('Success');
-              this.$router.push('/Success');
+              this.$router.push(`/view-karil?id=${this.karilId}`);
             } else {
               console.log(res.data);
               console.log(res.status);
