@@ -138,19 +138,22 @@
 
           </div>
 
-          <div class="reviewer" style="margin-top: 2rem; width: 100%;" justify="center">
+          <div class="reviewers" style="margin-top: 2rem; width: 100%;" justify="center">
               <v-row align="center" justify="center" row-gap="10px">
                   <v-col md="3" align="right">
                       <h1>Reviewer</h1> <br>
                   </v-col>
               </v-row>
+
+              <div class="reviewArea" v-for="reviewer in reviewers" :key="reviewer.id">
               <v-row align="center" justify="center">
-                  <v-col md="3" align="right">
-                      Nama Reviewer 1
+                  <v-col md="3" align="right" :for="reviewer.id">
+                      {{reviewer.label}}
                   </v-col>
                   <v-col md="2">
                     <v-select
-                      v-model="reviewer"
+                      :id="reviewer.id"
+                      v-model="reviewer.value"
                       :items="reviewerSelect"
                       label="Reviewer"
                       data-vv-name="select"
@@ -159,28 +162,14 @@
                     </v-select>
                   </v-col>
               </v-row>
+              </div>
+
               <v-row align="center" justify="center">
-                  <v-col md="3" align="right">
-                      Nama Reviewer 2
-                  </v-col>
-                  <v-col md="2">
-                    <v-select
-                      v-model="reviewer"
-                      :items="reviewerSelect"
-                      label="Reviewer"
-                      data-vv-name="select"
-                      outlined
-                    >
-                    </v-select>
-                  </v-col>
-              </v-row>
-              <v-row align="center" justify="center">
-                  <v-col md="3" align="right">
+                  <v-col md="4" align="right">
                     <v-btn
-                      class="mr-4 white--text"
-                      type="submit"
-                      color="success"
-                      width="100%"
+                      class="mr-5 white--text"
+                      v-on:click="addNew"
+                      color="purple"
                     > + Tambah Reviewer
                     </v-btn>
                   </v-col>
@@ -228,6 +217,12 @@ export default {
       pengIndex: null,
       kategori: null,
       status: 'Requested',
+      counter: 0,
+      reviewers: [{
+        id: 'reviewer0',
+        label: 'Nama Reviewer',
+        value: '',
+      }],
     };
   },
   methods: {
@@ -290,6 +285,14 @@ export default {
       this.$router.push('/view-karil');
     },
 
+    addNew() {
+      this.reviewers.push({
+        id: `reviewer${++this.counter}`,
+        label: 'Nama Reviewer',
+        value: '',
+      });
+    },
+
   },
 
   beforeMount() {
@@ -302,8 +305,6 @@ export default {
         console.log(res.data);
         if (res.status === 200) {
           this.karilData = res.data;
-          // this.namaPenulis = res.data.pemilik;
-          // this.position = res.data.position;
         }
       });
     } else {
