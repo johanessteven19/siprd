@@ -271,11 +271,6 @@ class ManageReviewForm(APIView):
         user_role = user_data['role']
 
         if ( user_role == "Admin" or user_role == "SDM PT" ):
-            # Verification: Admin or SDMPT must assign at least 2 reviewers.
-            reviewer_count = len(request.data['reviewers'])
-            if reviewer_count < 2:
-                return Response({'message': 'You must assign at least 2 reviewers!'}, status=status.HTTP_400_BAD_REQUEST)
-
             karil = None
             try:
                 karil = KaryaIlmiah.objects.get(karil_id=request.data['karil_id'])
