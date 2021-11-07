@@ -8,6 +8,7 @@
       <v-btn depressed color="error" v-on:click="logoutUser"> Logout </v-btn>
       <v-btn depressed color="success" v-on:click="editUser"> Edit Akun </v-btn>
       <v-btn depressed color="blue" v-on:click="addKaril"> Submit Karil </v-btn>
+      <v-btn depressed color="yellow" v-on:click="editKaril"> Edit Karil </v-btn>
     </v-container>
   </div>
 </template>
@@ -45,6 +46,10 @@ export default {
 
     addKaril() {
       this.$router.push('/add-karil');
+    },
+
+    editKaril() {
+      this.$router.push('/edit-karil');
     },
   },
   beforeMount() {

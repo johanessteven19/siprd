@@ -12,6 +12,7 @@ import Dashboard from '../views/Dashboard.vue';
 import RegisterSuccess from '../views/RegisterSuccess.vue';
 import AccountList from '../views/AccountList.vue';
 import AddKaril from '../views/AddKaril.vue';
+import EditKaril from '../views/EditKaril.vue';
 import AssignReviewer from '../views/AssignReviewer.vue';
 
 Vue.use(VueRouter);
@@ -85,6 +86,11 @@ const routes: Array<RouteConfig> = [
     path: '/add-karil',
     name: 'AddKaril',
     component: AddKaril,
+  },
+  {
+    path: '/edit-karil',
+    name: 'EditKaril',
+    component: EditKaril,
   },
   {
     path: '/assign-reviewer',

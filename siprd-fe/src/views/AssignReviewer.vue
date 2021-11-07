@@ -5,7 +5,7 @@
     </div>
     <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
       <validation-observer ref="observer" v-slot="{ invalid }">
-        <v-form @submit.prevent="submitForm" ref="form" v-model="valid">
+        <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
           <v-row>
           <v-col>
           <h1>Daftar Karya Ilmiah</h1>
@@ -33,8 +33,8 @@
 
           <v-row >
               <v-col md="3" class="mr-auto">
-                  Dosen: Doni <br>
-                  Jabatan: Asisten Ahli <br>
+                  Dosen:Doni <br>
+                  Jabatan:Lektor <br>
                   Kenaikan Jabatan: Lektor Kepala
               </v-col>
           </v-row>
@@ -222,13 +222,14 @@ export default {
   methods: {
     submitForm() {
       const data = {
+        
         pemilik: this.namaPenulis,
         judul: this.judulKaril,
         journal_data: this.dataJurnal,
         link_origin: this.linkAsli,
         link_repo: this.linkRepo,
         link_indexer: this.linkIndexer,
-        link_simheck: this.linkCheck,
+        link_simcheck: this.linkCheck,
         link_correspondence: this.linkBukti,
         indexer: this.pengIndex,
         category: this.kategori,
@@ -243,7 +244,7 @@ export default {
           },
         };
         Vue.axios
-          .put(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user/`, data, config)
+          .put(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, data, config)
           .then((res) => {
             console.log(res.data);
             if (res.status === 200) {
@@ -265,6 +266,30 @@ export default {
       }
     },
 
+    checkForm() {
+      this.$refs.observer.validate();
+      this.submitForm();
+    },
+
+  },
+
+  beforeMount() {
+    if (localStorage.access) {
+      const accessToken = localStorage.access;
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, config).then((res) => {
+        console.log(res.data);
+        if (res.status === 200) {
+          this.userData = res.data;
+          // this.namaPenulis = res.data.pemilik;
+          // this.position = res.data.position;
+        }
+      });
+    } else {
+      this.$router.push('/');
+    }
   },
 
 };

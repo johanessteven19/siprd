@@ -8,7 +8,7 @@
       <v-form @submit.prevent="checkForm" ref="form" v-model="valid" lazy-validation>
         <v-row>
         <v-col>
-        <h1>Tambah Karya Ilmiah</h1>
+        <h1>Edit Karya Ilmiah</h1>
         </v-col>
         <v-col md="1" class="mr-auto">
           <v-btn
@@ -17,7 +17,7 @@
             type="submit"
             color="success"
             width="100%"
-          > Submit
+          > Edit
           </v-btn>
         </v-col>
         <v-col md="1" class="mr-auto">
@@ -219,7 +219,7 @@ Vue.use(Vuetify);
 Vue.use(VueAxios, axios);
 
 export default {
-  name: 'AddKaril',
+  name: 'EditKaril',
   components: {
     ValidationProvider,
     ValidationObserver,
@@ -269,22 +269,18 @@ export default {
         };
         console.log(data);
         Vue.axios
-          .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, data, config)
+          .put(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, data, config)
           .then((res) => {
-            if (res.status === 500) {
-              console.log('Name error');
-              alert('Masukan nama penulis yang sudah terdaftar.');
-            } else if (res.status === 201) {
-              alert('Karil berhasil disubmit!');
+            if (res.status === 201) {
+              alert('Karil berhasil diedit!');
               console.log(res.data);
               console.log('Success');
               this.$router.push('/Success');
+            } else {
+              console.log(res.data);
+              console.log(res.status);
+              alert('Try Again.');
             }
-            // } else {
-            //   console.log(res.data);
-            //   console.log(res.status);
-            //   alert('Try Again.');
-            // }
           })
           .catch((err) => {
             console.log(err.response);
@@ -296,7 +292,33 @@ export default {
       this.$refs.observer.validate();
       this.submitForm();
     },
+  },
 
+  beforeMount() {
+    if (localStorage.access) {
+      const accessToken = localStorage.access;
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, config).then((res) => {
+        if (res.status === 200) {
+          this.userData = res.data;
+          this.namaPenulis = res.data.pemilik;
+          this.judulKaril = res.data.judul;
+          this.dataJurnal = res.data.journal_data;
+          this.linkAsli = res.data.link_origin;
+          this.linkRepo = res.data.link_repo;
+          this.linkIndexer = res.data.link_indexer;
+          this.linkCheck = res.data.link_simcheck;
+          this.linkBukti = res.data.link_correspondence;
+          this.pengIndex = res.data.indexer;
+          this.kategori = res.data.category;
+          this.promotion = res.data.promotion;
+        }
+      });
+    } else {
+      this.$router.push('/');
+    }
   },
 
 };
