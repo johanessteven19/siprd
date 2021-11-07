@@ -1,5 +1,6 @@
 /src/assets/*
 /src/components/GoogleIcon.vue
+/src/router/index.ts
 /src/main.ts
 /src/shims-tsx.d.ts
 /src/shims-vue.d.ts

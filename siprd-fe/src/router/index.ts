@@ -96,6 +96,7 @@ const routes: Array<RouteConfig> = [
     path: '/assign-reviewer',
     name: 'AssignReviewer',
     component: AssignReviewer,
+    props: route => ({ karilId: route.query.q }),
   },
 ];
 

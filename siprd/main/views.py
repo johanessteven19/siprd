@@ -242,7 +242,10 @@ class ManageReviewForm(APIView):
     # Used for debugging
     # Can be deleted if unneeded
     def get(self, request):
-        karil_list = KaryaIlmiah.objects.all()
+        if (request.data['karil_id'] != None | request.data['karil_id'] == ''):
+            karil_list = KaryaIlmiah.objects.filter(karil_id=request.data['karil_id'])
+        else:
+            karil_list = KaryaIlmiah.objects.all()
 
         serializer = KaryaIlmiahSerializer(karil_list, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
