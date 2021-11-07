@@ -6,7 +6,7 @@
       </div>
       <ul v-show="!mobile" class="navigation">
         <li>
-          <router-link class="link" :to="{ name: 'Success' }"
+          <router-link class="link" :to="{ name: 'KarilList' }"
             >Daftar Karya Ilmiah</router-link
           >
         </li>
@@ -31,7 +31,7 @@
       <transition name="mobile-nav">
         <ul v-show="mobileNav" class="dropdown-nav">
           <li>
-            <router-link class="link" :to="{ name: 'Success' }"
+            <router-link class="link" :to="{ name: 'KarilList' }"
               >Daftar Karya Ilmiah</router-link
             >
           </li>

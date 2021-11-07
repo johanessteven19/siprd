@@ -13,6 +13,7 @@ import RegisterSuccess from '../views/RegisterSuccess.vue';
 import AccountList from '../views/AccountList.vue';
 import AddKaril from '../views/AddKaril.vue';
 import AssignReviewer from '../views/AssignReviewer.vue';
+import KarilList from '../views/KarilList.vue';
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
@@ -80,6 +81,11 @@ const routes: Array<RouteConfig> = [
     path: '/account-list',
     name: 'AccountList',
     component: AccountList,
+  },
+  {
+    path: '/karil-list',
+    name: 'KarilList',
+    component: KarilList,
   },
   {
     path: '/add-karil',
