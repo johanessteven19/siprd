@@ -10,33 +10,26 @@
           <v-col>
           <h1>Daftar Karya Ilmiah</h1>
           </v-col>
-          <v-col md="2" class="mr-auto">
-            <v-btn
-              class="mr-4 white--text"
-              color="blue"
-              width="100%"
-            > Download to Excel
-            </v-btn>
-          </v-col>
-          <v-col md="2" class="mr-auto">
-            <v-btn
-              class="mr-4 white--text"
-              color="purple"
-              v-on:click="editKaril"
-              width="100%"
-            > Edit Karya Ilmiah
-            </v-btn>
-          </v-col>
-          <v-col md="2" class="mr-auto">
-            <v-btn
-              class="mr-4 white--text"
-              :disabled="invalid"
-              type="submit"
-              color="success"
-              width="100%"
-            > Assign Reviewer
-            </v-btn>
-          </v-col>
+            <v-col md="1" class="mr-auto">
+              <v-btn
+                class="mr-4 white--text"
+                :disabled="invalid"
+                type="submit"
+                color="success"
+                width="100%"
+              > Accept
+              </v-btn>
+            </v-col>
+            <v-col md="1" class="mr-auto">
+              <v-btn
+                class="mr-4 white--text"
+                :disabled="false"
+                v-on:click="cancel"
+                color="red"
+                width="100%"
+              > Cancel
+              </v-btn>
+            </v-col>
           </v-row>
 
           <v-row >
@@ -166,6 +159,32 @@
                     </v-select>
                   </v-col>
               </v-row>
+              <v-row align="center" justify="center">
+                  <v-col md="3" align="right">
+                      Nama Reviewer 2
+                  </v-col>
+                  <v-col md="2">
+                    <v-select
+                      v-model="reviewer"
+                      :items="reviewerSelect"
+                      label="Reviewer"
+                      data-vv-name="select"
+                      outlined
+                    >
+                    </v-select>
+                  </v-col>
+              </v-row>
+              <v-row align="center" justify="center">
+                  <v-col md="3" align="right">
+                    <v-btn
+                      class="mr-4 white--text"
+                      type="submit"
+                      color="success"
+                      width="100%"
+                    > + Tambah Reviewer
+                    </v-btn>
+                  </v-col>
+              </v-row>
 
           </div>
         </v-form>
@@ -265,6 +284,10 @@ export default {
 
     editKaril() {
       this.$router.push('/edit-karil');
+    },
+
+    cancel() {
+      this.$router.push('/view-karil');
     },
 
   },

@@ -25,6 +25,7 @@
             class="mr-4 white--text"
             :disabled="false"
             color="red"
+            v-on:click="cancel"
             width="100%"
           > Cancel
           </v-btn>
@@ -291,6 +292,10 @@ export default {
     checkForm() {
       this.$refs.observer.validate();
       this.submitForm();
+    },
+
+    cancel() {
+      this.$router.push('/view-karil');
     },
   },
 
