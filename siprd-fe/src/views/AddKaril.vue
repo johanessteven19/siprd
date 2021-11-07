@@ -1,7 +1,7 @@
 <template>
   <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
     <validation-observer ref="observer" v-slot="{ invalid }">
-      <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
+      <v-form @submit.prevent="checkForm" ref="form" v-model="valid" lazy-validation>
         <v-row>
         <v-col>
         <h1>Tambah Karya Ilmiah</h1>
@@ -30,25 +30,28 @@
         <v-row>
             <v-col md="3" class="mr-auto">
               <validation-provider
-                name="promotion"
+                v-slot="{ errors }"
+                name="Jabatan"
+                rules="required"
               >
-              <v-select
-                v-model="promotion"
-                :items="promotionSelect"
-                label="Pilih jabatan yang dituju"
-                data-vv-name="select"
-                outlined
-              >
-              </v-select>
+                  <v-select
+                    v-model="promotion"
+                    :items="promotionSelect"
+                    :error-messages="errors"
+                    label="Pilih jabatan yang dituju*"
+                    data-vv-name="select"
+                    required
+                    outlined
+                  >
+                  </v-select>
               </validation-provider>
             </v-col>
         </v-row>
-        <br>
 
         <div class="identitas" justify="center">
             <v-row align="center" justify="center" row-gap="10px">
                 <v-col md="5" align="right">
-                    <h1>Identitas Karya Ilmiah</h1> <br>
+                    <h1>Identitas Karya Ilmiah</h1>
                 </v-col>
             </v-row>
             <v-row align="center" justify="center">
@@ -56,8 +59,18 @@
                     Nama Penulis
                 </v-col>
                 <v-col md="2">
-                    <v-text-field v-model="namaPenulis" placeholder="Nama Penulis" outlined>
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="Nama penulis"
+                    rules="required"
+                  >
+                    <v-text-field v-model="namaPenulis"
+                      :error-messages="errors"
+                      placeholder="Nama Penulis*"
+                      required
+                      outlined>
                     </v-text-field>
+                  </validation-provider>
                 </v-col>
             </v-row>
 
@@ -66,8 +79,18 @@
                     Judul Karya Ilmiah
                 </v-col>
                 <v-col md="2">
-                    <v-text-field v-model="judulKaril" placeholder="Judul Karil" outlined>
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="Judul karil"
+                    rules="required"
+                  >
+                    <v-text-field v-model="judulKaril"
+                    :error-messages="errors"
+                    placeholder="Judul Karil*"
+                    required
+                    outlined>
                     </v-text-field>
+                  </validation-provider>
                 </v-col>
             </v-row>
 
@@ -146,14 +169,21 @@
                     Kategori Karya Ilmiah
                 </v-col>
                 <v-col md="2">
-                  <v-select
-                    v-model="kategori"
-                    :items="kategoriSelect"
-                    label="Kategori Karil"
-                    data-vv-name="select"
-                    outlined
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="Kategori Karil"
+                    rules="required"
                   >
-                  </v-select>
+                    <v-select
+                      v-model="kategori"
+                      :error-messages="errors"
+                      :items="kategoriSelect"
+                      label="Kategori Karil*"
+                      data-vv-name="select"
+                      outlined
+                    >
+                    </v-select>
+                  </validation-provider>
                 </v-col>
             </v-row>
         </div>
@@ -167,10 +197,17 @@ import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import Vuetify from 'vuetify';
+import { required } from 'vee-validate/dist/rules';
 import {
+  extend,
   ValidationObserver,
   ValidationProvider,
 } from 'vee-validate';
+
+extend('required', {
+  ...required,
+  message: '{_field_} harap diisi.',
+});
 
 Vue.use(Vuetify);
 Vue.use(VueAxios, axios);
@@ -196,9 +233,7 @@ export default {
       kategoriSelect: ['Buku', 'Jurnal'],
       promotion: null,
       promotionSelect: ['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar/Professor'],
-      status: 'In Review',
-      reviewers: null,
-      reviews: null,
+      status: 'Not Reviewed Yet',
     };
   },
   methods: {
@@ -210,14 +245,12 @@ export default {
         link_origin: this.linkAsli,
         link_repo: this.linkRepo,
         link_indexer: this.linkIndexer,
-        link_simheck: this.linkCheck,
+        link_simcheck: this.linkCheck,
         link_correspondence: this.linkBukti,
         indexer: this.pengIndex,
         category: this.kategori,
         promotion: this.promotion,
         status: this.status,
-        reviewers: this.reviewers,
-        reviews: this.reviews,
       };
       if (localStorage.access) {
         const accessToken = localStorage.access;
@@ -227,18 +260,18 @@ export default {
             Authorization: `Bearer ${accessToken}`,
           },
         };
+        console.log(data);
         Vue.axios
           .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, data, config)
           .then((res) => {
             if (res.status === 201) {
               console.log(res.data);
-              alert('Karil berhasil disubmit');
               console.log('Success');
               this.$router.push('/Success');
             } else {
               console.log(res.data);
               console.log(res.status);
-              alert('Gagal');
+              alert('Try Again.');
             }
           })
           .catch((err) => {
