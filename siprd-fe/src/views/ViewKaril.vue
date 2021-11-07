@@ -217,6 +217,7 @@ export default {
       pengIndex: null,
       kategori: null,
       status: 'Requested',
+      karilId: null,
     };
   },
   methods: {
@@ -276,13 +277,15 @@ export default {
   beforeMount() {
     if (localStorage.access) {
       const accessToken = localStorage.access;
+      const data = {
+        karil_id: this.karilId,
+      };
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
-      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, config).then((res) => {
+      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, config).then((res) => {
         console.log(res.data);
         if (res.status === 200) {
-          this.userData = res.data;
           // this.namaPenulis = res.data.pemilik;
           // this.position = res.data.position;
         }
