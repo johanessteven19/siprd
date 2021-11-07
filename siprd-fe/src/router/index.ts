@@ -12,8 +12,10 @@ import Dashboard from '../views/Dashboard.vue';
 import RegisterSuccess from '../views/RegisterSuccess.vue';
 import AccountList from '../views/AccountList.vue';
 import AddKaril from '../views/AddKaril.vue';
+import EditKaril from '../views/EditKaril.vue';
 import AssignReviewer from '../views/AssignReviewer.vue';
 import KarilList from '../views/KarilList.vue';
+import ViewKaril from '../views/ViewKaril.vue';
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
@@ -88,9 +90,19 @@ const routes: Array<RouteConfig> = [
     component: KarilList,
   },
   {
+    path: '/view-karil',
+    name: 'ViewKaril',
+    component: ViewKaril,
+  },
+  {
     path: '/add-karil',
     name: 'AddKaril',
     component: AddKaril,
+  },
+  {
+    path: '/edit-karil',
+    name: 'EditKaril',
+    component: EditKaril,
   },
   {
     path: '/assign-reviewer',
