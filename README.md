@@ -43,6 +43,8 @@ python -m venv env # depending on your computer/os, it may be python3
 
 ```bash
 source env/bin/activate # MacOS / Linux
+
+env\Scripts\activate # Windows
 ```
 
 5. Install the required dependencies

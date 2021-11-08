@@ -74,6 +74,20 @@ class IsUserExist(APIView):
 
         return Response(serializer.data)
 
+# Fetches Karils associated with the creater User based on username
+class GetLinkedKarils(APIView):
+	def get(self, request):
+		logger.info("Checking for linked karils...")
+		requested_username = request.query_params['username']
+
+		karils = KaryaIlmiahSerializer(KaryaIlmiah.objects.filter(pemilik__username=requested_username), many=True)
+
+		if len(karils.data) != 0:
+			return Response(karils.data, status=status.HTTP_200_OK)
+		else:
+			# No matching karils
+			return Response(status=status.HTTP_204_NO_CONTENT)
+
 # Will return all user data for the given email
 # only succeeds if the authenticated user's email
 # is the one being queried

@@ -15,6 +15,7 @@ urlpatterns = [
     path("api/user", views.ViewUserData.as_view()),
     path("api/ping", views.ping_auth),
     path("api/get-linked-users/", views.GetLinkedUsers.as_view()),
+    path("api/get-karil-summary/", views.GetLinkedKarils.as_view()),
     path("api/manage-users/", views.ManageUsers.as_view()),
     path('api/google/', include('rest_social_auth.urls_jwt_pair')),
     path(r'^auth/', include('rest_framework_social_oauth2.urls')),
