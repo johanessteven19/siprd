@@ -108,7 +108,7 @@
                             <span
                             v-for="reviewer in karil.reviewers"
                             :key="reviewer.username">
-                              {{reviewer.full_name}}, 
+                              {{reviewer.full_name}},
                             </span>
                           </div>
                           <div v-else>
@@ -187,7 +187,7 @@ export default {
           let asum = 0;
           let rsum = 0;
           let dsum = 0;
-          karils.array.forEach((element) => {
+          this.karils.array.forEach((element) => {
             if (element.status.includes('Done')) {
               dsum += 1;
             } else if (element.status.includes('In_Review')) {
@@ -196,9 +196,9 @@ export default {
               asum += 1;
             }
           });
-          this.assigned = (asum / karils.length) * 100;
-          this.reviewed = (rsum / karils.length) * 100;
-          this.done = (dsum / karils.length) * 100;
+          this.assigned = (asum / this.karils.length) * 100;
+          this.reviewed = (rsum / this.karils.length) * 100;
+          this.done = (dsum / this.karils.length) * 100;
         }
       });
     } else {
