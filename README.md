@@ -57,7 +57,7 @@ pip install -r requirements.txt
 
 7. In the root folder, run docker-compose
 ```bash
-docker-compose up
+docker-compose up --build
 ```
 
 8. In the backend directory, run make migrations
