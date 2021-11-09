@@ -1,4 +1,8 @@
 <template>
+  <div>
+  <div style="position: fixed; top: 0;">
+  <Navigation />
+  </div>
   <v-container style="padding: 140px 0">
     <v-row>
       <v-layout column align-center justify-center>
@@ -32,7 +36,7 @@
         <br>
         <br>
         <br>
-        <h2 class="text-center"><strong>Summary Karya Ilmiah</strong></h2>
+        <h2 class="text-center"><strong>Summary Karya Ilmiah {{ userData.full_name }}</strong></h2>
         <br>
         <v-row>
             <v-col>
@@ -42,12 +46,12 @@
                       <br><br>
                         <v-progress-circular
                         :rotate="-90"
-                        :size="130"
+                        :size="140"
                         :width="15"
                         :value= "assigned"
                         color="blue"
                         >
-                            <strong>10%</strong>
+                            <strong>{{assigned}}</strong>
                         </v-progress-circular>
                     </v-card-text>
                 </v-card>
@@ -59,12 +63,12 @@
                       <br><br>
                         <v-progress-circular
                         :rotate="-90"
-                        :size="130"
+                        :size="140"
                         :width="15"
                         :value= "reviewed"
                         color="blue"
                         >
-                            <strong>33%</strong>
+                            <strong>{{reviewed}}</strong>
                         </v-progress-circular>
                     </v-card-text>
                 </v-card>
@@ -76,12 +80,12 @@
                       <br><br>
                         <v-progress-circular
                         :rotate="-90"
-                        :size="130"
+                        :size="140"
                         :width="15"
                         :value= "done"
                         color="amber"
                         >
-                            <strong>75%</strong>
+                            <strong>{{done}}</strong>
                         </v-progress-circular>
                     </v-card-text>
                 </v-card>
@@ -91,15 +95,15 @@
           <div
             v-for="(karil,index) in karils"
             :key="karil.karil_id">
-            <v-col v-if="index <= 3">
+            <v-col v-if="index < 3">
                 <v-card outlined>
                     <v-card-title>
                         {{karil.judul}}
                     </v-card-title>
                     <v-card-text>
-                        {{ userData.full_name }}<br>
-                        {{karil.journal_data}}<br>
-                        <a :href="karil.link_indexer">Indexer</a><br>
+                        Pemilik: {{ userData.full_name }}<br>
+                        Data: {{karil.journal_data}}<br>
+                        Indexer: {{karil.indexer}}<br>
                         <a :href="karil.link_repo">Repository</a><br>
                         <a :href="karil.link_correspondence">Bukti Korespondensi</a>
                         <v-card color="#8D38E3" dark>
@@ -126,6 +130,7 @@
             class="ml-auto white--text"
             color="#8D38E3"
             width="100%"
+            v-on:click="karilList"
           >
             See All List
           </v-btn>
@@ -133,6 +138,7 @@
       </v-layout>
     </v-row>
   </v-container>
+  </div>
 </template>
 
 <script>
@@ -140,12 +146,16 @@ import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import Vuetify from 'vuetify';
+import Navigation from '../components/Navigation.vue';
 
 Vue.use(VueAxios, axios);
 Vue.use(Vuetify);
 
 export default {
   name: 'Success',
+  components: {
+    Navigation,
+  },
   data() {
     return {
       userData: '',
@@ -158,6 +168,9 @@ export default {
   methods: {
     proceed() {
       this.$router.push('/');
+    },
+    karilList() {
+      this.$router.push('/karil-list');
     },
   },
   beforeMount() {
@@ -174,20 +187,15 @@ export default {
           this.userData = res.data;
         }
       });
-      const config1 = {
-        params: {
-          username: this.userData.username,
-        },
-      };
-      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-karil-summary/`, config1).then((res) => {
+      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-karil-summary/`, config).then((res) => {
         console.log(res.data);
         if (res.status === 200) {
-          console.log(res.data);
           this.karils = res.data;
           let asum = 0;
           let rsum = 0;
           let dsum = 0;
-          this.karils.array.forEach((element) => {
+          this.karils.forEach((element) => {
+            console.log(element.status);
             if (element.status.includes('Done')) {
               dsum += 1;
             } else if (element.status.includes('In_Review')) {
@@ -199,13 +207,12 @@ export default {
           this.assigned = (asum / this.karils.length) * 100;
           this.reviewed = (rsum / this.karils.length) * 100;
           this.done = (dsum / this.karils.length) * 100;
+        } else {
+          console.log('fetch failed or no karil');
         }
       });
     } else {
       this.$router.push('/');
-      // alert(
-      // 'Maaf, tidak ada akun yang terhubung dengan email tersebut. Apakah anda sudah daftar?',
-      // );
     }
   },
 };
