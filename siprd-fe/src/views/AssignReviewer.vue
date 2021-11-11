@@ -255,7 +255,7 @@ export default {
     //       .then((res) => {
     //         console.log(res.data);
     //         if (res.status === 200) {
-    //           this.$router.push('/Success');
+    //           this.$router.push('/your-account');
     //         } else {
     //           alert('Gagal');
     //         }

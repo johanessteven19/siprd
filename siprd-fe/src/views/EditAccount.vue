@@ -235,7 +235,7 @@ export default {
             console.log(res.data);
             if (res.status === 200) {
               // alert("Akun berhasil diedit.");
-              this.$router.push('/Success');
+              this.$router.push('/your-account');
             } else {
               alert('Gagal');
             }
@@ -259,7 +259,7 @@ export default {
     },
 
     backRedir() {
-      this.$router.push('/Success');
+      this.$router.push('/your-account');
     },
   },
 
