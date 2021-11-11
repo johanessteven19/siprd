@@ -65,7 +65,7 @@ const routes: Array<RouteConfig> = [
     component: EditAccount,
   },
   {
-    path: '/success',
+    path: '/your-account',
     name: 'Success',
     component: Success,
   },

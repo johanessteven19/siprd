@@ -89,7 +89,7 @@ export default {
         (res) => {
           if (res.status === 200) {
             alert('pergantian password berhasil');
-            this.$router.push('/Success');
+            this.$router.push('/your-account');
           } else {
             alert('terjadi kesalahan pada server');
             this.$router.push('/');

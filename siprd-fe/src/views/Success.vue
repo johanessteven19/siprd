@@ -4,11 +4,11 @@
     <Navigation />
     </div>
     <v-container style="margin: auto; width: 60%; padding: 70px 0">
-      <h1>Welcome, {{ userData.full_name }}</h1>
-      <v-btn depressed color="error" v-on:click="logoutUser"> Logout </v-btn>
-      <v-btn depressed color="success" v-on:click="editUser"> Edit Akun </v-btn>
-      <v-btn depressed color="blue" v-on:click="addKaril"> Submit Karil </v-btn>
-      <v-btn depressed color="yellow" v-on:click="editKaril"> Edit Karil </v-btn>
+      <h1>Welcome, {{ userData.full_name }}</h1><br><br>
+      <v-btn outlined class="blue--text" v-on:click="editUser"> Edit Akun </v-btn><br><br>
+      <v-btn outlined class="blue--text" v-on:click="addKaril"> Submit Karil </v-btn><br><br>
+      <v-btn outlined class="blue--text" v-on:click="editKaril"> Edit Karil </v-btn><br><br>
+      <v-btn outlined class="red--text" v-on:click="logoutUser"> Logout </v-btn>
     </v-container>
   </div>
 </template>

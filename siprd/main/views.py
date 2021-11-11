@@ -178,6 +178,7 @@ class ManageUsers(APIView):
     def delete(self, request):
         user_data = get_user_data(request)
         user_role = user_data['role']
+        print("ur role is " + user_role)
 
         if ( user_role == "Admin" or user_role == "SDM PT" ):
             try:
