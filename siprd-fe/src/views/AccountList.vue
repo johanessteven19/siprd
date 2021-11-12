@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="position: fixed; top: 0;">
-    <Navigation />
+      <Navigation />
     </div>
     <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
       <v-row>
@@ -58,24 +58,20 @@
         class="elevation-1"
       >
 
-      <template v-slot:top>
-      <v-container>
-        <v-spacer></v-spacer>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        >
-        </v-text-field>
-      </v-container>
+        <template v-slot:top>
+          <v-container>
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            >
+            </v-text-field>
+          </v-container>
 
-      </template>
-
-      <template v-slot:item.no="{ index }">
-        {{ index + 1 }}
-      </template>
+        </template>
 
       <template v-slot:item.action="{ item }">
         <template v-if="show_only_unapproved">
