@@ -8,7 +8,7 @@
       <v-form @submit.prevent="checkForm" ref="form" v-model="valid" lazy-validation>
         <v-row>
         <v-col>
-        <h1>Tambah Karya Ilmiah</h1>
+        <h1>Edit Karya Ilmiah</h1>
         </v-col>
         <v-col md="1" class="mr-auto">
           <v-btn
@@ -17,7 +17,7 @@
             type="submit"
             color="success"
             width="100%"
-          > Submit
+          > Edit
           </v-btn>
         </v-col>
         <v-col md="1" class="mr-auto">
@@ -25,6 +25,7 @@
             class="mr-4 white--text"
             :disabled="false"
             color="red"
+            v-on:click="cancel"
             width="100%"
           > Cancel
           </v-btn>
@@ -219,7 +220,7 @@ Vue.use(Vuetify);
 Vue.use(VueAxios, axios);
 
 export default {
-  name: 'AddKaril',
+  name: 'EditKaril',
   components: {
     ValidationProvider,
     ValidationObserver,
@@ -241,11 +242,13 @@ export default {
       promotion: null,
       promotionSelect: ['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar/Professor'],
       status: 'Not Reviewed Yet',
+      karilId: null,
     };
   },
   methods: {
     submitForm() {
       const data = {
+        karil_id: this.karilId,
         pemilik: this.namaPenulis,
         judul: this.judulKaril,
         journal_data: this.dataJurnal,
@@ -269,22 +272,18 @@ export default {
         };
         console.log(data);
         Vue.axios
-          .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, data, config)
+          .put(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, data, config)
           .then((res) => {
-            if (res.status === 500) {
-              console.log('Name error');
-              alert('Masukan nama penulis yang sudah terdaftar.');
-            } else if (res.status === 201) {
-              alert('Karil berhasil disubmit!');
+            if (res.status === 200) {
+              alert('Karil berhasil diedit!');
               console.log(res.data);
               console.log('Success');
-              this.$router.push('/karil-list');
+              this.$router.push(`/view-karil?id=${this.karilId}`);
+            } else {
+              console.log(res.data);
+              console.log(res.status);
+              alert('Try Again.');
             }
-            // } else {
-            //   console.log(res.data);
-            //   console.log(res.status);
-            //   alert('Try Again.');
-            // }
           })
           .catch((err) => {
             console.log(err.response);
@@ -297,6 +296,43 @@ export default {
       this.submitForm();
     },
 
+    cancel() {
+      this.$router.push(`/view-karil?id=${this.karilId}`);
+    },
+  },
+
+  beforeMount() {
+    this.karilId = this.$route.query.id;
+    if (localStorage.access) {
+      const accessToken = localStorage.access;
+      const data = {
+        karil_id: this.karilId,
+      };
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+      Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, data, config).then((res) => {
+        if (res.status === 200) {
+          console.log(res.data);
+          this.karilData = res.data;
+          console.log(this.karilData);
+          this.namaPenulis = this.karilData.pemilik;
+          this.judulKaril = this.karilData.judul;
+          this.dataJurnal = this.karilData.journal_data;
+          this.linkAsli = this.karilData.linkAsli;
+          this.linkRepo = this.karilData.link_repo;
+          this.linkIndexer = this.karilData.link_indexer;
+          this.linkCheck = this.karilData.link_simcheck;
+          this.linkBukti = this.karilData.link_correspondence;
+          this.pengIndex = this.karilData.indexer;
+          this.kategori = this.karilData.category;
+          this.promotion = this.karilData.promotion;
+          this.status = this.karilData.status;
+        }
+      });
+    } else {
+      this.$router.push('/');
+    }
   },
 
 };

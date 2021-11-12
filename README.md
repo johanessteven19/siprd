@@ -43,6 +43,8 @@ python -m venv env # depending on your computer/os, it may be python3
 
 ```bash
 source env/bin/activate # MacOS / Linux
+
+env\Scripts\activate # Windows
 ```
 
 5. Install the required dependencies
@@ -55,7 +57,7 @@ pip install -r requirements.txt
 
 7. In the root folder, run docker-compose
 ```bash
-docker-compose up
+docker-compose up --build
 ```
 
 8. In the backend directory, run make migrations

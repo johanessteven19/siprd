@@ -95,7 +95,9 @@ class KaryaIlmiahSerializer(serializers.ModelSerializer):
             'indexer',
             'category',
             'status',
-            'promotion'
+            'promotion',
+            'reviewers',
+            'reviews'
         ]
 
 class ReviewSerializer(serializers.ModelSerializer):
