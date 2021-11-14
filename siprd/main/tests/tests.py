@@ -225,4 +225,4 @@ class SIPRDUnitTest(TestCase):
 			format='json')
 		
 		response = self.client.get(self.karil_summary_url)
-		self.assertEqual(response.status_code, 200)
+		self.assertEqual(response.status_code, 201)
