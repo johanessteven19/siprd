@@ -255,6 +255,7 @@ class ManageReviewForm(APIView):
             return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
         
         data = request.data
+        data._mutable = True
         try:
             data['pemilik'] = User.objects.filter(full_name=data['pemilik']).first().username
         except User.DoesNotExist:
