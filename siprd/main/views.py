@@ -314,7 +314,7 @@ class ManageReviewForm(APIView):
                 return Response({'message': 'The paper you are trying to delete does not exist'}, status=status.HTTP_404_NOT_FOUND) 
             karil.delete()
             return Response({request.data['judul'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
-        else: return Response(self.forbidden_warning, status=status.HTTP_401_UNAUTHORIZED)
+        else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer

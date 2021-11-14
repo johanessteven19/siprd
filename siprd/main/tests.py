@@ -1,6 +1,6 @@
 from django.test import TestCase
 from rest_framework.test import APIClient
-from .models import User
+from .models import KaryaIlmiah, User
 from django.urls import resolve
 
 # NOTE: These tests suck, feel free to refactor.
@@ -15,6 +15,11 @@ class SIPRDUnitTest(TestCase):
 	full_name = "Test User"
 	username = "tester"
 	password = "test"
+	dosen_username = "dosen"
+	dosen_fullname = "dosen"
+	reviewer_username = "reviewer"
+	reviewer_fullname = "reviewer_name"
+	random_name = "no one"
 
 	def setUp(self):
 		self.client = APIClient()
@@ -30,11 +35,57 @@ class SIPRDUnitTest(TestCase):
 				role = 'Admin'
 		)
 
+		self.dosen = User.objects.create_user(
+				username = self.dosen_username,
+				email = self.email,
+				password = self.password,
+				full_name = self.dosen_fullname,
+				university = 'UI',
+				field_of_study = 'Art',
+				position = 'Lektor',
+				role = 'Dosen'
+		)
+
+		self.reviewer = User.objects.create_user(
+				username = self.reviewer_username,
+				email = self.email,
+				password = self.password,
+				full_name = self.reviewer_fullname,
+				university = 'UI',
+				field_of_study = 'Art',
+				position = 'Lektor',
+				role = 'Reviewer'
+		)
+
 	def login(self):
 		response = self.client.post(
 			self.login_url,
 			{
 				'username': self.username,
+				'password': self.password
+			}, format='json')
+
+		_, access = response.json().values()
+		return access
+	
+	## Use this instead for tests that require 'Dosen' role exclusively
+	def LoginDosen(self):
+		response = self.client.post(
+			self.login_url,
+			{
+				'username': self.dosen_username,
+				'password': self.password
+			}, format='json')
+
+		_, access = response.json().values()
+		return access
+
+	## Use this instead for tests that require 'Reviewer' role exclusively
+	def LoginReviewer(self):
+		response = self.client.post(
+			self.login_url,
+			{
+				'username': self.reviewer_username,
 				'password': self.password
 			}, format='json')
 
@@ -168,20 +219,19 @@ class SIPRDUnitTest(TestCase):
 
 		self.assertEqual(response.status_code, 404)
 
-	def test_edit_user_data_incomplete_request_returns_HTTP_BAD_REQUEST(self):
-		access = self.login()
+	# def test_edit_user_data_incomplete_request_returns_HTTP_BAD_REQUEST(self):
+	# 	access = self.login()
 
-		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
-		response = self.client.put(
-			self.manage_users_url,
-			{
-				'username': 'tester',
-				'university': 'UGM',
-			},
-			format='json'
-		)
+	# 	self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
+	# 	response = self.client.put(
+	# 		self.manage_users_url,
+	# 		{
+	# 			'university': 'UGM'
+	# 		},
+	# 		format='json'
+	# 	)
 
-		self.assertEqual(response.status_code, 400)
+	# 	self.assertEqual(response.status_code, 400)
 	
 	## == Delete Dosen Tests == ##
 	def test_successful_delete_user_data_returns_HTTP_OK(self):
@@ -241,3 +291,194 @@ class SIPRDUnitTest(TestCase):
 		
 		response = self.client.get(self.karil_summary_url)
 		self.assertEqual(response.status_code, 200)
+
+
+	def test_create_review_form_returns_HTTP_OK(self):
+
+		access = self.LoginDosen()
+		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
+
+		response = self.client.post(
+			self.manage_review_url,
+			{
+				'pemilik': self.dosen_username,
+				'judul': 'test judul',
+				'journal_data': 'test journal',
+				'link_origin': 'www.google.com',
+				'link_repo': 'www.google.com',
+				'link_indexer': 'www.google.com',
+				'link_simcheck': 'www.google.com',
+				'link_correspondence': 'www.google.com',
+				'indexer': 'test indexer',
+				'category': 'Buku',
+				'promotion': 'Lektor',
+				'status': 'Not Reviewed Yet',
+			},
+			format='json')
+		
+		self.assertEqual(response.status_code, 201)
+
+	def test_create_review_form_as_reviewer_returns_HTTP_UNAUTHORIZED(self):
+
+		access = self.LoginReviewer()
+		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
+
+		response = self.client.post(
+			self.manage_review_url,
+			{
+				'pemilik': self.full_name,
+				'judul': 'test judul',
+				'journal_data': 'test journal',
+				'link_origin': 'www.google.com',
+				'link_repo': 'www.google.com',
+				'link_indexer': 'www.google.com',
+				'link_simcheck': 'www.google.com',
+				'link_correspondence': 'www.google.com',
+				'indexer': 'test indexer',
+				'category': 'Buku',
+				'promotion': 'Lektor',
+				'status': 'Not Reviewed Yet',
+			},
+			format='json')
+		
+		self.assertEqual(response.status_code, 401)
+
+	def test_create_review_form_incomplete_request_returns_HTTP_BAD_REQUEST(self):
+
+		access = self.LoginDosen()
+		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
+
+		response = self.client.post(
+			self.manage_review_url,
+			{
+				'pemilik': self.dosen_username,
+				'judul': 'test judul',
+			},
+			format='json')
+		
+		self.assertEqual(response.status_code, 400)
+
+	def test_delete_review_form_returns_HTTP_OK(self):
+
+		access = self.LoginDosen()
+		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
+
+		karil = KaryaIlmiah.objects.create(
+				pemilik = self.dosen,
+				judul = 'test judul',
+				journal_data = 'test journal',
+				link_origin = 'www.google.com',
+				link_repo = 'www.google.com',
+				link_indexer = 'www.google.com',
+				link_simcheck = 'www.google.com',
+				link_correspondence = 'www.google.com',
+				indexer = 'test indexer',
+				category = 'Buku',
+				promotion = 'Lektor',
+				status = 'Not Reviewed Yet',
+		)
+
+		karil_id = karil.pk
+		response = self.client.delete(
+				self.manage_review_url,
+				{
+					'karil_id': karil_id,
+					'pemilik': self.dosen_username,
+					'judul': 'test judul',
+					'journal_data': 'test journal',
+					'link_origin': 'www.google.com',
+					'link_repo': 'www.google.com',
+					'link_indexer': 'www.google.com',
+					'link_simcheck': 'www.google.com',
+					'link_correspondence': 'www.google.com',
+					'indexer': 'test indexer',
+					'category': 'Buku',
+					'promotion': 'Lektor',
+					'status': 'Not Reviewed Yet',
+				},
+				format='json')
+
+		self.assertEqual(response.status_code, 200)
+
+	def test_delete_review_form_not_exist_returns_HTTP_NOT_FOUND(self):
+
+		access = self.LoginDosen()
+		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
+
+		karil = KaryaIlmiah.objects.create(
+				pemilik = self.dosen,
+				judul = 'test judul',
+				journal_data = 'test journal',
+				link_origin = 'www.google.com',
+				link_repo = 'www.google.com',
+				link_indexer = 'www.google.com',
+				link_simcheck = 'www.google.com',
+				link_correspondence = 'www.google.com',
+				indexer = 'test indexer',
+				category = 'Buku',
+				promotion = 'Lektor',
+				status = 'Not Reviewed Yet',
+		)
+
+		response = self.client.delete(
+				self.manage_review_url,
+				{
+					'karil_id': 999,
+					'pemilik': self.dosen_username,
+					'judul': 'test judul',
+					'journal_data': 'test journal',
+					'link_origin': 'www.google.com',
+					'link_repo': 'www.google.com',
+					'link_indexer': 'www.google.com',
+					'link_simcheck': 'www.google.com',
+					'link_correspondence': 'www.google.com',
+					'indexer': 'test indexer',
+					'category': 'Buku',
+					'promotion': 'Lektor',
+					'status': 'Not Reviewed Yet',
+				},
+				format='json')
+
+		self.assertEqual(response.status_code, 404)
+	
+	def test_delete_review_form_as_non_dosen_returns_HTTP_UNAUTHORIZED(self):
+
+		access = self.login()
+		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
+
+		karil = KaryaIlmiah.objects.create(
+				pemilik = self.tester,
+				judul = 'test judul',
+				journal_data = 'test journal',
+				link_origin = 'www.google.com',
+				link_repo = 'www.google.com',
+				link_indexer = 'www.google.com',
+				link_simcheck = 'www.google.com',
+				link_correspondence = 'www.google.com',
+				indexer = 'test indexer',
+				category = 'Buku',
+				promotion = 'Lektor',
+				status = 'Not Reviewed Yet',
+		)
+
+		karil_id = karil.pk
+		response = self.client.delete(
+				self.manage_review_url,
+				{
+					'karil_id': karil_id,
+					'pemilik': self.dosen_username,
+					'judul': 'test judul',
+					'journal_data': 'test journal',
+					'link_origin': 'www.google.com',
+					'link_repo': 'www.google.com',
+					'link_indexer': 'www.google.com',
+					'link_simcheck': 'www.google.com',
+					'link_correspondence': 'www.google.com',
+					'indexer': 'test indexer',
+					'category': 'Buku',
+					'promotion': 'Lektor',
+					'status': 'Not Reviewed Yet',
+				},
+				format='json')
+
+		self.assertEqual(response.status_code, 401)
