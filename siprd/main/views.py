@@ -194,6 +194,8 @@ class ManageUsers(APIView):
 class ManageReviewers(APIView):
     permission_classes = [IsAuthenticated]
     forbidden_role_msg = {'message': 'You must be an Admin or SDM PT to perform this action.'}
+    
+    # Reviewer's position cannot be higher than reviewee
     positions = ['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar/Professor']
     position_exclusions = {
         positions[0]: [],
