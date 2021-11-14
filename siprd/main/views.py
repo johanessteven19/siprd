@@ -258,8 +258,8 @@ class ManageReviewForm(APIView):
         data._mutable = True
         try:
             data['pemilik'] = User.objects.filter(full_name=data['pemilik']).first().username
-        except User.DoesNotExist:
-            return Response({'This author does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+        except (User.DoesNotExist, AttributeError) :
+            return Response({'This author does not exist!'}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = KaryaIlmiahSerializer(data = request.data)
         if serializer.is_valid():
