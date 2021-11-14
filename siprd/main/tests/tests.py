@@ -1,6 +1,6 @@
 from django.test import TestCase
 from rest_framework.test import APIClient
-from .models import User
+from ..models import User
 from django.urls import resolve
 
 # NOTE: These tests suck, feel free to refactor.
