@@ -47,6 +47,7 @@ sonar-dev:
       -Dsonar.login=$SONARQUBE_TOKEN
       -Dsonar.branch.name=$CI_COMMIT_REF_NAME
       -Dsonar.branch.target=master
+      -Dsonar.python.coverage.reportPaths=siprd/coverage.xml
   except:
     - master
     - staging
