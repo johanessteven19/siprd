@@ -165,21 +165,6 @@ class SIPRDUnitTest(TestCase):
 		)
 
 		self.assertEqual(response.status_code, 404)
-
-	def test_edit_user_data_incomplete_request_returns_HTTP_BAD_REQUEST(self):
-		access = self.login()
-
-		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
-		response = self.client.put(
-			self.manage_users_url,
-			{
-				'username': 'tester',
-				'university': 'UGM',
-			},
-			format='json'
-		)
-
-		self.assertEqual(response.status_code, 400)
 	
 	## == Delete Dosen Tests == ##
 	def test_successful_delete_user_data_returns_HTTP_OK(self):
