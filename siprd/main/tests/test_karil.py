@@ -50,3 +50,19 @@ class TestKaril(TestCase):
 		)
 
 		self.assertEqual(response.status_code, 201)
+
+	def test_create_invaldi_karil_returns_HTTP_BAD_REQUEST(self):
+		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + self.access)
+		response = self.client.post(
+			self.karil_url,
+			{
+				"pemilik": "User Who Does Not Exist",
+				"judul": "Invalid",
+				"link_origin": "www.origin.com",
+				"category": "Buku",
+				"promotion": "Lektor",
+				"status": "Not Reviewed Yet",
+			}
+		)
+
+		self.assertEqual(response.status_code, 400)
