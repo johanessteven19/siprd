@@ -267,7 +267,9 @@ export default {
           // TODO: Make this output more user-friendly!!!
           // Clean string up with a function?
           console.log(err.response);
-          const responseErrors = JSON.stringify(err.response.data);
+          let errResponseData = '';
+          errResponseData = err.response.data;
+          const responseErrors = JSON.stringify(errResponseData);
           console.log(responseErrors);
           const errMsg = `Register gagal, errors: ${responseErrors}`;
           alert(errMsg);

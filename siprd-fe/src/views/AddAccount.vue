@@ -1,173 +1,178 @@
 <template>
-  <v-container style="margin-top: 2rem; width: 60%; padding: 80px 0">
-    <validation-observer ref="observer" v-slot="{ invalid }">
-      <h3><a v-on:click="backRedir" style="color:black">Back</a></h3>
-      <h2>Tambah Akun Baru</h2>
-      <br />
-      <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
-        <v-row>
-          <v-col md="5">
-            <div v-if="google_signed != null">
-              <v-text-field
-                :value="email"
-                label="Email (Filled)"
-                filled
-                readonly
-              >
-              </v-text-field>
-            </div>
-            <div v-else>
+  <div>
+    <div style="position: fixed; top: 0;">
+      <Navigation />
+    </div>
+    <v-container style="margin-top: 2rem; width: 60%; padding: 80px 0">
+      <validation-observer ref="observer" v-slot="{ invalid }">
+        <h3><a v-on:click="backRedir" style="color:black">Back</a></h3>
+        <h2>Tambah Akun Baru</h2>
+        <br />
+        <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
+          <v-row>
+            <v-col md="5">
+              <div v-if="google_signed != null">
+                <v-text-field
+                  :value="email"
+                  label="Email (Filled)"
+                  filled
+                  readonly
+                >
+                </v-text-field>
+              </div>
+              <div v-else>
+                <validation-provider
+                  v-slot="{ errors }"
+                  name="Email"
+                  rules="required|email"
+                >
+                  <v-text-field
+                    v-model="email"
+                    :error-messages="errors"
+                    label="Email*"
+                    required
+                  >
+                  </v-text-field>
+                </validation-provider>
+              </div>
+
               <validation-provider
                 v-slot="{ errors }"
-                name="Email"
-                rules="required|email"
+                name="Username"
+                rules="required"
               >
                 <v-text-field
-                  v-model="email"
+                  v-model="username"
                   :error-messages="errors"
-                  label="Email*"
+                  label="Username*"
                   required
                 >
                 </v-text-field>
               </validation-provider>
-            </div>
 
-            <validation-provider
-              v-slot="{ errors }"
-              name="Username"
-              rules="required"
-            >
-              <v-text-field
-                v-model="username"
-                :error-messages="errors"
-                label="Username*"
-                required
+              <validation-provider
+                v-slot="{ errors }"
+                name="Universitas"
+                rules="required"
               >
-              </v-text-field>
-            </validation-provider>
+                <v-text-field
+                  v-model="university"
+                  :error-messages="errors"
+                  label="Universitas*"
+                  required
+                >
+                </v-text-field>
+              </validation-provider>
 
-            <validation-provider
-              v-slot="{ errors }"
-              name="Universitas"
-              rules="required"
-            >
-              <v-text-field
-                v-model="university"
-                :error-messages="errors"
-                label="Universitas*"
-                required
+              <validation-provider v-slot="{ errors }" name="Bidang Keahlian">
+                <v-text-field
+                  v-model="fieldOfStudy"
+                  :error-messages="errors"
+                  label="Bidang Keahlian"
+                  required
+                >
+                </v-text-field>
+              </validation-provider>
+
+              <validation-provider v-slot="{ errors }" name="Jabatan">
+                <v-select
+                  v-model="position"
+                  :items="posSelect"
+                  :error-messages="errors"
+                  label="Jabatan"
+                  data-vv-name="select"
+                  required
+                >
+                </v-select>
+              </validation-provider>
+            </v-col>
+
+            <v-col md="5" class="ml-auto">
+              <validation-provider
+                v-slot="{ errors }"
+                name="Nama Lengkap"
+                rules="required"
               >
-              </v-text-field>
-            </validation-provider>
+                <v-text-field
+                  v-model="full_name"
+                  :error-messages="errors"
+                  label="Nama Lengkap*"
+                  required
+                >
+                </v-text-field>
+              </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="Bidang Keahlian">
-              <v-text-field
-                v-model="fieldOfStudy"
-                :error-messages="errors"
-                label="Bidang Keahlian"
-                required
+              <validation-provider
+                v-slot="{ errors }"
+                name="Password"
+                rules="required"
               >
-              </v-text-field>
-            </validation-provider>
+                <v-text-field
+                  v-model="password"
+                  :error-messages="errors"
+                  label="Password*"
+                  :type="'password'"
+                  required
+                >
+                </v-text-field>
+              </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="Jabatan">
-              <v-select
-                v-model="position"
-                :items="posSelect"
-                :error-messages="errors"
-                label="Jabatan"
-                data-vv-name="select"
-                required
+              <validation-provider v-slot="{ errors }" name="NIP" rules="numeric">
+                <v-text-field
+                  v-model="nip"
+                  :error-messages="errors"
+                  label="NIP"
+                  numeric
+                >
+                </v-text-field>
+              </validation-provider>
+
+              <validation-provider
+                v-slot="{ errors }"
+                name="Role"
+                rules="required"
               >
-              </v-select>
-            </validation-provider>
-          </v-col>
+                <v-select
+                  v-model="role"
+                  :items="roleSelect"
+                  :error-messages="errors"
+                  label="Role*"
+                  data-vv-name="select"
+                  required
+                >
+                </v-select>
+              </validation-provider>
+            </v-col>
+          </v-row>
 
-          <v-col md="5" class="ml-auto">
-            <validation-provider
-              v-slot="{ errors }"
-              name="Nama Lengkap"
-              rules="required"
-            >
-              <v-text-field
-                v-model="full_name"
-                :error-messages="errors"
-                label="Nama Lengkap*"
-                required
+          Required*
+          <v-row>
+            <v-col md="5">
+              <v-btn
+                class="ml-auto white--text"
+                :disabled="invalid"
+                type="submit"
+                color="#8D38E3"
+                width="100%"
               >
-              </v-text-field>
-            </validation-provider>
-
-            <validation-provider
-              v-slot="{ errors }"
-              name="Password"
-              rules="required"
-            >
-              <v-text-field
-                v-model="password"
-                :error-messages="errors"
-                label="Password*"
-                :type="'password'"
-                required
+                Buat Akun
+              </v-btn>
+            </v-col>
+            <v-col md="5" class="ml-auto">
+              <v-btn
+                class="ml-auto white--text"
+                color="#2D3748"
+                width="100%"
+                v-on:click="backRedir"
               >
-              </v-text-field>
-            </validation-provider>
-
-            <validation-provider v-slot="{ errors }" name="NIP" rules="numeric">
-              <v-text-field
-                v-model="nip"
-                :error-messages="errors"
-                label="NIP"
-                numeric
-              >
-              </v-text-field>
-            </validation-provider>
-
-            <validation-provider
-              v-slot="{ errors }"
-              name="Role"
-              rules="required"
-            >
-              <v-select
-                v-model="role"
-                :items="roleSelect"
-                :error-messages="errors"
-                label="Role*"
-                data-vv-name="select"
-                required
-              >
-              </v-select>
-            </validation-provider>
-          </v-col>
-        </v-row>
-
-        Required*
-        <v-row>
-          <v-col md="5">
-            <v-btn
-              class="ml-auto white--text"
-              :disabled="invalid"
-              type="submit"
-              color="#8D38E3"
-              width="100%"
-            >
-              Buat Akun
-            </v-btn>
-          </v-col>
-          <v-col md="5" class="ml-auto">
-            <v-btn
-              class="ml-auto white--text"
-              color="#2D3748"
-              width="100%"
-              v-on:click="backRedir"
-            >
-              Cancel
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-form>
-    </validation-observer>
-  </v-container>
+                Cancel
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-form>
+      </validation-observer>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -179,6 +184,7 @@ import {
   ValidationProvider,
   setInteractionMode,
 } from 'vee-validate';
+import Navigation from '../components/Navigation.vue';
 
 setInteractionMode('eager');
 
@@ -202,6 +208,7 @@ export default {
   components: {
     ValidationProvider,
     ValidationObserver,
+    Navigation,
   },
   data() {
     return {

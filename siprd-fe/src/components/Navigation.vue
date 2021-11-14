@@ -6,7 +6,7 @@
       </div>
       <ul v-show="!mobile" class="navigation">
         <li>
-          <router-link class="link" :to="{ name: 'Success' }"
+          <router-link class="link" :to="{ name: 'KarilList' }"
             >Daftar Karya Ilmiah</router-link
           >
         </li>
@@ -17,7 +17,7 @@
           <router-link class="link" :to="{ name: 'Success' }">Panduan</router-link>
         </li>
         <li>
-          <router-link class="link" :to="{ name: 'Success' }">Profil Anda</router-link>
+          <router-link class="link" :to="{ name: 'EditAccount' }">Profil Anda</router-link>
         </li>
       </ul>
       <div class="icon">
@@ -31,7 +31,7 @@
       <transition name="mobile-nav">
         <ul v-show="mobileNav" class="dropdown-nav">
           <li>
-            <router-link class="link" :to="{ name: 'Success' }"
+            <router-link class="link" :to="{ name: 'KarilList' }"
               >Daftar Karya Ilmiah</router-link
             >
           </li>
@@ -44,7 +44,7 @@
             <router-link class="link" :to="{ name: '' }">Panduan</router-link>
           </li>
           <li>
-            <router-link class="link" :to="{ name: 'Success' }">Profil Anda</router-link>
+            <router-link class="link" :to="{ name: 'EditAccount' }">Profil Anda</router-link>
           </li>
         </ul>
       </transition>
