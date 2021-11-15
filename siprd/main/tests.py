@@ -482,3 +482,4 @@ class SIPRDUnitTest(TestCase):
 				format='json')
 
 		self.assertEqual(response.status_code, 401)
+

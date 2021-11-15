@@ -188,6 +188,19 @@ class ManageUsers(APIView):
             return Response({request.data['username'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
         else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
+# Admin is able to approve user
+class ApproveUsers(APIView):
+    permission_classes = [IsAuthenticated]
+    forbidden_role_msg = {'message': 'You must be an Admin or SDM PT to perform this action.'}
+    def post(self, request):
+        username = request.user.username
+        user = User.objects.filter(username=username).first()
+        user.approved = True 
+        user.save()
+        return Response({request.data['username'] + ' was updated successfully!'}, status=status.HTTP_200_OK)
+
+
+
 # Reviewer management endpoint
 # For use with Stage 2 review form creation
 class ManageReviewers(APIView):

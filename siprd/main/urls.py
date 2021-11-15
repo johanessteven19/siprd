@@ -24,7 +24,8 @@ urlpatterns = [
     # Review Management
     path("api/manage-reviews/", views.ManageReviewForm.as_view()),
     path("api/get-review-form/", views.GetSpecificReviewForm.as_view()),
-
+    path("api/approve-user/", views.ApproveUsers.as_view()),
+    
     # Reset password endpoints
     path('api/request-reset-email/', RequestPasswordResetEmail.as_view(), name="request-reset-email"),
     path('api/password-reset/<uidb64>/<token>/<username>', PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
@@ -39,5 +40,7 @@ urlpatterns = [
 
     # NOTE: Grants the user a new Access token using their existing refresh token
     # If user's Refresh token has expired, they will be logged out
-    path("api/token/refresh/", TokenRefreshView.as_view(), name='token_refresh')
+    path("api/token/refresh/", TokenRefreshView.as_view(), name='token_refresh'),
+
+   
 ]
