@@ -271,14 +271,14 @@ export default {
         Vue.axios
           .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, data, config)
           .then((res) => {
-            if (res.status === 500) {
-              console.log('Name error');
-              alert('Masukan nama penulis yang sudah terdaftar.');
-            } else if (res.status === 201) {
+            if (res.status === 201) {
               alert('Karil berhasil disubmit!');
               console.log(res.data);
               console.log('Success');
               this.$router.push('/karil-list');
+            } else if (res.status === 400) {
+              console.log('Name error');
+              alert('Masukan nama penulis yang sudah terdaftar.');
             }
             // } else {
             //   console.log(res.data);
