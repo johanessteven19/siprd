@@ -5,10 +5,10 @@
     </div>
     <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
       <v-row>
-        <v-col md="4">
+        <v-col md="3">
         <h1>Daftar Karya Ilmiah</h1>
         </v-col>
-        <v-col md="4">
+        <v-col md="3">
           <v-btn
             class="mr-4 white--text"
             :disabled="false"

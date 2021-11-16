@@ -141,7 +141,9 @@
           <div class="reviewers" style="margin-top: 2rem; width: 100%;" justify="center">
               <v-row align="center" justify="center" row-gap="10px">
                   <v-col md="3" align="right">
-                      <h1>Reviewer</h1> <br>
+                      <h1>Reviewer</h1>
+                      {{reviewerData.full_name}}
+                      <br>
                   </v-col>
               </v-row>
 
@@ -153,7 +155,7 @@
                   <v-col md="2">
                     <v-select
                       :id="reviewer.id"
-                      v-model="reviewer.value"
+                      v-model="reviewer.id.value"
                       :items="reviewerSelect"
                       label="Reviewer"
                       data-vv-name="select"
@@ -206,6 +208,7 @@ export default {
   data() {
     return {
       karilData: '',
+      reviewerData: '',
       namaPenulis: null,
       judulKaril: null,
       dataJurnal: null,
@@ -219,6 +222,7 @@ export default {
       status: 'Requested',
       karilId: null,
       counter: 0,
+      reviewerSelect: ['Dosen', 'Reviewer', 'SDM PT', 'Admin'],
       reviewers: [{
         id: 'reviewer0',
         label: 'Nama Reviewer',
@@ -296,7 +300,7 @@ export default {
 
   },
 
-  beforeMount() {
+  async beforeMount() {
     this.karilId = this.$route.query.id;
     if (localStorage.access) {
       const accessToken = localStorage.access;
@@ -306,15 +310,23 @@ export default {
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
-      Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, data, config).then((res) => {
-        console.log(res.data);
-        if (res.status === 200) {
-          this.karilData = res.data;
-        }
-      });
-    } else {
-      this.$router.push('/');
-    }
+
+      Vue.axios
+        .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, data, config)
+        .then((res) => {
+          if (res.status === 200) {
+            this.karilData = res.data;
+          }
+        });
+      const posData = {
+        position: this.karilData.promotion,
+      };
+      const res = await Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviewers/`, posData, config);
+      console.log(res.data);
+      if (res.status === 200) {
+        this.reviewerData = res.data;
+      }
+    } else { this.$router.push('/'); }
   },
 
 };

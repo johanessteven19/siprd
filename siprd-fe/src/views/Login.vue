@@ -195,7 +195,7 @@ export default {
           window.localStorage.setItem('refresh', res.data.refresh);
           window.localStorage.setItem('access', res.data.access);
           // alert("Login berhasil!");
-          this.$router.push('/your-account');
+          this.$router.push('/dashboard');
         } else {
           alert('Login gagal');
         }

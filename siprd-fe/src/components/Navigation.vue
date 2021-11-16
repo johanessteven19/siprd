@@ -10,14 +10,25 @@
             >Daftar Karya Ilmiah</router-link
           >
         </li>
-        <li>
+        <li v-if="userData.role === 'ADMIN'">
           <router-link class="link" :to="{ name: 'AccountList' }">Daftar Akun</router-link>
         </li>
         <li>
           <router-link class="link" :to="{ name: 'Success' }">Panduan</router-link>
         </li>
-        <li>
-          <router-link class="link" :to="{ name: 'EditAccount' }">Profil Anda</router-link>
+        <li @mouseover="profileList = true" @mouseleave="profileList = false">
+          <a href="#"> Profile </a>
+
+          <transition name="fade">
+            <ul v-if="profileList" @click="profileList = false">
+              <li> <router-link class="link"
+                    :to="{ name: 'ViewAccount' }">Profil Anda </router-link>
+              </li>
+              <li> <div class="link" v-on:click="logoutUser"> Logout </div>
+              </li>
+            </ul>
+          </transition>
+
         </li>
       </ul>
       <div class="icon">
@@ -44,7 +55,7 @@
             <router-link class="link" :to="{ name: '' }">Panduan</router-link>
           </li>
           <li>
-            <router-link class="link" :to="{ name: 'EditAccount' }">Profil Anda</router-link>
+            <router-link class="link" :to="{ name: 'ViewAccount' }">Profil Anda</router-link>
           </li>
         </ul>
       </transition>
@@ -53,14 +64,22 @@
 </template>
 
 <script>
+import Vue from 'vue';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
+
+Vue.use(VueAxios, axios);
 export default {
   name: 'navigation',
   data() {
     return {
+      userData: '',
       scrolledNav: null,
       mobile: null,
       mobileNav: null,
       windowWidth: null,
+      profileList: false,
+      role: null,
     };
   },
   created() {
@@ -92,6 +111,31 @@ export default {
       this.mobile = false;
       this.mobileNav = false;
     },
+
+    logoutUser() {
+      console.log('enter');
+      localStorage.removeItem('access');
+      localStorage.removeItem('refresh');
+      this.$router.push('/');
+    },
+  },
+  beforeMount() {
+    if (localStorage.access) {
+      console.log(localStorage.access);
+      console.log(localStorage.refresh);
+      const accessToken = localStorage.access;
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, config).then((res) => {
+        console.log(res.data);
+        if (res.status === 200) {
+          this.userData = res.data;
+        }
+      });
+    } else {
+      this.$router.push('/');
+    }
   },
 };
 </script>
@@ -182,6 +226,19 @@ header {
 
     .icon-active {
       transform: rotate(180deg);
+    }
+
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .2s;
+    }
+
+    .fade-enter, .fade-leave-active {
+      opacity: 0;
+    }
+
+    a{
+      text-decoration: none;
+      color: black;
     }
 
     .dropdown-nav {

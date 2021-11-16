@@ -7,6 +7,7 @@ import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import AddAccount from '../views/AddAccount.vue';
 import EditAccount from '../views/EditAccount.vue';
+import ViewAccount from '../views/ViewAccount.vue';
 import Success from '../views/Success.vue';
 import Dashboard from '../views/Dashboard.vue';
 import RegisterSuccess from '../views/RegisterSuccess.vue';
@@ -66,6 +67,11 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/your-account',
+    name: 'ViewAccount',
+    component: ViewAccount,
+  },
+  {
+    path: '/success',
     name: 'Success',
     component: Success,
   },

@@ -276,18 +276,11 @@ export default {
               console.log(res.data);
               console.log('Success');
               this.$router.push('/karil-list');
-            } else if (res.status === 400) {
-              console.log('Name error');
-              alert('Masukan nama penulis yang sudah terdaftar.');
             }
-            // } else {
-            //   console.log(res.data);
-            //   console.log(res.status);
-            //   alert('Try Again.');
-            // }
           })
           .catch((err) => {
             console.log(err.response);
+            alert('Masukan nama penulis yang sudah terdaftar.');
           });
       }
     },
