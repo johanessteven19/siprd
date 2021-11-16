@@ -212,10 +212,10 @@ export default {
           },
         }).then((res) => {
           if (res.status === 200) {
+            this.$router.go();
             alert(
               'Akun berhasil dihapus!',
             );
-            this.$router.push('/account-list');
           } else if (res.status === 404) {
             alert(
               'Akun tidak ada di database',

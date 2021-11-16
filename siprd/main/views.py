@@ -178,9 +178,8 @@ class ManageUsers(APIView):
     def delete(self, request):
         user_data = get_user_data(request)
         user_role = user_data['role']
-        print("ur role is " + user_role)
 
-        if ( user_role == "Admin" or user_role == "SDM PT" ):
+        if ( user_role == "Admin" or user_role == "SDM PT" or user_data['username'] != request.data['username']):
             try:
                 user = User.objects.get(username=request.data['username'])
             except User.DoesNotExist: 
@@ -194,11 +193,14 @@ class ManageUsers(APIView):
 class ManageReviewers(APIView):
     permission_classes = [IsAuthenticated]
     forbidden_role_msg = {'message': 'You must be an Admin or SDM PT to perform this action.'}
+    
+    # Reviewer's position cannot be higher than reviewee
+    positions = ['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar/Professor']
     position_exclusions = {
-        'Asisten Ahli': [],
-        'Lektor': ['Asisten Ahli'],
-        'Lektor Kepala': ['Asisten Ahli', 'Lektor'],
-        'Guru Besar/Professor': ['Asisten Ahli', 'Lektor', 'Lektor Kepala']
+        positions[0]: [],
+        positions[1]: [positions[0]],
+        positions[2]: positions[:2],
+        positions[3]: positions[:3]
     }
 
     # Fetches all reviewers
@@ -254,8 +256,8 @@ class ManageReviewForm(APIView):
         data = request.data
         try:
             data['pemilik'] = User.objects.filter(full_name=data['pemilik']).first().username
-        except User.DoesNotExist:
-            return Response({'This author does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+        except (User.DoesNotExist, AttributeError) :
+            return Response({'This author does not exist!'}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = KaryaIlmiahSerializer(data = request.data)
         if serializer.is_valid():

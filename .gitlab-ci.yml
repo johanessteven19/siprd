@@ -42,11 +42,12 @@ sonar-dev:
   script:
     - sonar-scanner -X
       -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY
-      -Dsonar.sources=.
+      -Dsonar.sources=siprd,siprd-fe
       -Dsonar.host.url=$SONARQUBE_URL
       -Dsonar.login=$SONARQUBE_TOKEN
       -Dsonar.branch.name=$CI_COMMIT_REF_NAME
       -Dsonar.branch.target=master
+      -Dsonar.python.coverage.reportPaths=siprd/coverage.xml
   except:
     - master
     - staging
