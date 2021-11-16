@@ -37,6 +37,17 @@
             </v-btn>
           </v-col>
           </v-row>
+          <v-row>
+            <v-col md="2" class="mr-auto">
+            <v-btn
+              class="mr-auto white--text"
+              v-on:click="deleteKaril(karilData.karil_id)"
+              color="error"
+              width="100%"
+            > Hapus
+            </v-btn>
+            </v-col>
+          </v-row>
 
           <v-row >
               <v-col md="3" class="mr-auto">
@@ -202,6 +213,28 @@ export default {
       this.$router.push(`/assign-reviewer?id=${karilId}`);
     },
 
+    deleteKaril(karilId) {
+      console.log(karilId);
+      if (localStorage.access) {
+        const accessToken = localStorage.access;
+        const data = {
+          karil_id: this.karilId,
+        };
+        const config = {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        };
+        Vue.axios.delete(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, data, config).then((res) => {
+          console.log(res.data);
+          if (res.status === 200) {
+            console.log(res.data);
+            this.karilData = res.data;
+            console.log(this.karilData);
+          }
+        });
+      } else {
+        this.$router.push('/');
+      }
+    },
   },
 
   beforeMount() {
