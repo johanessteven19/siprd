@@ -24,6 +24,7 @@ urlpatterns = [
     # Review Management
     path("api/manage-reviews/", views.ManageReviewForm.as_view()),
     path("api/get-review-form/", views.GetSpecificReviewForm.as_view()),
+    path("api/assign-reviewer/", views.AssignReviewer.as_view()),
 
     # Reset password endpoints
     path('api/request-reset-email/', RequestPasswordResetEmail.as_view(), name="request-reset-email"),

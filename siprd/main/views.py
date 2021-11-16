@@ -203,10 +203,15 @@ class ManageReviewers(APIView):
         positions[3]: positions[:3]
     }
 
+    
     # Fetches all reviewers
     # Reviewers must be positioned equal to or higher than selected promotion rank.
     # e.g. dosen wants to be promoted to Lektor, reviewer cannot be Asisten Ahli.
-    def get(self, request):
+    # For use with reviewer dropdown menu when assigning reviewers
+    # request.data = {
+    #     'position': selected promotion rank stated in review form
+    # } 
+    def post(self, request):
         user_data = get_user_data(request)
         user_role = user_data['role']
 
@@ -224,6 +229,35 @@ class ManageReviewers(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
+class AssignReviewer(APIView):
+    permission_classes = [IsAuthenticated]
+    forbidden_role_msg = {'message': 'You are not authorized to modify this review form.'}
+    
+    # Assign reviewer by username to certain karil
+    # NOTE: User MUST assign more than 1 reviewer (see PBI 14)
+    # request.data = {
+    #   'reviewers': list of reviewer usernames,
+    #   'karil_id': id of karil to be assigned
+    # }
+    def post(self, request):
+        user_data = get_user_data(request)
+        user_role = user_data['role']
+
+        if ( user_role == "Admin" or user_role == "SDM PT" ):
+            karil = KaryaIlmiah.objects.filter(karil_id=request.data['karil_id']).first()
+            reviewers = request.data['reviewers']
+
+            reviewers = User.objects.filter(username__in=reviewers)
+            serializer = KaryaIlmiahSerializer(karil, data={'reviewers': reviewers}, partial=True)
+            if serializer.is_valid():
+                reviewform = serializer.save()
+                if reviewform:
+                    return Response({'Reviewers successfully assigned!'}, status=status.HTTP_200_OK)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else: return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
 class GetSpecificReviewForm(APIView):
     def post(self, request):
         try:
@@ -237,6 +271,7 @@ class GetSpecificReviewForm(APIView):
 # Review form management endpoint
 # For Stage 1 and Stage 2 review form creation
 # NOTE: This is NOT for reviews! Only for review forms, which are basically karil entries.
+# NOTE: This is also not for reviewers, see ManageReviewers and AssignReviewer
 class ManageReviewForm(APIView):
     permission_classes = [IsAuthenticated]
     forbidden_role_msg = {'message': 'You are not authorized to modify this review form.'}
