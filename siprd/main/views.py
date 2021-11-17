@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.decorators import api_view, permission_classes
-from .models import KaryaIlmiah, User
+from .models import KaryaIlmiah, Review, User
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 import logging
@@ -315,6 +315,33 @@ class ManageReviewForm(APIView):
             karil.delete()
             return Response({request.data['judul'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
         else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
+
+# Class to get reviews based on roles
+class ManageKaril(APIView):
+    permission_classes = [IsAuthenticated]
+    forbidden_role_msg = {'message': 'You are not authorized to perform this action!'}
+
+    def get(self, request):
+        user_data = get_user_data(request)
+        user_role = user_data['role']
+
+        if (user_role == "Admin"):
+            try:
+                karil_list = KaryaIlmiah.objects.all()
+                serializer = KaryaIlmiahSerializer(karil_list, many=True)
+
+            except KaryaIlmiah.DoesNotExist:
+                return Response({'message': 'Papers not found!'}, status=status.HTTP_404_NOT_FOUND)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        elif (user_role == "Reviewer"):
+            try:
+                karil_list = KaryaIlmiah.objects.filter(reviewers = user_data['full_name'])
+                serializer = KaryaIlmiahSerializer(karil_list, many=True)
+            except KaryaIlmiah.DoesNotExist:
+                return Response({'message': 'No papers are assigned to this reviewer yet! '}, status=status.HTTP_404_NOT_FOUND)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED) 
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
