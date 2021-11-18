@@ -37,6 +37,17 @@
             </v-btn>
           </v-col>
           </v-row>
+          <v-row>
+            <v-col md="2" class="mr-auto">
+            <v-btn
+              class="mr-auto white--text"
+              v-on:click="deleteKaril(karilData.karil_id)"
+              color="error"
+              width="100%"
+            > Hapus
+            </v-btn>
+            </v-col>
+          </v-row>
 
           <v-row >
               <v-col md="3" class="mr-auto">
@@ -172,6 +183,7 @@ export default {
   },
   data() {
     return {
+      userData: '',
       karilData: '',
       namaPenulis: null,
       judulKaril: null,
@@ -202,11 +214,35 @@ export default {
       this.$router.push(`/assign-reviewer?id=${karilId}`);
     },
 
+    deleteKaril(karilId) {
+      console.log(karilId);
+      if (localStorage.access) {
+        const accessToken = localStorage.access;
+
+        Vue.axios.delete(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          data: {
+            karil_id: this.karilId,
+          },
+        }).then((res) => {
+          console.log(res.data);
+          if (res.status === 200) {
+            alert(
+              ' Karil berhasil dihapus!',
+            );
+          }
+        })
+          .catch((err) => {
+            console.log(err.response);
+          });
+      }
+    },
   },
 
   beforeMount() {
     this.karilId = this.$route.query.id;
-    console.log(this.karilId);
     if (localStorage.access) {
       const accessToken = localStorage.access;
       const data = {
@@ -216,11 +252,8 @@ export default {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
       Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, data, config).then((res) => {
-        console.log(res.data);
         if (res.status === 200) {
-          console.log(res.data);
           this.karilData = res.data;
-          console.log(this.karilData);
         }
       });
     } else {
