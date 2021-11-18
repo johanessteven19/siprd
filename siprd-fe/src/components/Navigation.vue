@@ -10,7 +10,7 @@
             >Daftar Karya Ilmiah</router-link
           >
         </li>
-        <li v-if="userData.role === 'ADMIN'">
+        <li v-if="userData.role === 'Admin'">
           <router-link class="link" :to="{ name: 'AccountList' }">Daftar Akun</router-link>
         </li>
         <li>
