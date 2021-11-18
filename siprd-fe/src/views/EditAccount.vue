@@ -205,6 +205,10 @@ export default {
       roleSelect: ['Dosen', 'Reviewer', 'SDM PT', 'Admin'],
       userData: '',
       config: null,
+      // Who is editing?
+      // 0: Own account
+      // 1: Admin
+      editor: null,
     };
   },
   methods: {
@@ -234,8 +238,13 @@ export default {
           .then((res) => {
             console.log(res.data);
             if (res.status === 200) {
-              // alert("Akun berhasil diedit.");
-              this.$router.push('/your-account');
+              if (this.editor === 0) {
+                alert('Akun berhasil diedit.');
+                this.$router.push('/your-account');
+              } else {
+                alert('Akun berhasil diedit.');
+                this.$router.push('/account-list');
+              }
             } else {
               alert('Gagal');
             }
@@ -265,24 +274,55 @@ export default {
 
   beforeMount() {
     if (localStorage.access) {
-      const accessToken = localStorage.access;
-      const config = {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      };
-      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, config).then((res) => {
-        if (res.status === 200) {
-          this.userData = res.data;
-          this.email = res.data.email;
-          this.username = res.data.username;
-          this.fullName = res.data.full_name;
-          this.password = res.data.password;
-          this.university = res.data.university;
-          this.nip = res.data.nip;
-          this.fieldOfStudy = res.data.field_of_study;
-          this.role = res.data.role;
-          this.position = res.data.position;
-        }
-      });
+      if (this.$route.query.id) {
+        this.editor = 1;
+        console.log('editing user...');
+        const username = this.$route.query.id;
+        const accessToken = localStorage.access;
+        const config = {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        };
+        const data = {
+          username,
+        };
+
+        Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data, config).then((res) => {
+          if (res.status === 200) {
+            this.userData = res.data;
+            this.email = res.data.email;
+            this.username = res.data.username;
+            this.fullName = res.data.full_name;
+            this.password = res.data.password;
+            this.university = res.data.university;
+            this.nip = res.data.nip;
+            this.fieldOfStudy = res.data.field_of_study;
+            this.role = res.data.role;
+            this.position = res.data.position;
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+      } else {
+        this.editor = 0;
+        const accessToken = localStorage.access;
+        const config = {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        };
+        Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, config).then((res) => {
+          if (res.status === 200) {
+            this.userData = res.data;
+            this.email = res.data.email;
+            this.username = res.data.username;
+            this.fullName = res.data.full_name;
+            this.password = res.data.password;
+            this.university = res.data.university;
+            this.nip = res.data.nip;
+            this.fieldOfStudy = res.data.field_of_study;
+            this.role = res.data.role;
+            this.position = res.data.position;
+          }
+        });
+      }
     } else {
       this.$router.push('/');
     }
