@@ -78,6 +78,7 @@
           <v-btn
             depressed
             color="success"
+            @click="editUser(row.item.username);"
           >
             Ubah
           </v-btn>
@@ -234,6 +235,10 @@ export default {
     },
     cancelItem() {
       this.item = '';
+    },
+    editUser(username) {
+      console.log(username);
+      this.$router.push(`/edit-account?id=${username}`);
     },
   },
   beforeMount() {
