@@ -343,15 +343,16 @@ class ManageReviewForm(APIView):
     def delete(self, request):
         user_data = get_user_data(request)
         user_role = user_data['role']
+        try:
+            karil = KaryaIlmiah.objects.get(karil_id = request.data['karil_id'])
+        except KaryaIlmiah.DoesNotExist: 
+            return Response({'message': 'The paper you are trying to delete does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+        karil_data = KaryaIlmiahSerializer(karil).data
 
         # Checks if a dosen is trying to delete their own karil
-        if ( user_data['username'] == request.data['pemilik'] and user_role == "Dosen"):
-            try:
-                karil = KaryaIlmiah.objects.get(karil_id = request.data['karil_id'])
-            except KaryaIlmiah.DoesNotExist: 
-                return Response({'message': 'The paper you are trying to delete does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+        if ((user_data['username'] == karil_data['pemilik'] and user_role == "Dosen") or user_role == "Admin"):
             karil.delete()
-            return Response({request.data['judul'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
+            return Response({karil_data['judul'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
         else: return Response(self.forbidden_warning, status=status.HTTP_401_UNAUTHORIZED)
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
