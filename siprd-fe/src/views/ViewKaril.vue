@@ -232,6 +232,7 @@ export default {
             alert(
               ' Karil berhasil dihapus!',
             );
+            this.$router.push('/karil-list');
           }
         })
           .catch((err) => {

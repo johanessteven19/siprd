@@ -73,12 +73,12 @@
 
         </template>
 
-      <template v-slot:item.action="{ item }">
+      <template v-slot:item.action="row">
         <template v-if="show_only_unapproved">
           <v-btn
             depressed
             color="success"
-            v-on:click="editItem(item.username)"
+            @click="editUser(row.item.username);"
           >
             Edit
           </v-btn>
@@ -91,11 +91,11 @@
             Setujui
           </v-btn>
         </template>
-        <template v-if="item.username != userData.username">
+        <template v-if="row.item.username != userData.username">
           <v-btn
           color="error"
           dark
-          @click="setItem(item); dialog = true"
+          @click="setItem(row.item); dialog = true"
           >
             Hapus
           </v-btn>
@@ -127,7 +127,7 @@
             <v-btn
             color="blue"
             text
-            @click="deleteUser(item);dialog = false"
+            @click="deleteUser();dialog = false"
             >
               Iya
             </v-btn>
@@ -194,8 +194,11 @@ export default {
     toggleListTab() {
       this.show_only_unapproved = !this.show_only_unapproved;
     },
-    deleteUser(item) {
-      console.log(item);
+    deleteUser() {
+      console.log(this.item.username);
+      // const data = {
+      //   username: item.username,
+      // };
       if (localStorage.access) {
         const accessToken = localStorage.access;
         Vue.axios.delete(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-users/`, {
@@ -203,7 +206,7 @@ export default {
             Authorization: `Bearer ${accessToken}`,
           },
           data: {
-            username: item.username,
+            username: this.item.username,
           },
         }).then((res) => {
           if (res.status === 200) {
@@ -234,6 +237,10 @@ export default {
     },
     cancelItem() {
       this.item = '';
+    },
+    editUser(username) {
+      console.log(username);
+      this.$router.push(`/edit-account?id=${username}`);
     },
   },
   beforeMount() {

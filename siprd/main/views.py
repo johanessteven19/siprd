@@ -40,16 +40,29 @@ class Register(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# Fetches the data of the user who is currently logged in
 class ViewUserData(APIView):
     permission_classes = [IsAuthenticated]
 
+    # Fetches the data of the user who is currently logged in
     def get(self, request):
         username = request.user.username
         user = User.objects.filter(username=username).first()
         serializer = UserSerializer(user)
 
         return Response(serializer.data)
+
+    # Fetches the data of a user with a certain username
+    def post(self, request):
+        user_data = get_user_data(request)
+        user_role = user_data['role']
+
+        if (user_role == 'Admin' or user_role == "SDM PT"): 
+            username = request.data['username']
+            user = User.objects.filter(username=username).first()
+            serializer = UserSerializer(user)
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else: return Response({'message': "You are not an admin!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 # Fetches the data of the user who is currently logged in
@@ -343,15 +356,16 @@ class ManageReviewForm(APIView):
     def delete(self, request):
         user_data = get_user_data(request)
         user_role = user_data['role']
+        try:
+            karil = KaryaIlmiah.objects.get(karil_id = request.data['karil_id'])
+        except KaryaIlmiah.DoesNotExist: 
+            return Response({'message': 'The paper you are trying to delete does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+        karil_data = KaryaIlmiahSerializer(karil).data
 
         # Checks if a dosen is trying to delete their own karil
-        if ( user_data['username'] == request.data['pemilik'] and user_role == "Dosen"):
-            try:
-                karil = KaryaIlmiah.objects.get(karil_id = request.data['karil_id'])
-            except KaryaIlmiah.DoesNotExist: 
-                return Response({'message': 'The paper you are trying to delete does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+        if ((user_data['username'] == karil_data['pemilik'] and user_role == "Dosen") or user_role == "Admin"):
             karil.delete()
-            return Response({request.data['judul'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
+            return Response({karil_data['judul'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
         else: return Response(self.forbidden_warning, status=status.HTTP_401_UNAUTHORIZED)
 
 class RequestPasswordResetEmail(generics.GenericAPIView):

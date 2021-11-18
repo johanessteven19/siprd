@@ -7,6 +7,7 @@ import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import AddAccount from '../views/AddAccount.vue';
 import EditAccount from '../views/EditAccount.vue';
+import EditOwnAccount from '../views/EditOwnAccount.vue';
 import ViewAccount from '../views/ViewAccount.vue';
 import Success from '../views/Success.vue';
 import Dashboard from '../views/Dashboard.vue';
@@ -64,6 +65,11 @@ const routes: Array<RouteConfig> = [
     path: '/edit-account',
     name: 'EditAccount',
     component: EditAccount,
+  },
+  {
+    path: '/edit-your-account',
+    name: 'EditOwnAccount',
+    component: EditOwnAccount,
   },
   {
     path: '/your-account',

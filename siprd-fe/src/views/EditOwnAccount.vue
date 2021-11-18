@@ -21,8 +21,7 @@
                     label="Email*"
                     :value="email"
 
-                    readonly
-                    filled
+                    required
                   >
                   </v-text-field>
                 </validation-provider>
@@ -30,13 +29,13 @@
               <validation-provider
                 v-slot="{ errors }"
                 name="Username"
+                rules="required"
               >
                 <v-text-field
                   v-model="username"
                   :error-messages="errors"
                   label="Username*"
-                  readonly
-                  filled
+                  required
                 >
                 </v-text-field>
               </validation-provider>
@@ -72,8 +71,7 @@
                   :error-messages="errors"
                   label="Jabatan"
                   data-vv-name="select"
-                  readonly
-                  filled
+                  required
                 >
                 </v-select>
               </validation-provider>
@@ -89,8 +87,7 @@
                     v-model="fullName"
                     :error-messages="errors"
                     label="Nama Lengkap*"
-                    readonly
-                    filled
+                    required
                   >
                   </v-text-field>
                 </validation-provider>
@@ -101,8 +98,6 @@
                   :error-messages="errors"
                   label="NIP"
                   numeric
-                  readonly
-                  filled
                 >
                 </v-text-field>
               </validation-provider>
@@ -118,8 +113,7 @@
                   :error-messages="errors"
                   label="Role*"
                   data-vv-name="select"
-                  readonly
-                  filled
+                  required
                 >
                 </v-select>
               </validation-provider>
@@ -184,7 +178,7 @@ extend('numeric', {
   message: '{_field_} hanya berupa angka.',
 });
 export default {
-  name: 'EditAccount',
+  name: 'EditOwnAccount',
   components: {
     ValidationProvider,
     ValidationObserver,
@@ -211,10 +205,6 @@ export default {
       roleSelect: ['Dosen', 'Reviewer', 'SDM PT', 'Admin'],
       userData: '',
       config: null,
-      // Who is editing?
-      // 0: Own account
-      // 1: Admin
-      editor: null,
     };
   },
   methods: {
@@ -244,13 +234,8 @@ export default {
           .then((res) => {
             console.log(res.data);
             if (res.status === 200) {
-              if (this.editor === 0) {
-                alert('Akun berhasil diedit.');
-                this.$router.push('/your-account');
-              } else {
-                alert('Akun berhasil diedit.');
-                this.$router.push('/account-list');
-              }
+              // alert("Akun berhasil diedit.");
+              this.$router.push('/your-account');
             } else {
               alert('Gagal');
             }
@@ -280,55 +265,24 @@ export default {
 
   beforeMount() {
     if (localStorage.access) {
-      if (this.$route.query.id) {
-        this.editor = 1;
-        console.log('editing user...');
-        const username = this.$route.query.id;
-        const accessToken = localStorage.access;
-        const config = {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        };
-        const data = {
-          username,
-        };
-
-        Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data, config).then((res) => {
-          if (res.status === 200) {
-            this.userData = res.data;
-            this.email = res.data.email;
-            this.username = res.data.username;
-            this.fullName = res.data.full_name;
-            this.password = res.data.password;
-            this.university = res.data.university;
-            this.nip = res.data.nip;
-            this.fieldOfStudy = res.data.field_of_study;
-            this.role = res.data.role;
-            this.position = res.data.position;
-          }
-        }).catch((err) => {
-          console.log(err);
-        });
-      } else {
-        this.editor = 0;
-        const accessToken = localStorage.access;
-        const config = {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        };
-        Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, config).then((res) => {
-          if (res.status === 200) {
-            this.userData = res.data;
-            this.email = res.data.email;
-            this.username = res.data.username;
-            this.fullName = res.data.full_name;
-            this.password = res.data.password;
-            this.university = res.data.university;
-            this.nip = res.data.nip;
-            this.fieldOfStudy = res.data.field_of_study;
-            this.role = res.data.role;
-            this.position = res.data.position;
-          }
-        });
-      }
+      const accessToken = localStorage.access;
+      const config = {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      };
+      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, config).then((res) => {
+        if (res.status === 200) {
+          this.userData = res.data;
+          this.email = res.data.email;
+          this.username = res.data.username;
+          this.fullName = res.data.full_name;
+          this.password = res.data.password;
+          this.university = res.data.university;
+          this.nip = res.data.nip;
+          this.fieldOfStudy = res.data.field_of_study;
+          this.role = res.data.role;
+          this.position = res.data.position;
+        }
+      });
     } else {
       this.$router.push('/');
     }

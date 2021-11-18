@@ -140,7 +140,7 @@ export default {
     },
 
     editAccount() {
-      this.$router.push('/edit-account');
+      this.$router.push('/edit-your-account');
     },
   },
 
