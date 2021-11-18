@@ -13,6 +13,9 @@
         <li v-if="userData.role === 'ADMIN'">
           <router-link class="link" :to="{ name: 'AccountList' }">Daftar Akun</router-link>
         </li>
+        <li v-if="userData.role === 'SDM PT'">
+          <router-link class="link" :to="{ name: 'AccountList' }">Daftar Akun</router-link>
+        </li>
         <li>
           <router-link class="link" :to="{ name: 'Success' }">Panduan</router-link>
         </li>

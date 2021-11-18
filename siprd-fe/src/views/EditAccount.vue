@@ -21,7 +21,8 @@
                     label="Email*"
                     :value="email"
 
-                    required
+                    readonly
+                    filled
                   >
                   </v-text-field>
                 </validation-provider>
@@ -29,13 +30,13 @@
               <validation-provider
                 v-slot="{ errors }"
                 name="Username"
-                rules="required"
               >
                 <v-text-field
                   v-model="username"
                   :error-messages="errors"
                   label="Username*"
-                  required
+                  readonly
+                  filled
                 >
                 </v-text-field>
               </validation-provider>
@@ -71,7 +72,8 @@
                   :error-messages="errors"
                   label="Jabatan"
                   data-vv-name="select"
-                  required
+                  readonly
+                  filled
                 >
                 </v-select>
               </validation-provider>
@@ -87,7 +89,8 @@
                     v-model="fullName"
                     :error-messages="errors"
                     label="Nama Lengkap*"
-                    required
+                    readonly
+                    filled
                   >
                   </v-text-field>
                 </validation-provider>
@@ -98,6 +101,8 @@
                   :error-messages="errors"
                   label="NIP"
                   numeric
+                  readonly
+                  filled
                 >
                 </v-text-field>
               </validation-provider>
@@ -113,7 +118,8 @@
                   :error-messages="errors"
                   label="Role*"
                   data-vv-name="select"
-                  required
+                  readonly
+                  filled
                 >
                 </v-select>
               </validation-provider>

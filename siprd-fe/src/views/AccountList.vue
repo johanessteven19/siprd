@@ -78,8 +78,9 @@
           <v-btn
             depressed
             color="success"
+            v-on:click="editItem(item.username)"
           >
-            Ubah
+            Edit
           </v-btn>
         </template>
         <template v-else>
@@ -195,14 +196,8 @@ export default {
     },
     deleteUser(item) {
       console.log(item);
-      // const data = {
-      //   username: item.username,
-      // };
       if (localStorage.access) {
         const accessToken = localStorage.access;
-        // const config = {
-        //   headers: { Authorization: `Bearer ${accessToken}` },
-        // };
         Vue.axios.delete(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-users/`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -229,6 +224,11 @@ export default {
           });
       }
     },
+    editItem(username) {
+      console.log(username);
+      this.$router.push(`/edit-account?id=${username}`);
+    },
+
     setItem(item) {
       this.item = item;
     },
