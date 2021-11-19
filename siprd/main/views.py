@@ -393,7 +393,7 @@ class ManageKarilReview(APIView):
             except KaryaIlmiah.DoesNotExist:
                 return Response({'message': 'The paper you are trying to review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
             
-            serializer = KaryaIlmiahSerializer(data=request.data)
+            serializer = ReviewSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 
