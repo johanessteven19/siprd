@@ -111,13 +111,14 @@
       </v-data-table>
       <v-dialog
       v-model="dialog"
-      persistent>
-        <v-card>
-          <v-card-title class="text-h5">
+      persistent
+      max-width="350">
+        <v-card class="mx-auto my-0" max-width="350">
+          <v-card-title class="justify-center text-h5 ">
             Izin Diperlukan
           </v-card-title>
-          <v-card-text>Anda yakin ingin menghapus akun?</v-card-text>
-          <v-card-actions>
+          <v-card-text style="text-align:center">Anda yakin ingin menghapus akun?</v-card-text>
+          <v-card-actions class="justify-center">
             <v-btn
             text
             @click="cancelItem(); dialog = false"
@@ -130,6 +131,25 @@
             @click="deleteUser();dialog = false"
             >
               Iya
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <v-dialog
+      v-model="success"
+      persistent
+      max-width="350">
+        <v-card class="mx-auto my-0" max-width="350">
+          <v-card-title class="justify-center text-h5 ">
+            Akun berhasil dihapus!
+          </v-card-title>
+          <v-card-actions class="justify-center">
+            <v-btn
+            text
+            @click="cancelItem(); dialog = false"
+            >
+              OK
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -185,6 +205,7 @@ export default {
       userData: '',
       dialog: false,
       item: '',
+      success: false,
     };
   },
   methods: {
@@ -211,9 +232,7 @@ export default {
         }).then((res) => {
           if (res.status === 200) {
             this.$router.go();
-            alert(
-              'Akun berhasil dihapus!',
-            );
+            // success=true;
           } else if (res.status === 404) {
             alert(
               'Akun tidak ada di database',

@@ -126,7 +126,7 @@
               <v-btn
                 class="ml-auto white--text"
                 :disabled="invalid"
-                type="submit"
+                @click="dialog = true"
                 color="#8D38E3"
                 width="100%"
               >
@@ -144,6 +144,34 @@
               </v-btn>
             </v-col>
           </v-row>
+
+            <v-dialog
+          v-model="dialog"
+          persistent
+          max-width="350">
+            <v-card class="mx-auto my-0" max-width="350">
+              <v-card-title class="justify-center text-h5 ">
+                Izin Diperlukan
+              </v-card-title>
+              <v-card-text style="text-align:center">Anda yakin ingin mengedit akun?</v-card-text>
+              <v-card-actions class="justify-center">
+                <v-btn
+                text
+                @click="dialog = false"
+                >
+                  Kembali
+                </v-btn>
+                <v-btn
+                color="blue"
+                text
+                type="submit"
+                 @click="checkForm();dialog = false"
+                >
+                  Iya
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-form>
       </validation-observer>
     </v-container>
@@ -205,6 +233,7 @@ export default {
       roleSelect: ['Dosen', 'Reviewer', 'SDM PT', 'Admin'],
       userData: '',
       config: null,
+      dialog: false,
     };
   },
   methods: {

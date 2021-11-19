@@ -14,7 +14,7 @@
           <v-btn
             class="mr-4 white--text"
             :disabled="invalid"
-            type="submit"
+            @click="dialog = true"
             color="success"
             width="100%"
           > Submit
@@ -191,6 +191,36 @@
                 </v-col>
             </v-row>
         </div>
+
+          <v-dialog
+          v-model="dialog"
+          persistent
+          max-width="350">
+            <v-card class="mx-auto my-0" max-width="350">
+              <v-card-title class="justify-center text-h5 ">
+                Izin Diperlukan
+              </v-card-title>
+              <v-card-text style="text-align:center">
+                Anda yakin ingin menambah karya ilmiah?
+              </v-card-text>
+              <v-card-actions class="justify-center">
+                <v-btn
+                text
+                @click="dialog = false"
+                >
+                  Kembali
+                </v-btn>
+                <v-btn
+                color="blue"
+                text
+                type="submit"
+                 @click="checkForm();dialog = false"
+                >
+                  Iya
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
       </v-form>
     </validation-observer>
   </v-container>
@@ -241,6 +271,7 @@ export default {
       promotion: null,
       promotionSelect: ['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar/Professor'],
       status: 'Not Reviewed Yet',
+      dialog: false,
     };
   },
   methods: {

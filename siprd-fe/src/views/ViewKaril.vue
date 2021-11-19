@@ -41,7 +41,7 @@
             <v-col md="2" class="mr-auto">
             <v-btn
               class="mr-auto white--text"
-              v-on:click="deleteKaril(karilData.karil_id)"
+              @click="dialog = true"
               color="error"
               width="100%"
             > Hapus
@@ -154,6 +154,36 @@
               </v-row>
 
           </div>
+
+            <v-dialog
+            v-model="dialog"
+            persistent
+            max-width="350">
+              <v-card class="mx-auto my-0" max-width="350">
+                <v-card-title class="justify-center text-h5 ">
+                  Izin Diperlukan
+                </v-card-title>
+                <v-card-text style="text-align:center">
+                  Anda yakin ingin menghapus akun?
+                </v-card-text>
+                <v-card-actions class="justify-center">
+                  <v-btn
+                  text
+                  @click="dialog = false"
+                  >
+                    Kembali
+                  </v-btn>
+                  <v-btn
+                  color="blue"
+                  text
+                  type="submit"
+                  @click="deleteKaril(karilData.karil_id);dialog = false"
+                  >
+                    Iya
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
         </v-form>
 
       </validation-observer>
@@ -197,6 +227,7 @@ export default {
       kategori: null,
       status: 'Requested',
       karilId: null,
+      dialog: false,
     };
   },
   methods: {
