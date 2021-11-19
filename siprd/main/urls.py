@@ -21,11 +21,15 @@ urlpatterns = [
     path(r'^auth/', include('rest_framework_social_oauth2.urls')),
     path("api/is-user-exists", views.IsUserExist.as_view()),
 
-    # Review Management
+    # Review form Management
     path("api/manage-reviews/", views.ManageReviewForm.as_view()),
     path("api/get-review-form/", views.GetSpecificReviewForm.as_view()),
     path("api/manage-reviewers/", views.ManageReviewers.as_view()),
     path("api/assign-reviewer/", views.AssignReviewer.as_view()),
+
+    # Review management
+    # I am so sorry for the confusing naming
+    path("api/manage-karil-reviews/", views.ManageKarilReview.as_view()),
 
     # Reset password endpoints
     path('api/request-reset-email/', RequestPasswordResetEmail.as_view(), name="request-reset-email"),

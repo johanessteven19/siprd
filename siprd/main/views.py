@@ -258,9 +258,9 @@ class AssignReviewer(APIView):
 
         if ( user_role == "Admin" or user_role == "SDM PT" ):
             karil = KaryaIlmiah.objects.filter(karil_id=request.data['karil_id']).first()
-            reviewers = request.data['reviewers']
 
-            reviewers = User.objects.filter(username__in=reviewers)
+            # Edit reviewers field in karil
+            reviewers = User.objects.filter(username__in=request.data['reviewers'])
             serializer = KaryaIlmiahSerializer(karil, data={'reviewers': reviewers}, partial=True)
             if serializer.is_valid():
                 reviewform = serializer.save()
@@ -352,7 +352,9 @@ class ManageReviewForm(APIView):
         else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
     # Deletes karil with a requested karil_id
-    # Needs karil data that wants to be deleted in the request body
+    # request_data = {
+    #   karil_id: id of the requested karil
+    # }
     def delete(self, request):
         user_data = get_user_data(request)
         user_role = user_data['role']
@@ -367,6 +369,47 @@ class ManageReviewForm(APIView):
             karil.delete()
             return Response({karil_data['judul'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
         else: return Response(self.forbidden_warning, status=status.HTTP_401_UNAUTHORIZED)
+
+# Review management endpoint
+# NOTE: For reviews made by reviewers
+class ManageKarilReview(APIView):
+    permission_classes = [IsAuthenticated]
+
+    # Create new review
+    # request_data = {
+    #   karil_id: id of karil to be reviewed
+    #   reviewer: username of the current reviewer/admin,
+    #   + any other required fields for Review (see Review model or serializer)
+    # }
+    def post(self, request):
+        user_data = get_user_data(request)
+        user_role = user_data['role']
+
+        # Reviewers and Admins can review. Also checks if they are reviewing on their own behalf
+        if ((user_role == 'Reviewer' or user_role == 'Admin') and request.data['reviewer'] == user_data['username']):
+            data = request.data
+            try:
+                karil = KaryaIlmiah.objects.get(karil_id = request.data['karil_id'])
+            except KaryaIlmiah.DoesNotExist:
+                return Response({'message': 'The paper you are trying to review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+            
+            serializer = UserSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                
+                # Update karil reviews
+                review_id = serializer.data['review_id']
+                karilReviews = KaryaIlmiahSerializer(karil).data['reviews']
+                if isinstance(karilReviews, list):
+                    karilReviews = [review_id].extend(karilReviews)
+                else:
+                    karilReviews = [review_id].append(karilReviews)
+                KaryaIlmiahSerializer(karil, data={'reviews': karilReviews}, partial=True).save()
+
+                return Response({'message': 'Review has successfully been created!'}, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
