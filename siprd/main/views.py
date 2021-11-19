@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.decorators import api_view, permission_classes
-from .models import KaryaIlmiah, User
+from .models import KaryaIlmiah, Review, User
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 import logging
@@ -410,6 +410,16 @@ class ManageKarilReview(APIView):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else: return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    # Get review by id in request params (see url)
+    def get(self, request):
+        review_id = request.query_params.get('id')
+        try:
+            serializer = ReviewSerializer.objects.all().filter(review_id=review_id)
+        except Review.DoesNotExist:
+            return Response({'message': 'This review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer

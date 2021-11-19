@@ -29,7 +29,8 @@ urlpatterns = [
 
     # Review management
     # I am so sorry for the confusing naming
-    path("api/manage-karil-reviews/", views.ManageKarilReview.as_view()),
+    # Expected path: api/manage-karil-reviews?username=<something>
+    re_path(r"^api/manage-karil-reviews(\?id=(?P<id>.+))?$", views.ManageKarilReview.as_view()),
 
     # Reset password endpoints
     path('api/request-reset-email/', RequestPasswordResetEmail.as_view(), name="request-reset-email"),
