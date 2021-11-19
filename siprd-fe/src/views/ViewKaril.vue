@@ -38,7 +38,17 @@
           </v-col>
           </v-row>
           <v-row>
-            <v-col md="2" class="mr-auto">
+            <v-col md="2" class="mr-auto" v-if="userData.role === 'Admin'">
+            <v-btn
+              class="mr-auto white--text"
+              @click="dialog = true"
+              color="error"
+              width="100%"
+            > Hapus
+            </v-btn>
+            </v-col>
+
+            <v-col md="2" class="mr-auto"  v-if="userData.role === 'Dosen'">
             <v-btn
               class="mr-auto white--text"
               @click="dialog = true"
@@ -286,6 +296,12 @@ export default {
       Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, data, config).then((res) => {
         if (res.status === 200) {
           this.karilData = res.data;
+        }
+      });
+      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, config).then((res) => {
+        console.log(res.data);
+        if (res.status === 200) {
+          this.userData = res.data;
         }
       });
     } else {
