@@ -101,11 +101,20 @@
           </v-btn>
         </template>
         <template v-else>
-          <v-btn
-          color="error"
-          disabled>
-            Hapus
-          </v-btn>
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <span
+              v-bind="attrs"
+              v-on="on">
+                <v-btn
+                color="error"
+                disabled>
+                  Hapus
+                </v-btn>
+              </span>
+            </template>
+            <span>You can't delete your own account!</span>
+          </v-tooltip>
         </template>
       </template>
       </v-data-table>

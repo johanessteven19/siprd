@@ -7,55 +7,84 @@
       <validation-observer ref="observer">
         <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
           <v-row>
-          <v-col>
-          <h1>Daftar Karya Ilmiah</h1>
-          </v-col>
-          <v-col md="2" class="mr-auto">
-            <v-btn
-              class="mr-4 white--text"
-              color="blue"
-              width="100%"
-            > Download to Excel
-            </v-btn>
-          </v-col>
-          <v-col md="2" class="mr-auto">
-            <v-btn
-              class="mr-4 white--text"
-              color="purple"
-              v-on:click="editKaril(karilData.karil_id)"
-              width="100%"
-            > Edit Karya Ilmiah
-            </v-btn>
-          </v-col>
-          <v-col md="2" class="mr-auto">
-            <v-btn
-              class="mr-4 white--text"
-              v-on:click="assignReviewer(karilData.karil_id)"
-              color="success"
-              width="100%"
-            > Assign Reviewer
-            </v-btn>
-          </v-col>
+            <v-col>
+              <h1>Daftar Karya Ilmiah</h1>
+            </v-col>
+            <template v-if="userData.role === 'Reviewer'">
+              <v-col md="2" class="mr-auto">
+                <v-btn
+                  class="mr-4 white--text"
+                  color="blue"
+                  width="100%"
+                  > Download to Excel
+                </v-btn>
+              </v-col>
+              <v-col md="2" class="mr-auto">
+                <v-btn
+                  class="mr-4 white--text"
+                  color="purple"
+                  v-on:click="reviewKaril(karilData.karil_id)"
+                  width="100%"
+                  > Review
+                </v-btn>
+              </v-col>
+              <v-col md="2" class="mr-auto">
+                <v-btn
+                  class="mr-4 white--text"
+                  color="success"
+                  width="100%"
+                  > Upload From Excel
+                </v-btn>
+              </v-col>
+            </template>
+            <template v-else>
+              <v-col md="2" class="mr-auto">
+                <v-btn
+                  class="mr-4 white--text"
+                  color="blue"
+                  width="100%"
+                  > Download to Excel
+                </v-btn>
+              </v-col>
+              <v-col md="2" class="mr-auto">
+                <v-btn
+                  class="mr-4 white--text"
+                  color="purple"
+                  v-on:click="editKaril(karilData.karil_id)"
+                  width="100%"
+                  > Edit Karya Ilmiah
+                </v-btn>
+              </v-col>
+              <v-col md="2" class="mr-auto">
+                <v-btn
+                  class="mr-4 white--text"
+                  v-on:click="assignReviewer(karilData.karil_id)"
+                  color="success"
+                  width="100%"
+                  > Assign Reviewer
+                </v-btn>
+              </v-col>
+            </template>
           </v-row>
           <v-row>
             <v-col md="2" class="mr-auto" v-if="userData.role === 'Admin'">
-            <v-btn
-              class="mr-auto white--text"
-              @click="dialog = true"
-              color="error"
-              width="100%"
-            > Hapus
-            </v-btn>
+              <v-btn
+                class="mr-auto white--text"
+                @click="dialog = true"
+                color="error"
+                width="100%"
+              > Hapus
+              </v-btn>
             </v-col>
 
             <v-col md="2" class="mr-auto"  v-if="userData.role === 'Dosen'">
-            <v-btn
-              class="mr-auto white--text"
-              @click="dialog = true"
-              color="error"
-              width="100%"
-            > Hapus
-            </v-btn>
+              <v-btn
+                class="mr-auto white--text"
+                @click="dialog = true"
+                color="error"
+                width="100%"
+              > Hapus
+              </v-btn>
             </v-col>
           </v-row>
 
@@ -249,6 +278,10 @@ export default {
 
     editKaril(karilId) {
       this.$router.push(`/edit-karil?id=${karilId}`);
+    },
+
+    reviewKaril(karilId) {
+      this.$router.push(`/add-karil-review?id=${karilId}`);
     },
 
     assignReviewer(karilId) {
