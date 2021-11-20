@@ -279,7 +279,8 @@ class SIPRDUnitTest(TestCase):
 			format='json')
 		
 		response = self.client.get(self.karil_summary_url)
-		self.assertEqual(response.status_code, 201)
+		self.assertEqual(response.status_code, 200)
+
 
 	def test_create_review_form_returns_HTTP_OK(self):
 
@@ -471,102 +472,102 @@ class SIPRDUnitTest(TestCase):
 
 		self.assertEqual(response.status_code, 401)
 	
-	# def test_get_karil_admin_returns_HTTP_OK(self):
+	def test_get_karil_admin_returns_HTTP_OK(self):
 
-	# 	access = self.login()
-	# 	self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
+		access = self.login()
+		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
 
-	# 	reviewer = User.objects.create_user(
-	# 			username = 'Reviewer2',
-	# 			email = self.email,
-	# 			password = self.password,
-	# 			full_name = self.full_name,
-	# 			university = 'UI',
-	# 			field_of_study = 'Art',
-	# 			position = 'Lektor',
-	# 			role = 'Reviewer'
-	# 	)
+		reviewer = User.objects.create_user(
+				username = 'Reviewer2',
+				email = self.email,
+				password = self.password,
+				full_name = self.full_name,
+				university = 'UI',
+				field_of_study = 'Art',
+				position = 'Lektor',
+				role = 'Reviewer'
+		)
 
-	# 	KaryaIlmiah.objects.create(
-	# 		pemilik = self.tester,
-	# 		judul = 'test judul',
-	# 		journal_data = 'test journal',
-	# 		link_origin = 'www.google.com',
-	# 		link_repo = 'www.google.com',
-	# 		link_indexer = 'www.google.com',
-	# 		link_simcheck = 'www.google.com',
-	# 		link_correspondence = 'www.google.com',
-	# 		indexer = 'test indexer',
-	# 		category = 'Buku',
-	# 		promotion = 'Lektor',
-	# 		status = 'Not Reviewed Yet',
-	# 	)
+		KaryaIlmiah.objects.create(
+			pemilik = self.tester,
+			judul = 'test judul',
+			journal_data = 'test journal',
+			link_origin = 'www.google.com',
+			link_repo = 'www.google.com',
+			link_indexer = 'www.google.com',
+			link_simcheck = 'www.google.com',
+			link_correspondence = 'www.google.com',
+			indexer = 'test indexer',
+			category = 'Buku',
+			promotion = 'Lektor',
+			status = 'Not Reviewed Yet',
+		)
 
-	# 	karil2 = KaryaIlmiah.objects.create(
-	# 		pemilik = self.tester,
-	# 		judul = 'karil ep.2',
-	# 		journal_data = 'test journal',
-	# 		link_origin = 'www.google.com',
-	# 		link_repo = 'www.google.com',
-	# 		link_indexer = 'www.google.com',
-	# 		link_simcheck = 'www.google.com',
-	# 		link_correspondence = 'www.google.com',
-	# 		indexer = 'test indexer',
-	# 		category = 'Buku',
-	# 		promotion = 'Lektor',
-	# 		status = 'Not Reviewed Yet'
-	# 	)
+		karil2 = KaryaIlmiah.objects.create(
+			pemilik = self.tester,
+			judul = 'karil ep.2',
+			journal_data = 'test journal',
+			link_origin = 'www.google.com',
+			link_repo = 'www.google.com',
+			link_indexer = 'www.google.com',
+			link_simcheck = 'www.google.com',
+			link_correspondence = 'www.google.com',
+			indexer = 'test indexer',
+			category = 'Buku',
+			promotion = 'Lektor',
+			status = 'Not Reviewed Yet'
+		)
 
-	# 	reviewers = User.objects.filter(role="Reviewer")
+		reviewers = User.objects.filter(role="Reviewer")
 
-	# 	karil2.reviewers.set(reviewers)
+		karil2.reviewers.set(reviewers)
 
-	# 	response = self.client.get(self.manage_karil_url)
+		response = self.client.get(self.manage_karil_url)
 
-	# 	self.assertEqual(response.status_code, 200)
+		self.assertEqual(response.status_code, 200)
 
-	# def test_get_karil_assigned_reviewer_returns_HTTP_OK(self):
+	def test_get_karil_assigned_reviewer_returns_HTTP_OK(self):
 
-	# 	access = self.LoginReviewer()
-	# 	self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
+		access = self.LoginReviewer()
+		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
 
-	# 	KaryaIlmiah.objects.create(
-	# 		pemilik = self.tester,
-	# 		judul = 'test judul',
-	# 		journal_data = 'test journal',
-	# 		link_origin = 'www.google.com',
-	# 		link_repo = 'www.google.com',
-	# 		link_indexer = 'www.google.com',
-	# 		link_simcheck = 'www.google.com',
-	# 		link_correspondence = 'www.google.com',
-	# 		indexer = 'test indexer',
-	# 		category = 'Buku',
-	# 		promotion = 'Lektor',
-	# 		status = 'Not Reviewed Yet',
-	# 	)
+		KaryaIlmiah.objects.create(
+			pemilik = self.tester,
+			judul = 'test judul',
+			journal_data = 'test journal',
+			link_origin = 'www.google.com',
+			link_repo = 'www.google.com',
+			link_indexer = 'www.google.com',
+			link_simcheck = 'www.google.com',
+			link_correspondence = 'www.google.com',
+			indexer = 'test indexer',
+			category = 'Buku',
+			promotion = 'Lektor',
+			status = 'Not Reviewed Yet',
+		)
 
-	# 	karil2 = KaryaIlmiah.objects.create(
-	# 		pemilik = self.tester,
-	# 		judul = 'karil ep.2',
-	# 		journal_data = 'test journal',
-	# 		link_origin = 'www.google.com',
-	# 		link_repo = 'www.google.com',
-	# 		link_indexer = 'www.google.com',
-	# 		link_simcheck = 'www.google.com',
-	# 		link_correspondence = 'www.google.com',
-	# 		indexer = 'test indexer',
-	# 		category = 'Buku',
-	# 		promotion = 'Lektor',
-	# 		status = 'Not Reviewed Yet'
-	# 	)
+		karil2 = KaryaIlmiah.objects.create(
+			pemilik = self.tester,
+			judul = 'karil ep.2',
+			journal_data = 'test journal',
+			link_origin = 'www.google.com',
+			link_repo = 'www.google.com',
+			link_indexer = 'www.google.com',
+			link_simcheck = 'www.google.com',
+			link_correspondence = 'www.google.com',
+			indexer = 'test indexer',
+			category = 'Buku',
+			promotion = 'Lektor',
+			status = 'Not Reviewed Yet'
+		)
 
-	# 	assigned_reviewer = User.objects.filter(username='reviewer')
+		assigned_reviewer = User.objects.filter(username='reviewer')
 
-	# 	karil2.reviewers.set(assigned_reviewer)
+		karil2.reviewers.set(assigned_reviewer)
 
-	# 	response = self.client.get(self.manage_karil_url)
+		response = self.client.get(self.manage_karil_url)
 
-	# 	self.assertEqual(response.status_code, 200)
+		self.assertEqual(response.status_code, 200)
 
 	# def test_get_karil_non_assigned_reviewer_returns_HTTP_NOT_FOUND(self):
 

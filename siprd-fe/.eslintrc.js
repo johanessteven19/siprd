@@ -23,5 +23,6 @@ module.exports = {
     "vue/valid-v-slot":"off",
     "vue/multi-word-component-names":"off",
     "prefer-destructuring":"off",
+    "camelcase": "off",
   },
 };
