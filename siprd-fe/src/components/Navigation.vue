@@ -146,11 +146,11 @@ export default {
 <style lang="scss" scoped>
 header {
   // background-color: rgba(0, 0, 0, 0.8);
-  z-index: 99;
+  z-index: 109;
   width: 100%;
   position: fixed;
   transition: 0.5s ease all;
-  color: white;
+  background-color: white;
   border-bottom: 2px;
   border-bottom: 1px solid transparent;
 
@@ -158,7 +158,7 @@ header {
     position: relative;
     display: flex;
     flex-direction: row;
-    padding: 10px 0;
+    padding: 2px 0;
     transition: 0.5s ease all;
     width: 90%;
     margin: 0 auto;
@@ -299,6 +299,13 @@ header {
       transform: translateX(0);
     }
   }
+}
+
+header{
+  color: aliceblue;
+   -webkit-box-shadow: 0 8px 6px -6px #999;
+    -moz-box-shadow: 0 8px 6px -6px #999;
+    box-shadow: 0 8px 6px -6px #999;
 }
 
 .scrolled-nav {
