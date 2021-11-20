@@ -390,7 +390,7 @@ class ManageKaril(APIView):
         
         elif (user_role == "Reviewer"):
             try:
-                karil_list = KaryaIlmiah.objects.filter(reviewers = user_data['full_name'])
+                karil_list = KaryaIlmiah.objects.filter(reviewers__contains = user_data['username'])
                 serializer = KaryaIlmiahSerializer(karil_list, many=True)
             except KaryaIlmiah.DoesNotExist:
                 return Response({'message': 'No papers are assigned to this reviewer yet! '}, status=status.HTTP_404_NOT_FOUND)
