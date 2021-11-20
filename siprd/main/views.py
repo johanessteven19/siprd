@@ -422,16 +422,16 @@ class ManageKarilReview(APIView):
             
             serializer = ReviewSerializer(data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                new = serializer.save()
                 
                 # Update karil reviews
-                review_id = serializer.data['review_id']
+                review_id = new.review_id
+                print(review_id)
                 karilReviews = KaryaIlmiahSerializer(karil).data['reviews']
-                if isinstance(karilReviews, list):
-                    karilReviews = [review_id].extend(karilReviews)
-                else:
-                    karilReviews = [review_id].append(karilReviews)
-                KaryaIlmiahSerializer(karil, data={'reviews': karilReviews}, partial=True).save()
+                karilReviews.append(review_id)
+                karilSerializer = KaryaIlmiahSerializer(karil, data={'reviews': karilReviews}, partial=True)
+                karilSerializer.is_valid(raise_exception=True)
+                karilSerializer.save()
 
                 return Response({'message': 'Review has successfully been created!'}, status=status.HTTP_201_CREATED)
             else:
