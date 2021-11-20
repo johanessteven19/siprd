@@ -378,8 +378,10 @@ class ManageKaril(APIView):
     def get(self, request):
         user_data = get_user_data(request)
         user_role = user_data['role']
+        print("getting karils...")
 
         if (user_role == "Admin"):
+            print("I'm an admin")
             try:
                 karil_list = KaryaIlmiah.objects.all()
                 serializer = KaryaIlmiahSerializer(karil_list, many=True)
@@ -389,8 +391,9 @@ class ManageKaril(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         
         elif (user_role == "Reviewer"):
+            print("I'm a reviewer")
             try:
-                karil_list = KaryaIlmiah.objects.filter(reviewers__contains = user_data['username'])
+                karil_list = KaryaIlmiah.objects.filter(reviewers__username = user_data['username'])
                 serializer = KaryaIlmiahSerializer(karil_list, many=True)
             except KaryaIlmiah.DoesNotExist:
                 return Response({'message': 'No papers are assigned to this reviewer yet! '}, status=status.HTTP_404_NOT_FOUND)
@@ -446,34 +449,6 @@ class ManageKarilReview(APIView):
         except Review.DoesNotExist:
             return Response({'message': 'This review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
-
-# Class to get reviews based on roles
-class ManageKaril(APIView):
-    permission_classes = [IsAuthenticated]
-    forbidden_role_msg = {'message': 'You are not authorized to perform this action!'}
-
-    def get(self, request):
-        user_data = get_user_data(request)
-        user_role = user_data['role']
-
-        if (user_role == "Admin"):
-            try:
-                karil_list = KaryaIlmiah.objects.all()
-                serializer = KaryaIlmiahSerializer(karil_list, many=True)
-
-            except KaryaIlmiah.DoesNotExist:
-                return Response({'message': 'Papers not found!'}, status=status.HTTP_404_NOT_FOUND)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        elif (user_role == "Reviewer"):
-            try:
-                karil_list = KaryaIlmiah.objects.filter(reviewers = user_data['full_name'])
-                serializer = KaryaIlmiahSerializer(karil_list, many=True)
-            except KaryaIlmiah.DoesNotExist:
-                return Response({'message': 'No papers are assigned to this reviewer yet! '}, status=status.HTTP_404_NOT_FOUND)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED) 
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
