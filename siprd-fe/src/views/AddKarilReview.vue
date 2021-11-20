@@ -15,6 +15,7 @@
                   class="mr-4 white--text"
                   color="success"
                   width="100%"
+                  @click="dialog = true"
                   > Submit
                 </v-btn>
             </v-col>
@@ -369,7 +370,7 @@
                         <validation-provider
                         v-slot="{ errors }"
                         name="Nilai Pengusul"
-                        rules="required|numeric|max_value:40|min_value:0"
+                        rules="required|double:2,dot|max_value:40|min_value:0"
                         >
                             <v-text-field
                             :error-messages="errors"
@@ -419,6 +420,35 @@
                 </v-row>
             </div>
           </v-card>
+          <v-dialog
+          v-model="dialog"
+          persistent
+          max-width="350">
+            <v-card class="mx-auto my-0" max-width="350">
+              <v-card-title class="justify-center text-h5 ">
+                Izin Diperlukan
+              </v-card-title>
+              <v-card-text style="text-align:center">
+                Anda yakin selesai review karya ilmiah?
+              </v-card-text>
+              <v-card-actions class="justify-center">
+                <v-btn
+                text
+                @click="dialog = false"
+                >
+                  Kembali
+                </v-btn>
+                <v-btn
+                color="blue"
+                text
+                type="submit"
+                 @click="checkForm();dialog = false"
+                >
+                  Iya
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-form>
 
       </validation-observer>
@@ -437,6 +467,7 @@ import {
   numeric,
   max_value,
   min_value,
+  double,
 } from 'vee-validate/dist/rules';
 import {
   extend,
@@ -463,6 +494,11 @@ extend('max_value', {
 extend('min_value', {
   ...min_value,
   message: 'Angka {_field_} terlalu rendah.',
+});
+
+extend('double', {
+  ...double,
+  message: 'Angka {_field_} hanya boleh 2 angka desimal.',
 });
 
 Vue.use(Vuetify);
@@ -503,6 +539,7 @@ export default {
       score4: 0,
       totalscore: 0,
       proposer_score: 0,
+      dialog: false,
     };
   },
   methods: {
@@ -551,8 +588,8 @@ export default {
         Vue.axios
           .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-karil-reviews/`, data, config)
           .then((res) => {
-            if (res.status === 200) {
-              alert('Karil berhasil diedit!');
+            if (res.status === 201) {
+              alert('Review berhasil dibuat!');
               console.log(res.data);
               console.log('Success');
               this.$router.push('/karil-list');
