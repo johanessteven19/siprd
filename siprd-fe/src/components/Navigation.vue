@@ -1,6 +1,6 @@
 <template>
   <header :class="{ 'scrolled-nav': scrolledNav }">
-    <nav>
+    <nav style='z-index:999'>
       <div class="branding">
         <a href="">SIPEERKI</a>
       </div>
@@ -146,16 +146,18 @@ export default {
 <style lang="scss" scoped>
 header {
   // background-color: rgba(0, 0, 0, 0.8);
-  z-index: 109;
+  z-index: 9999;
   width: 100%;
   position: fixed;
   transition: 0.5s ease all;
   background-color: white;
+  opacity: 100;
   border-bottom: 2px;
   border-bottom: 1px solid transparent;
 
   nav {
     position: relative;
+    z-index: 999;
     display: flex;
     flex-direction: row;
     padding: 2px 0;
