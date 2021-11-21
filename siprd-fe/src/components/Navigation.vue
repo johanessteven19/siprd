@@ -1,10 +1,10 @@
 <template>
   <header :class="{ 'scrolled-nav': scrolledNav }">
-    <nav>
+    <nav style='z-index:999'>
       <div class="branding">
         <a href="">SIPEERKI</a>
       </div>
-      <ul v-show="!mobile" class="navigation">
+      <ul v-show="!mobile" class="menu">
         <li>
           <router-link class="link" :to="{ name: 'KarilList' }"
             >Daftar Karya Ilmiah</router-link
@@ -19,15 +19,16 @@
         <li>
           <router-link class="link" :to="{ name: 'Success' }">Panduan</router-link>
         </li>
+
         <li @mouseover="profileList = true" @mouseleave="profileList = false">
-          <a href="#"> Profile </a>
+          <img src="@/assets/profile.jpg" alt="User" width="40" height="40">
 
           <transition name="fade">
             <ul v-if="profileList" @click="profileList = false">
               <li> <router-link class="link"
-                    :to="{ name: 'ViewAccount' }">Profil Anda </router-link>
+                    :to="{ name: 'ViewAccount' }">Profile</router-link>
               </li>
-              <li> <div class="link" v-on:click="logoutUser"> Logout </div>
+              <li> <div class="link" v-on:click="logoutUser"> <a>Logout</a> </div>
               </li>
             </ul>
           </transition>
@@ -145,51 +146,87 @@ export default {
 <style lang="scss" scoped>
 header {
   // background-color: rgba(0, 0, 0, 0.8);
-  z-index: 99;
+  z-index: 9999;
   width: 100%;
   position: fixed;
   transition: 0.5s ease all;
-  color: white;
+  background-color: white;
+  opacity: 100;
   border-bottom: 2px;
   border-bottom: 1px solid transparent;
 
   nav {
     position: relative;
+    z-index: 999;
     display: flex;
     flex-direction: row;
-    padding: 12px 0;
+    padding: 2px 0;
     transition: 0.5s ease all;
     width: 90%;
     margin: 0 auto;
     @media (min-width: 1140px) {
       max-width: 1140px;
     }
+  .menu {
+    // position: sticky;
+    display: flex;
+    align-items: right;
+    flex: 1;
+    justify-content: flex-end;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
 
-    ul,
-    .link {
-      font-weight: 500;
-      color: black;
-      list-style: none;
-      text-decoration: none;
+  .menu a {
+    display: block;
+    padding: 10px;
+    font-weight: 500;
+    color: black;
+    text-decoration: none;
+  }
+
+  .menu li {
+    display:block;
+    float: left;
+    position: relative;
+    background:white;
+    color: black;
+    // min-width: 10px;
+    text-transform: uppercase;
+    padding: 16px;
+  }
+
+  .menu li ul {
+    position: absolute;
+    left: 0;
+    top: 61px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .menu li ul li {
+    background:white;
+    transition: background .2s;
+  }
+
+  .menu li ul li:hover {
+    color: purple;
+    border-color: purple;
+  }
+
+  .link {
+    font-size: 14px;
+    transition: 0.5s ease all;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
+
+    &:hover {
+      color: purple;
+      border-color: purple;
     }
-
-    li {
-      text-transform: uppercase;
-      padding: 16px;
-      margin-left: 16px;
-    }
-
-    .link {
-      font-size: 14px;
-      transition: 0.5s ease all;
-      padding-bottom: 4px;
-      border-bottom: 1px solid transparent;
-
-      &:hover {
-        color: purple;
-        border-color: purple;
-      }
-    }
+  }
 
     .branding {
       display: flex;
@@ -202,13 +239,6 @@ header {
         transition: 0.5s ease all;
         font-weight: 500;
       }
-    }
-
-    .navigation {
-      display: flex;
-      align-items: center;
-      flex: 1;
-      justify-content: flex-end;
     }
 
     .icon {
@@ -236,11 +266,6 @@ header {
 
     .fade-enter, .fade-leave-active {
       opacity: 0;
-    }
-
-    a{
-      text-decoration: none;
-      color: black;
     }
 
     .dropdown-nav {
@@ -276,6 +301,13 @@ header {
       transform: translateX(0);
     }
   }
+}
+
+header{
+  color: aliceblue;
+   -webkit-box-shadow: 0 8px 6px -6px #999;
+    -moz-box-shadow: 0 8px 6px -6px #999;
+    box-shadow: 0 8px 6px -6px #999;
 }
 
 .scrolled-nav {

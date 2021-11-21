@@ -22,6 +22,7 @@
         </v-col>
         <v-col md="1" class="mr-auto">
           <v-btn
+            style='z-index:-0'
             class="mr-4 white--text"
             :disabled="false"
             color="red"
@@ -39,6 +40,8 @@
                 rules="required"
               >
                   <v-select
+                    class="pb-4"
+                    style="z-index: 0"
                     v-model="promotion"
                     :items="promotionSelect"
                     :error-messages="errors"
@@ -54,15 +57,15 @@
 
         <div class="identitas" justify="center">
             <v-row align="center" justify="center" row-gap="10px">
-                <v-col md="5" align="right">
-                    <h1>Identitas Karya Ilmiah</h1>
+                <v-col md="5" align="center">
+                    <h1 class = "Nama pb-4">Identitas Karya Ilmiah</h1>
                 </v-col>
             </v-row>
             <v-row align="center" justify="center">
-                <v-col md="3" align="right">
+                <v-col md="2" align="center">
                     Nama Penulis
                 </v-col>
-                <v-col md="2">
+                <v-col md="3">
                   <validation-provider
                     v-slot="{ errors }"
                     name="Nama penulis"
@@ -79,10 +82,10 @@
             </v-row>
 
             <v-row align="center" justify="center">
-                <v-col md="3" align="right">
+                <v-col md="2" align="center">
                     Judul Karya Ilmiah
                 </v-col>
-                <v-col md="2">
+                <v-col md="3">
                   <validation-provider
                     v-slot="{ errors }"
                     name="Judul karil"
@@ -99,80 +102,80 @@
             </v-row>
 
               <v-row align="center" justify="center">
-                  <v-col md="3" align="right">
+                  <v-col md="2" align="center">
                       Data Jurnal
                   </v-col>
-                  <v-col md="2">
+                  <v-col md="3">
                       <v-text-field v-model="dataJurnal" placeholder="Data Jurnal" outlined>
                       </v-text-field>
                   </v-col>
               </v-row>
 
               <v-row align="center" justify="center">
-                  <v-col md="3" align="right">
+                  <v-col md="2" align="center">
                       Link Asli Jurnal
                   </v-col>
-                  <v-col md="2">
+                  <v-col md="3">
                       <v-text-field v-model="linkAsli" placeholder="Link Asli" outlined>
                       </v-text-field>
                   </v-col>
               </v-row>
 
               <v-row align="center" justify="center">
-                  <v-col md="3" align="right">
+                  <v-col md="2" align="center">
                       Link Repository
                   </v-col>
-                  <v-col md="2">
+                  <v-col md="3">
                       <v-text-field v-model="linkRepo" placeholder="Link Repository" outlined>
                       </v-text-field>
                   </v-col>
               </v-row>
 
               <v-row align="center" justify="center">
-                  <v-col md="3" align="right">
+                  <v-col md="2" align="center">
                       Link Indexer
                   </v-col>
-                  <v-col md="2">
+                  <v-col md="3">
                       <v-text-field v-model="linkIndexer" placeholder="Link Indexer" outlined>
                       </v-text-field>
                   </v-col>
               </v-row>
 
               <v-row align="center" justify="center">
-                  <v-col md="3" align="right">
+                  <v-col md="2" align="center">
                       Link Check Similarity
                   </v-col>
-                  <v-col md="2">
+                  <v-col md="3">
                       <v-text-field v-model="linkCheck" placeholder="Link Check" outlined>
                       </v-text-field>
                   </v-col>
               </v-row>
 
               <v-row align="center" justify="center">
-                  <v-col md="3" align="right">
+                  <v-col md="2" align="center">
                       Link Bukti Korespondensi
                   </v-col>
-                  <v-col md="2">
+                  <v-col md="3">
                       <v-text-field v-model="linkBukti" placeholder="Link Bukti" outlined>
                       </v-text-field>
                   </v-col>
               </v-row>
 
               <v-row align="center" justify="center">
-                  <v-col md="3" align="right">
+                  <v-col md="2" align="center">
                       Peng-index
                   </v-col>
-                  <v-col md="2">
+                  <v-col md="3">
                       <v-text-field v-model="pengIndex" placeholder="Peng-Index" outlined>
                       </v-text-field>
                   </v-col>
               </v-row>
 
             <v-row align="center" justify="center">
-                <v-col md="3" align="right">
+                <v-col md="2" align="right">
                     Kategori Karya Ilmiah
                 </v-col>
-                <v-col md="2">
+                <v-col md="3">
                   <validation-provider
                     v-slot="{ errors }"
                     name="Kategori Karil"
@@ -205,6 +208,7 @@
               </v-card-text>
               <v-card-actions class="justify-center">
                 <v-btn
+                style='z-index:0'
                 text
                 @click="dialog = false"
                 >
@@ -325,3 +329,14 @@ export default {
 
 };
 </script>
+
+<style scoped>
+  .identitas{
+    background-color: #F9F9F9;
+    border-radius: 25px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  }
+  .v-btn{
+    z-index: 0;
+  }
+</style>
