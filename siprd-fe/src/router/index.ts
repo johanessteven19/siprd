@@ -16,6 +16,7 @@ import EditKaril from '../views/EditKaril.vue';
 import AssignReviewer from '../views/AssignReviewer.vue';
 import KarilList from '../views/KarilList.vue';
 import ViewKaril from '../views/ViewKaril.vue';
+import ForgetPasswordRequest from "../views/ForgetPasswordRequest.vue";
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
@@ -109,6 +110,12 @@ const routes: Array<RouteConfig> = [
     name: 'AssignReviewer',
     component: AssignReviewer,
   },
+  {
+    path: "/forget",
+    name: "Forget",
+    component: ForgetPasswordRequest,
+  },
+
 ];
 
 const router = new VueRouter({
