@@ -87,6 +87,7 @@
           <v-btn
             depressed
             color="success"
+           @click="updateUser(item);"
           >
             Setujui
           </v-btn>
@@ -260,6 +261,36 @@ export default {
       this.$router.push(`/edit-account?id=${username}`);
     },
 
+    updateUser(item) {
+      // console.log(item);
+      if (localStorage.access) {
+        // const accessToken = localStorage.access;
+        const data = {
+          username: item.username,
+        };
+        const accessToken = localStorage.access;
+        const config = {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        };
+        console.log(data);
+        Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/approve-user/`, data, config).then((res) => {
+          if (res.status === 200) {
+            this.$router.go();
+          } else if (res.status === 404) {
+            alert(
+              'Akun tidak ada di database',
+            );
+          }
+        })
+          .catch((err) => {
+            // something went horribly wrong!
+            console.log(err.response);
+            alert('Maaf, server SIPEERKI tidak dapat dihubungi.');
+          });
+      }
+    },
     setItem(item) {
       this.item = item;
     },
