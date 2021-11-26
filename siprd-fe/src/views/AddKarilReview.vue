@@ -157,7 +157,7 @@
                         <validation-provider
                         v-slot="{ errors }"
                         name="Indikasi Plagiasi"
-                        rules="required|numeric|max_value:100|min_value:0"
+                        rules="required|double:2,dot|max_value:100|min_value:0"
                         >
                             <v-text-field
                             :error-messages="errors"
@@ -178,12 +178,13 @@
                         <validation-provider
                         v-slot="{ errors }"
                         name="Linearitas"
-                        rules="required"
+                        rules="required|max:254"
                         >
                             <v-text-field
                             :error-messages="errors"
                             v-model="linearitas"
                             required
+                            placeholder="max char: 254"
                             outlined></v-text-field>
                         </validation-provider>
                     </v-col>
@@ -237,24 +238,56 @@
                         Komentar
                     </v-col>
                     <v-col>
+                      <validation-provider
+                        v-slot="{ errors }"
+                        name="Komen 1"
+                        rules="max:254"
+                        >
                         <v-textarea
+                        :error-messages="errors"
+                        placeholder="max char: 254"
                         v-model="komen1"
                         outlined></v-textarea>
+                      </validation-provider>
                     </v-col>
                     <v-col>
+                      <validation-provider
+                        v-slot="{ errors }"
+                        name="Komen 2"
+                        rules="max:254"
+                        >
                         <v-textarea
+                        :error-messages="errors"
+                        placeholder="max char: 254"
                         v-model="komen2"
                         outlined></v-textarea>
+                      </validation-provider>
                     </v-col>
                     <v-col>
+                      <validation-provider
+                        v-slot="{ errors }"
+                        name="Komen 3"
+                        rules="max:254"
+                        >
                         <v-textarea
+                        :error-messages="errors"
+                        placeholder="max char: 254"
                         v-model="komen3"
                         outlined></v-textarea>
+                      </validation-provider>
                     </v-col>
                     <v-col>
+                      <validation-provider
+                        v-slot="{ errors }"
+                        name="Komen 4"
+                        rules="max:254"
+                        >
                         <v-textarea
+                        :error-messages="errors"
+                        placeholder="max char: 254"
                         v-model="komen4"
                         outlined></v-textarea>
+                      </validation-provider>
                     </v-col>
                     <v-col></v-col>
                 </v-row>
@@ -468,6 +501,7 @@ import {
   max_value,
   min_value,
   double,
+  max,
 } from 'vee-validate/dist/rules';
 import {
   extend,
@@ -499,6 +533,11 @@ extend('min_value', {
 extend('double', {
   ...double,
   message: 'Angka {_field_} hanya boleh 2 angka desimal.',
+});
+
+extend('max', {
+  ...max,
+  message: '{_field_} maksimal 254 karakter.',
 });
 
 Vue.use(Vuetify);
