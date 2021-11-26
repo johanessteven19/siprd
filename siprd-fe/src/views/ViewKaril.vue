@@ -381,6 +381,8 @@
                   </v-row>
               </div>
             </v-card>
+          </div>
+          <div v-if="reviewData != null || reviewerData != null">
             <v-card>
               <div
               class="identitas"
@@ -396,7 +398,7 @@
                         Nama:
                     </v-col>
                     <v-col style="margin-top: 1rem" md="4" cols="8">
-                        {{ reviewData[0].reviewer }}
+                        {{ reviewerData.full_name }}
                     </v-col>
                 </v-row>
                 <v-row row-gap="3px">
@@ -404,7 +406,7 @@
                         NIP:
                     </v-col>
                     <v-col style="margin-top: 1rem" md="4" cols="8">
-                        hmmm
+                        {{ reviewerData.nip }}
                     </v-col>
                 </v-row>
                 <v-row row-gap="3px">
@@ -412,7 +414,7 @@
                         Unit Kerja:
                     </v-col>
                     <v-col style="margin-top: 1rem" md="4" cols="8">
-                        hmmm
+                        {{ reviewerData.field_of_study }}, {{ reviewerData.university }}
                     </v-col>
                 </v-row>
               </div>
@@ -479,6 +481,7 @@ export default {
     return {
       userData: '',
       karilData: '',
+      reviewerData: null,
       reviewData: null,
       namaPenulis: null,
       judulKaril: null,
@@ -558,13 +561,28 @@ export default {
       };
       Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, data, config).then((res) => {
         if (res.status === 200) {
-          console.log(res.data);
           this.karilData = res.data;
           if (res.data.reviews.length !== 0) {
             Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-karil-reviews?id=${res.data.reviews[0]}`, config).then((res1) => {
               if (res1.status === 200) {
-                console.log(res1.data);
                 this.reviewData = res1.data;
+                const data1 = {
+                  username: res1.data[0].reviewer,
+                };
+                Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data1, config).then((res2) => {
+                  if (res2.status === 200) {
+                    this.reviewerData = res2.data;
+                  }
+                });
+              }
+            });
+          } else {
+            const data2 = {
+              username: res.data.reviewers[0],
+            };
+            Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data2, config).then((res3) => {
+              if (res3.status === 200) {
+                this.reviewerData = res3.data;
               }
             });
           }
