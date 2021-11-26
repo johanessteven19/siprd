@@ -59,13 +59,14 @@ class ViewUserData(APIView):
         user_data = get_user_data(request)
         user_role = user_data['role']
 
-        if (user_role == 'Admin' or user_role == "SDM PT"): 
-            username = request.data['username']
+        username = request.data['username']
+        try:
             user = User.objects.filter(username=username).first()
-            serializer = UserSerializer(user)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND) 
+        serializer = UserSerializer(user)
 
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else: return Response({'message': "You are not an admin!"}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # Fetches the data of the user who is currently logged in
