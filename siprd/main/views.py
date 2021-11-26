@@ -17,6 +17,9 @@ from rest_framework.decorators import api_view, permission_classes
 from .models import KaryaIlmiah, Review, User
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
+from django.core.mail import send_mail
+from django.conf import settings
+
 import logging
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
@@ -200,6 +203,29 @@ class ManageUsers(APIView):
             user.delete()
             return Response({request.data['username'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
         else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
+
+# Admin is able to approve user
+class ApproveUsers(APIView):
+    # permission_classes = [IsAuthenticated]
+    # forbidden_role_msg = {'message': 'You must be an Admin or SDM PT to perform this action.'}
+    def post(self, request):
+        user_data = get_user_data(request)
+        user_role = user_data['role']
+        if ( user_role == "Admin" or user_role == "SDM PT" or user_data['username'] == request.data['username']):
+            try:
+                user = User.objects.get(username=request.data['username'])
+            except User.DoesNotExist:
+                return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND)
+            user = User.objects.get(username=request.data['username'])
+            data = {'approved' : True}
+            serializer = UserSerializer(user, data=data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
+
+
 
 # Reviewer management endpoint
 # For use with Stage 2 review form creation
@@ -452,7 +478,6 @@ class ManageKarilReview(APIView):
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
-
     def post(self, request):
         serializer = ResetPasswordEmailRequestSerializer(data=request.data)
         if serializer.is_valid():
@@ -470,11 +495,19 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
 
                 redirect_url = request.data.get('redirect_url', '')
                 absurl = 'http://' + current_site + relative_link
+                subject = 'Reset your password'
+                email_from = settings.EMAIL_HOST_USER
+                list_email_to = [user.email,]
                 email_body = 'Hello, \n Use link below to reset your password  \n' + \
                              absurl + "?redirect_url=" + redirect_url
+                
                 data = {'email_body': email_body, 'to_email': user.email,
                         'email_subject': 'Reset your passsword'}
+                send_mail(subject, email_body, email_from, list_email_to)
                 # Util.send_email(data)
+
+                print(email_from)
+                print(user.email)
                 return Response({'success': 'We have sent you a link to reset your password', 'data': absurl},
                                 status=status.HTTP_200_OK)
             else:

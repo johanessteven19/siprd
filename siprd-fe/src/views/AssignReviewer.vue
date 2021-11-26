@@ -78,7 +78,14 @@
                       Link Asli Jurnal
                   </v-col>
                   <v-col md="2">
-                      {{ karilData.link_origin }}
+                    <v-btn
+                      v-if="karilData.link_origin != null"
+                      outlined
+                      color="black"
+                      v-on:click="link(karilData.link_origin)"
+                      width="100%"
+                    > Link
+                    </v-btn>
                   </v-col>
               </v-row>
 
@@ -87,7 +94,14 @@
                       Link Repository
                   </v-col>
                   <v-col md="2">
-                      {{ karilData.link_repo }}
+                      <v-btn
+                      v-if="karilData.link_repo != null"
+                      outlined
+                      color="black"
+                      v-on:click="link(karilData.link_repo)"
+                      width="100%"
+                    > Link
+                    </v-btn>
                   </v-col>
               </v-row>
 
@@ -96,7 +110,14 @@
                       Link Indexer
                   </v-col>
                   <v-col md="2">
-                      {{ karilData.link_indexer }}
+                    <v-btn
+                      v-if="karilData.link_indexer != null"
+                      outlined
+                      color="black"
+                      v-on:click="link(karilData.link_indexer)"
+                      width="100%"
+                    > Link
+                    </v-btn>
                   </v-col>
               </v-row>
 
@@ -105,7 +126,14 @@
                       Link Check Similarity
                   </v-col>
                   <v-col md="2">
-                      {{ karilData.link_simcheck }}
+                    <v-btn
+                      v-if="karilData.link_simcheck != null"
+                      outlined
+                      color="black"
+                      v-on:click="link(karilData.link_simcheck)"
+                      width="100%"
+                    > Link
+                    </v-btn>
                   </v-col>
               </v-row>
 
@@ -114,7 +142,14 @@
                       Link Bukti Korespondensi
                   </v-col>
                   <v-col md="2">
-                      {{ karilData.link_correspondence }}
+                    <v-btn
+                      v-if="karilData.link_correspondence != null"
+                      outlined
+                      color="black"
+                      v-on:click="link(karilData.link_correspondence)"
+                      width="100%"
+                    > Link
+                    </v-btn>
                   </v-col>
               </v-row>
 
