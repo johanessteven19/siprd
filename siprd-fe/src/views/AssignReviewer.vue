@@ -42,7 +42,7 @@
 
           <div class="identitas" style="margin-top: 2rem; width: 100%;" justify="center">
               <v-row align="center" justify="center" row-gap="10px">
-                  <v-col md="5" align="right">
+                  <v-col md="5" align="center">
                       <h1>Identitas Karya Ilmiah</h1>
                   </v-col>
               </v-row>

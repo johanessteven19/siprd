@@ -198,9 +198,9 @@ export default {
             console.log(element.status);
             if (element.status.includes('Done')) {
               dsum += 1;
-            } else if (element.status.includes('In_Review')) {
+            } if (element.reviews.length !== 0) {
               rsum += 1;
-            } else if (element.status.includes('Reviewed')) {
+            } if (element.reviewers.length !== 0) {
               asum += 1;
             }
           });
