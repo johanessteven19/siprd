@@ -471,9 +471,10 @@ class ManageKarilReview(APIView):
     def get(self, request):
         review_id = request.query_params.get('id')
         try:
-            serializer = ReviewSerializer.objects.all().filter(review_id=review_id)
+            reviews = Review.objects.all().filter(review_id=review_id)
         except Review.DoesNotExist:
             return Response({'message': 'This review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
