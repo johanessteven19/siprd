@@ -7,55 +7,84 @@
       <validation-observer ref="observer">
         <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
           <v-row>
-          <v-col>
-          <h1>Daftar Karya Ilmiah</h1>
-          </v-col>
-          <v-col md="2" class="mr-auto">
-            <v-btn
-              class="mr-4 white--text"
-              color="blue"
-              width="100%"
-            > Download to Excel
-            </v-btn>
-          </v-col>
-          <v-col md="2" class="mr-auto">
-            <v-btn
-              class="mr-4 white--text"
-              color="purple"
-              v-on:click="editKaril(karilData.karil_id)"
-              width="100%"
-            > Edit Karya Ilmiah
-            </v-btn>
-          </v-col>
-          <v-col md="2" class="mr-auto">
-            <v-btn
-              class="mr-4 white--text"
-              v-on:click="assignReviewer(karilData.karil_id)"
-              color="success"
-              width="100%"
-            > Assign Reviewer
-            </v-btn>
-          </v-col>
+            <v-col>
+              <h1>Daftar Karya Ilmiah</h1>
+            </v-col>
+            <template v-if="userData.role === 'Reviewer'">
+              <v-col md="2" class="mr-auto">
+                <v-btn
+                  class="mr-4 white--text"
+                  color="blue"
+                  width="100%"
+                  > Download to Excel
+                </v-btn>
+              </v-col>
+              <v-col md="2" class="mr-auto">
+                <v-btn
+                  class="mr-4 white--text"
+                  color="purple"
+                  v-on:click="reviewKaril(karilData.karil_id)"
+                  width="100%"
+                  > Review
+                </v-btn>
+              </v-col>
+              <v-col md="2" class="mr-auto">
+                <v-btn
+                  class="mr-4 white--text"
+                  color="success"
+                  width="100%"
+                  > Upload From Excel
+                </v-btn>
+              </v-col>
+            </template>
+            <template v-else>
+              <v-col md="2" class="mr-auto">
+                <v-btn
+                  class="mr-4 white--text"
+                  color="blue"
+                  width="100%"
+                  > Download to Excel
+                </v-btn>
+              </v-col>
+              <v-col md="2" class="mr-auto">
+                <v-btn
+                  class="mr-4 white--text"
+                  color="purple"
+                  v-on:click="editKaril(karilData.karil_id)"
+                  width="100%"
+                  > Edit Karya Ilmiah
+                </v-btn>
+              </v-col>
+              <v-col md="2" class="mr-auto">
+                <v-btn
+                  class="mr-4 white--text"
+                  v-on:click="assignReviewer(karilData.karil_id)"
+                  color="success"
+                  width="100%"
+                  > Assign Reviewer
+                </v-btn>
+              </v-col>
+            </template>
           </v-row>
           <v-row>
             <v-col md="2" class="mr-auto" v-if="userData.role === 'Admin'">
-            <v-btn
-              class="mr-auto white--text"
-              @click="dialog = true"
-              color="error"
-              width="100%"
-            > Hapus
-            </v-btn>
+              <v-btn
+                class="mr-auto white--text"
+                @click="dialog = true"
+                color="error"
+                width="100%"
+              > Hapus
+              </v-btn>
             </v-col>
 
             <v-col md="2" class="mr-auto"  v-if="userData.role === 'Dosen'">
-            <v-btn
-              class="mr-auto white--text"
-              @click="dialog = true"
-              color="error"
-              width="100%"
-            > Hapus
-            </v-btn>
+              <v-btn
+                class="mr-auto white--text"
+                @click="dialog = true"
+                color="error"
+                width="100%"
+              > Hapus
+              </v-btn>
             </v-col>
           </v-row>
 
@@ -69,7 +98,7 @@
 
           <div class="identitas" style="margin-top: 2rem; width: 100%;" justify="center">
               <v-row align="center" justify="center" row-gap="10px">
-                  <v-col md="5" align="right">
+                  <v-col md="5" align="center">
                       <h1>Identitas Karya Ilmiah</h1>
                   </v-col>
               </v-row>
@@ -197,7 +226,199 @@
                     {{ karilData.category }}
                   </v-col>
               </v-row>
-
+          </div>
+          <div v-if="reviewData != null">
+            <v-card>
+              <div
+              class="identitas"
+              style="margin-top: 2rem; margin-bottom: 2rem; width: 100%;"
+              justify="center">
+                  <v-row align="center" justify="center" row-gap="3px">
+                    <v-col md="5" align="center">
+                        <h1>Hasil Penilaian Validasi</h1>
+                    </v-col>
+                  </v-row>
+                  <v-row style="margin-top: 1rem" row-gap="3px">
+                    <v-col cols="6" align="right">
+                      Indikasi Plagiasi
+                    </v-col>
+                    <v-col md="4" cols="8">
+                      {{ reviewData[0].plagiarism_percentage }}%
+                    </v-col>
+                  </v-row>
+                  <v-row style="margin-top: 1rem;margin-bottom: 1rem" row-gap="3px">
+                      <v-col cols="6" align="right">
+                          Linearitas
+                      </v-col>
+                      <v-col md="4" cols="8">
+                        {{ reviewData[0].linearity }}
+                      </v-col>
+                  </v-row>
+              </div>
+            </v-card>
+            <v-card>
+              <div
+              class="identitas"
+              style="margin-top: 2rem; margin-bottom: 2rem; width: 100%;"
+              justify="center">
+                <v-row align="center" justify="center" row-gap="3px">
+                    <v-col md="5" align="center">
+                        <h1>Hasil Penilaian Peer Review</h1>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col></v-col>
+                    <v-col align="center">
+                        Kelengkapan dan<br>
+                        Kesesuaian Unsur<br>
+                        Publikasi
+                        <br>(10%)
+                    </v-col>
+                    <v-col align="center">
+                        Ruang lingkup,<br>
+                        kedalaman<br>
+                        pembahasaan,<br>
+                        kebaruan
+                        <br>(30%)
+                    </v-col>
+                    <v-col align="center">
+                        Kecupukuan dan<br>
+                        kemutakhiran<br>
+                        data/infromasi<br>
+                        dan metodologi
+                        <br>(30%)
+                    </v-col>
+                    <v-col align="center">
+                        Kelengkapan unsur<br>
+                        dan kualitas penerbit,<br>
+                        hasil dan manfaat
+                        <br>(30%)
+                    </v-col>
+                    <v-col align="center" style="margin-top: 2rem">
+                        Total
+                    </v-col>
+                </v-row>
+                <v-row align="center" justify="center" row-gap="3px">
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                        Komentar
+                    </v-col>
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                      {{ reviewData[0].comment_1 }}
+                    </v-col>
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                      {{ reviewData[0].comment_2 }}
+                    </v-col>
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                      {{ reviewData[0].comment_3 }}
+                    </v-col>
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                      {{ reviewData[0].comment_4 }}
+                    </v-col>
+                    <v-col></v-col>
+                </v-row>
+                <v-row align="center" justify="center" row-gap="3px">
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                        Nilai Akhir
+                    </v-col>
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                      {{ reviewData[0].score_1 }}
+                    </v-col>
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                      {{ reviewData[0].score_2 }}
+                    </v-col>
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                      {{ reviewData[0].score_3 }}
+                    </v-col>
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                      {{ reviewData[0].score_4 }}
+                    </v-col>
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                        <strong>{{ reviewData[0].score_1
+                          + reviewData[0].score_2
+                          + reviewData[0].score_3
+                          + reviewData[0].score_4}}</strong>
+                    </v-col>
+                </v-row>
+                <v-row align="center" justify="center" row-gap="3px">
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                        Nilai Maksimum
+                    </v-col>
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                        <strong>4</strong>
+                    </v-col>
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                        <strong>12</strong>
+                    </v-col>
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                        <strong>12</strong>
+                    </v-col>
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                        <strong>12</strong>
+                    </v-col>
+                    <v-col align="center" style="margin-bottom: 1.5rem;">
+                      <strong>40</strong>
+                    </v-col>
+                  </v-row>
+                </div>
+            </v-card>
+            <v-card>
+                <div
+                class="identitas"
+                style="margin-top: 2rem; margin-bottom: 2rem; width: 100%;"
+                justify="center">
+                  <v-row align="center" justify="center" row-gap="3px">
+                      <v-col md="5" align="center">
+                        <h1>Nilai Pengusul</h1>
+                      </v-col>
+                  </v-row>
+                  <v-row style="margin-top: 1rem;margin-bottom: 1rem" row-gap="3px">
+                      <v-col cols="6" align="right">
+                          Nilai Pengusul
+                      </v-col>
+                      <v-col md="4" cols="8">
+                        {{ reviewData[0].score_proposer }}
+                      </v-col>
+                  </v-row>
+              </div>
+            </v-card>
+          </div>
+          <div v-if="reviewData != null || reviewerData != null">
+            <v-card>
+              <div
+              class="identitas"
+              style="margin-top: 2rem; margin-bottom: 2rem; width: 100%;"
+              justify="center">
+                <v-row align="center" justify="center" row-gap="3px">
+                    <v-col md="5" align="center">
+                        <h1>Reviewer</h1>
+                    </v-col>
+                </v-row>
+                <v-row row-gap="3px">
+                    <v-col style="margin-top: 1rem" cols="6" align="right">
+                        Nama:
+                    </v-col>
+                    <v-col style="margin-top: 1rem" md="4" cols="8">
+                        {{ reviewerData.full_name }}
+                    </v-col>
+                </v-row>
+                <v-row row-gap="3px">
+                    <v-col style="margin-top: 1rem" cols="6" align="right">
+                        NIP:
+                    </v-col>
+                    <v-col style="margin-top: 1rem" md="4" cols="8">
+                        {{ reviewerData.nip }}
+                    </v-col>
+                </v-row>
+                <v-row row-gap="3px">
+                    <v-col style="margin-top: 1rem" cols="6" align="right">
+                        Unit Kerja:
+                    </v-col>
+                    <v-col style="margin-top: 1rem" md="4" cols="8">
+                        {{ reviewerData.field_of_study }}, {{ reviewerData.university }}
+                    </v-col>
+                </v-row>
+              </div>
+            </v-card>
           </div>
 
             <v-dialog
@@ -260,6 +481,8 @@ export default {
     return {
       userData: '',
       karilData: '',
+      reviewerData: null,
+      reviewData: null,
       namaPenulis: null,
       judulKaril: null,
       dataJurnal: null,
@@ -284,6 +507,10 @@ export default {
 
     editKaril(karilId) {
       this.$router.push(`/edit-karil?id=${karilId}`);
+    },
+
+    reviewKaril(karilId) {
+      this.$router.push(`/add-karil-review?id=${karilId}`);
     },
 
     assignReviewer(karilId) {
@@ -335,6 +562,30 @@ export default {
       Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, data, config).then((res) => {
         if (res.status === 200) {
           this.karilData = res.data;
+          if (res.data.reviews.length !== 0) {
+            Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-karil-reviews?id=${res.data.reviews[0]}`, config).then((res1) => {
+              if (res1.status === 200) {
+                this.reviewData = res1.data;
+                const data1 = {
+                  username: res1.data[0].reviewer,
+                };
+                Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data1, config).then((res2) => {
+                  if (res2.status === 200) {
+                    this.reviewerData = res2.data;
+                  }
+                });
+              }
+            });
+          } else {
+            const data2 = {
+              username: res.data.reviewers[0],
+            };
+            Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data2, config).then((res3) => {
+              if (res3.status === 200) {
+                this.reviewerData = res3.data;
+              }
+            });
+          }
         }
       });
       Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, config).then((res) => {

@@ -14,15 +14,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.decorators import api_view, permission_classes
-from .models import KaryaIlmiah, User
+from .models import KaryaIlmiah, Review, User
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+
+from django.core.mail import send_mail
+from django.conf import settings
 
 import logging
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 
 logger = logging.getLogger(__name__)
-
+user_does_not_exist_msg = {'message': 'The user does not exist'}
 
 class CustomRedirect(HttpResponsePermanentRedirect):
     allowed_schemes = [os.environ.get('APP_SCHEME'), 'http', 'https']
@@ -54,15 +57,15 @@ class ViewUserData(APIView):
     # Fetches the data of a user with a certain username
     def post(self, request):
         user_data = get_user_data(request)
-        user_role = user_data['role']
 
-        if (user_role == 'Admin' or user_role == "SDM PT"): 
-            username = request.data['username']
+        username = request.data['username']
+        try:
             user = User.objects.filter(username=username).first()
-            serializer = UserSerializer(user)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND) 
+        serializer = UserSerializer(user)
 
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else: return Response({'message': "You are not an admin!"}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # Fetches the data of the user who is currently logged in
@@ -176,7 +179,7 @@ class ManageUsers(APIView):
             try:
                 user = User.objects.get(username=request.data['username'])
             except User.DoesNotExist:
-                return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND)
+                return Response(user_does_not_exist_msg, status=status.HTTP_404_NOT_FOUND)
             user = User.objects.get(username=request.data['username'])
 
             serializer = UserSerializer(user, data=request.data, partial=True)
@@ -196,10 +199,33 @@ class ManageUsers(APIView):
             try:
                 user = User.objects.get(username=request.data['username'])
             except User.DoesNotExist: 
-                return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+                return Response(user_does_not_exist_msg, status=status.HTTP_404_NOT_FOUND) 
             user.delete()
             return Response({request.data['username'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
         else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
+
+# Admin is able to approve user
+class ApproveUsers(APIView):
+    permission_classes = [IsAuthenticated]
+    forbidden_role_msg = {'message': 'You must be an Admin or SDM PT to perform this action.'}
+    def post(self, request):
+        user_data = get_user_data(request)
+        user_role = user_data['role']
+        if ( user_role == "Admin" or user_role == "SDM PT" or user_data['username'] == request.data['username']):
+            try:
+                user = User.objects.get(username=request.data['username'])
+            except User.DoesNotExist:
+                return Response(user_does_not_exist_msg, status=status.HTTP_404_NOT_FOUND)
+            user = User.objects.get(username=request.data['username'])
+            data = {'approved' : True}
+            serializer = UserSerializer(user, data=data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
+
+
 
 # Reviewer management endpoint
 # For use with Stage 2 review form creation
@@ -258,9 +284,9 @@ class AssignReviewer(APIView):
 
         if ( user_role == "Admin" or user_role == "SDM PT" ):
             karil = KaryaIlmiah.objects.filter(karil_id=request.data['karil_id']).first()
-            reviewers = request.data['reviewers']
 
-            reviewers = User.objects.filter(username__in=reviewers)
+            # Edit reviewers field in karil
+            reviewers = User.objects.filter(username__in=request.data['reviewers'])
             serializer = KaryaIlmiahSerializer(karil, data={'reviewers': reviewers}, partial=True)
             if serializer.is_valid():
                 reviewform = serializer.save()
@@ -352,7 +378,9 @@ class ManageReviewForm(APIView):
         else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
     # Deletes karil with a requested karil_id
-    # Needs karil data that wants to be deleted in the request body
+    # request_data = {
+    #   karil_id: id of the requested karil
+    # }
     def delete(self, request):
         user_data = get_user_data(request)
         user_role = user_data['role']
@@ -365,12 +393,91 @@ class ManageReviewForm(APIView):
         # Checks if a dosen is trying to delete their own karil
         if ((user_data['username'] == karil_data['pemilik'] and user_role == "Dosen") or user_role == "Admin"):
             karil.delete()
-            return Response({karil_data['judul'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
-        else: return Response(self.forbidden_warning, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({request.data['judul'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
+        else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
+
+# Class to get reviews based on roles
+class ManageKaril(APIView):
+    permission_classes = [IsAuthenticated]
+    forbidden_role_msg = {'message': 'You are not authorized to perform this action!'}
+
+    def get(self, request):
+        user_data = get_user_data(request)
+        user_role = user_data['role']
+        print("getting karils...")
+
+        if (user_role == "Admin"):
+            print("I'm an admin")
+            try:
+                karil_list = KaryaIlmiah.objects.all()
+                serializer = KaryaIlmiahSerializer(karil_list, many=True)
+
+            except KaryaIlmiah.DoesNotExist:
+                return Response({'message': 'Papers not found!'}, status=status.HTTP_404_NOT_FOUND)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        elif (user_role == "Reviewer"):
+            print("I'm a reviewer")
+            try:
+                karil_list = KaryaIlmiah.objects.filter(reviewers__username = user_data['username'])
+                serializer = KaryaIlmiahSerializer(karil_list, many=True)
+            except KaryaIlmiah.DoesNotExist:
+                return Response({'message': 'No papers are assigned to this reviewer yet! '}, status=status.HTTP_404_NOT_FOUND)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED) 
+
+# Review management endpoint
+# NOTE: For reviews made by reviewers
+class ManageKarilReview(APIView):
+    permission_classes = [IsAuthenticated]
+
+    # Create new review
+    # request_data = {
+    #   karil_id: id of karil to be reviewed
+    #   reviewer: username of the current reviewer/admin,
+    #   + any other required fields for Review (see Review model or serializer)
+    # }
+    def post(self, request):
+        user_data = get_user_data(request)
+        user_role = user_data['role']
+
+        # Reviewers and Admins can review. Also checks if they are reviewing on their own behalf
+        if ((user_role == 'Reviewer' or user_role == 'Admin') and request.data['reviewer'] == user_data['username']):
+            try:
+                karil = KaryaIlmiah.objects.get(karil_id = request.data['karil_id'])
+            except KaryaIlmiah.DoesNotExist:
+                return Response({'message': 'The paper you are trying to review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+            
+            serializer = ReviewSerializer(data=request.data)
+            if serializer.is_valid():
+                new = serializer.save()
+                
+                # Update karil reviews
+                review_id = new.review_id
+                print(review_id)
+                karil_reviews = KaryaIlmiahSerializer(karil).data['reviews']
+                karil_reviews.append(review_id)
+                karil_serializer = KaryaIlmiahSerializer(karil, data={'reviews': karil_reviews}, partial=True)
+                karil_serializer.is_valid(raise_exception=True)
+                karil_serializer.save()
+
+                return Response({'message': 'Review has successfully been created!'}, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    # Get review by id in request params (see url)
+    def get(self, request):
+        review_id = request.query_params.get('id')
+        try:
+            reviews = Review.objects.all().filter(review_id=review_id)
+        except Review.DoesNotExist:
+            return Response({'message': 'This review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
-
     def post(self, request):
         serializer = ResetPasswordEmailRequestSerializer(data=request.data)
         if serializer.is_valid():
@@ -388,11 +495,19 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
 
                 redirect_url = request.data.get('redirect_url', '')
                 absurl = 'http://' + current_site + relative_link
+                subject = 'Reset your password'
+                email_from = settings.EMAIL_HOST_USER
+                list_email_to = [user.email,]
                 email_body = 'Hello, \n Use link below to reset your password  \n' + \
                              absurl + "?redirect_url=" + redirect_url
+                
                 data = {'email_body': email_body, 'to_email': user.email,
                         'email_subject': 'Reset your passsword'}
+                send_mail(subject, email_body, email_from, list_email_to)
                 # Util.send_email(data)
+
+                print(email_from)
+                print(user.email)
                 return Response({'success': 'We have sent you a link to reset your password', 'data': absurl},
                                 status=status.HTTP_200_OK)
             else:
