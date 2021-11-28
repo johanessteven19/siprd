@@ -17,12 +17,17 @@ class SIPRDUnitTest(TestCase):
 	email = "test.user@example.com"
 	full_name = "Test User"
 	username = "tester"
-	password = "test"
+	not_pass = "test"
 	dosen_username = "dosen"
 	dosen_fullname = "dosen"
 	reviewer_username = "reviewer"
 	reviewer_fullname = "reviewer_name"
 	random_name = "no one"
+	title = 'test judul'
+	journal_data = 'test journal'
+	link = 'www.google.com'
+	indexer = 'test indexer'
+	status = 'Not Reviewed Yet'
 
 	def setUp(self):
 		self.client = APIClient()
@@ -30,7 +35,7 @@ class SIPRDUnitTest(TestCase):
 		self.tester = User.objects.create_user(
 				username = self.username,
 				email = self.email,
-				password = self.password,
+				password = self.not_pass,
 				full_name = self.full_name,
 				university = 'UI',
 				field_of_study = 'Art',
@@ -41,7 +46,7 @@ class SIPRDUnitTest(TestCase):
 		self.dosen = User.objects.create_user(
 				username = self.dosen_username,
 				email = self.email,
-				password = self.password,
+				password = self.not_pass,
 				full_name = self.dosen_fullname,
 				university = 'UI',
 				field_of_study = 'Art',
@@ -52,7 +57,7 @@ class SIPRDUnitTest(TestCase):
 		self.reviewer = User.objects.create_user(
 				username = self.reviewer_username,
 				email = self.email,
-				password = self.password,
+				password = self.not_pass,
 				full_name = self.reviewer_fullname,
 				university = 'UI',
 				field_of_study = 'Art',
@@ -65,7 +70,7 @@ class SIPRDUnitTest(TestCase):
 			self.login_url,
 			{
 				'username': self.username,
-				'password': self.password
+				'password': self.not_pass
 			}, format='json')
 
 		_, access = response.json().values()
@@ -77,7 +82,7 @@ class SIPRDUnitTest(TestCase):
 			self.login_url,
 			{
 				'username': self.dosen_username,
-				'password': self.password
+				'password': self.not_pass
 			}, format='json')
 
 		_, access = response.json().values()
@@ -89,7 +94,7 @@ class SIPRDUnitTest(TestCase):
 			self.login_url,
 			{
 				'username': self.reviewer_username,
-				'password': self.password
+				'password': self.not_pass
 			}, format='json')
 
 		_, access = response.json().values()
@@ -110,7 +115,7 @@ class SIPRDUnitTest(TestCase):
 			{
 				'username': 'test',
 				'email': self.email,
-				'password': 'test',
+				'password': self.not_pass,
 				'full_name': self.full_name,
 				'university': 'UI',
 				'expertise': 'Art',
@@ -134,7 +139,7 @@ class SIPRDUnitTest(TestCase):
 			{
 				'username': 'test',
 				'email': self.email,
-				'password': 'test',
+				'password': self.not_pass,
 				'full_name': self.full_name,
 				'university': 'UI',
 				'expertise': 'Art',
@@ -147,7 +152,7 @@ class SIPRDUnitTest(TestCase):
 			self.login_url,
 			{
 				'username': 'test',
-				'password': 'test'
+				'password': self.not_pass
 			}, format='json')
 
 		self.assertEqual(response.status_code, 200)
@@ -158,7 +163,7 @@ class SIPRDUnitTest(TestCase):
 			{
 				'username': 'test',
 				'email': self.email,
-				'password': 'test',
+				'password': self.not_pass,
 				'full_name': self.full_name,
 				'university': 'UI',
 				'expertise': 'Art',
@@ -171,7 +176,7 @@ class SIPRDUnitTest(TestCase):
 			self.login_url,
 			{
 				'username': 'test',
-				'password': 'test'
+				'password': self.not_pass
 			}, format='json')
 
 		access, refresh = response.json().values()
@@ -189,7 +194,7 @@ class SIPRDUnitTest(TestCase):
 			{
 				'username': self.username,
 				'email': self.email,
-				'password': self.password,
+				'password': self.not_pass,
 				'full_name': self.full_name,
 				'university': 'UGM',
 				'expertise': 'Art',
@@ -210,7 +215,7 @@ class SIPRDUnitTest(TestCase):
 			{
 				'username': 'doesnotexist',
 				'email': self.email,
-				'password': 'test',
+				'password': self.not_pass,
 				'full_name': self.full_name,
 				'university': 'UGM',
 				'expertise': 'Art',
@@ -264,17 +269,17 @@ class SIPRDUnitTest(TestCase):
 			self.manage_review_url,
 			{
 				'pemilik': self.full_name,
-				'judul': 'test judul',
-				'journal_data': 'test journal',
-				'link_origin': 'www.google.com',
-				'link_repo': 'www.google.com',
-				'link_indexer': 'www.google.com',
-				'link_simcheck': 'www.google.com',
-				'link_correspondence': 'www.google.com',
-				'indexer': 'test indexer',
+				'judul': self.title,
+				'journal_data': self.journal_data,
+				'link_origin': self.link,
+				'link_repo': self.link,
+				'link_indexer': self.link,
+				'link_simcheck': self.link,
+				'link_correspondence': self.link,
+				'indexer': self.indexer,
 				'category': 'Buku',
 				'promotion': 'Lektor',
-				'status': 'Not Reviewed Yet',
+				'status': self.status,
 			},
 			format='json')
 		
@@ -291,17 +296,17 @@ class SIPRDUnitTest(TestCase):
 			self.manage_review_url,
 			{
 				'pemilik': self.dosen_username,
-				'judul': 'test judul',
-				'journal_data': 'test journal',
-				'link_origin': 'www.google.com',
-				'link_repo': 'www.google.com',
-				'link_indexer': 'www.google.com',
-				'link_simcheck': 'www.google.com',
-				'link_correspondence': 'www.google.com',
-				'indexer': 'test indexer',
+				'judul': self.title,
+				'journal_data': self.journal_data,
+				'link_origin': self.link,
+				'link_repo': self.link,
+				'link_indexer': self.link,
+				'link_simcheck': self.link,
+				'link_correspondence': self.link,
+				'indexer': self.indexer,
 				'category': 'Buku',
 				'promotion': 'Lektor',
-				'status': 'Not Reviewed Yet',
+				'status': self.status,
 			},
 			format='json')
 		
@@ -316,17 +321,17 @@ class SIPRDUnitTest(TestCase):
 			self.manage_review_url,
 			{
 				'pemilik': self.full_name,
-				'judul': 'test judul',
-				'journal_data': 'test journal',
-				'link_origin': 'www.google.com',
-				'link_repo': 'www.google.com',
-				'link_indexer': 'www.google.com',
-				'link_simcheck': 'www.google.com',
-				'link_correspondence': 'www.google.com',
-				'indexer': 'test indexer',
+				'judul': self.title,
+				'journal_data': self.journal_data,
+				'link_origin': self.link,
+				'link_repo': self.link,
+				'link_indexer': self.link,
+				'link_simcheck': self.link,
+				'link_correspondence': self.link,
+				'indexer': self.indexer,
 				'category': 'Buku',
 				'promotion': 'Lektor',
-				'status': 'Not Reviewed Yet',
+				'status': self.status,
 			},
 			format='json')
 		
@@ -341,7 +346,7 @@ class SIPRDUnitTest(TestCase):
 			self.manage_review_url,
 			{
 				'pemilik': self.dosen_username,
-				'judul': 'test judul',
+				'judul': self.title,
 			},
 			format='json')
 		
@@ -354,17 +359,17 @@ class SIPRDUnitTest(TestCase):
 
 		karil = KaryaIlmiah.objects.create(
 				pemilik = self.dosen,
-				judul = 'test judul',
-				journal_data = 'test journal',
-				link_origin = 'www.google.com',
-				link_repo = 'www.google.com',
-				link_indexer = 'www.google.com',
-				link_simcheck = 'www.google.com',
-				link_correspondence = 'www.google.com',
-				indexer = 'test indexer',
+				judul = self.title,
+				journal_data = self.journal_data,
+				link_origin = self.link,
+				link_repo = self.link,
+				link_indexer = self.link,
+				link_simcheck = self.link,
+				link_correspondence = self.link,
+				indexer = self.indexer,
 				category = 'Buku',
 				promotion = 'Lektor',
-				status = 'Not Reviewed Yet',
+				status = self.status,
 		)
 
 		karil_id = karil.pk
@@ -373,17 +378,17 @@ class SIPRDUnitTest(TestCase):
 				{
 					'karil_id': karil_id,
 					'pemilik': self.dosen_username,
-					'judul': 'test judul',
-					'journal_data': 'test journal',
-					'link_origin': 'www.google.com',
-					'link_repo': 'www.google.com',
-					'link_indexer': 'www.google.com',
-					'link_simcheck': 'www.google.com',
-					'link_correspondence': 'www.google.com',
-					'indexer': 'test indexer',
+					'judul': self.title,
+					'journal_data': self.journal_data,
+					'link_origin': self.link,
+					'link_repo': self.link,
+					'link_indexer': self.link,
+					'link_simcheck': self.link,
+					'link_correspondence': self.link,
+					'indexer': self.indexer,
 					'category': 'Buku',
 					'promotion': 'Lektor',
-					'status': 'Not Reviewed Yet',
+					'status': self.status,
 				},
 				format='json')
 
@@ -394,19 +399,19 @@ class SIPRDUnitTest(TestCase):
 		access = self.LoginDosen()
 		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
 
-		karil = KaryaIlmiah.objects.create(
+		KaryaIlmiah.objects.create(
 				pemilik = self.dosen,
-				judul = 'test judul',
-				journal_data = 'test journal',
-				link_origin = 'www.google.com',
-				link_repo = 'www.google.com',
-				link_indexer = 'www.google.com',
-				link_simcheck = 'www.google.com',
-				link_correspondence = 'www.google.com',
-				indexer = 'test indexer',
+				judul = self.title,
+				journal_data = self.journal_data,
+				link_origin = self.link,
+				link_repo = self.link,
+				link_indexer = self.link,
+				link_simcheck = self.link,
+				link_correspondence = self.link,
+				indexer = self.indexer,
 				category = 'Buku',
 				promotion = 'Lektor',
-				status = 'Not Reviewed Yet',
+				status = self.status,
 		)
 
 		response = self.client.delete(
@@ -414,17 +419,17 @@ class SIPRDUnitTest(TestCase):
 				{
 					'karil_id': 999,
 					'pemilik': self.dosen_username,
-					'judul': 'test judul',
-					'journal_data': 'test journal',
-					'link_origin': 'www.google.com',
-					'link_repo': 'www.google.com',
-					'link_indexer': 'www.google.com',
-					'link_simcheck': 'www.google.com',
-					'link_correspondence': 'www.google.com',
-					'indexer': 'test indexer',
+					'judul': self.title,
+					'journal_data': self.journal_data,
+					'link_origin': self.link,
+					'link_repo': self.link,
+					'link_indexer': self.link,
+					'link_simcheck': self.link,
+					'link_correspondence': self.link,
+					'indexer': self.indexer,
 					'category': 'Buku',
 					'promotion': 'Lektor',
-					'status': 'Not Reviewed Yet',
+					'status': self.status,
 				},
 				format='json')
 
@@ -437,17 +442,17 @@ class SIPRDUnitTest(TestCase):
 
 		karil = KaryaIlmiah.objects.create(
 				pemilik = self.tester,
-				judul = 'test judul',
-				journal_data = 'test journal',
-				link_origin = 'www.google.com',
-				link_repo = 'www.google.com',
-				link_indexer = 'www.google.com',
-				link_simcheck = 'www.google.com',
-				link_correspondence = 'www.google.com',
-				indexer = 'test indexer',
+				judul = self.title,
+				journal_data = self.journal_data,
+				link_origin = self.link,
+				link_repo = self.link,
+				link_indexer = self.link,
+				link_simcheck = self.link,
+				link_correspondence = self.link,
+				indexer = self.indexer,
 				category = 'Buku',
 				promotion = 'Lektor',
-				status = 'Not Reviewed Yet',
+				status = self.status,
 		)
 
 		karil_id = karil.pk
@@ -456,17 +461,17 @@ class SIPRDUnitTest(TestCase):
 				{
 					'karil_id': karil_id,
 					'pemilik': self.dosen_username,
-					'judul': 'test judul',
-					'journal_data': 'test journal',
-					'link_origin': 'www.google.com',
-					'link_repo': 'www.google.com',
-					'link_indexer': 'www.google.com',
-					'link_simcheck': 'www.google.com',
-					'link_correspondence': 'www.google.com',
-					'indexer': 'test indexer',
+					'judul': self.title,
+					'journal_data': self.journal_data,
+					'link_origin': self.link,
+					'link_repo': self.link,
+					'link_indexer': self.link,
+					'link_simcheck': self.link,
+					'link_correspondence': self.link,
+					'indexer': self.indexer,
 					'category': 'Buku',
 					'promotion': 'Lektor',
-					'status': 'Not Reviewed Yet',
+					'status': self.status,
 				},
 				format='json')
 
@@ -477,10 +482,10 @@ class SIPRDUnitTest(TestCase):
 		access = self.login()
 		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
 
-		reviewer = User.objects.create_user(
+		User.objects.create_user(
 				username = 'Reviewer2',
 				email = self.email,
-				password = self.password,
+				password = self.not_pass,
 				full_name = self.full_name,
 				university = 'UI',
 				field_of_study = 'Art',
@@ -490,32 +495,32 @@ class SIPRDUnitTest(TestCase):
 
 		KaryaIlmiah.objects.create(
 			pemilik = self.tester,
-			judul = 'test judul',
-			journal_data = 'test journal',
-			link_origin = 'www.google.com',
-			link_repo = 'www.google.com',
-			link_indexer = 'www.google.com',
-			link_simcheck = 'www.google.com',
-			link_correspondence = 'www.google.com',
-			indexer = 'test indexer',
+			judul = self.title,
+			journal_data = self.journal_data,
+			link_origin = self.link,
+			link_repo = self.link,
+			link_indexer = self.link,
+			link_simcheck = self.link,
+			link_correspondence = self.link,
+			indexer = self.indexer,
 			category = 'Buku',
 			promotion = 'Lektor',
-			status = 'Not Reviewed Yet',
+			status = self.status,
 		)
 
 		karil2 = KaryaIlmiah.objects.create(
 			pemilik = self.tester,
 			judul = 'karil ep.2',
-			journal_data = 'test journal',
-			link_origin = 'www.google.com',
-			link_repo = 'www.google.com',
-			link_indexer = 'www.google.com',
-			link_simcheck = 'www.google.com',
-			link_correspondence = 'www.google.com',
-			indexer = 'test indexer',
+			journal_data = self.journal_data,
+			link_origin = self.link,
+			link_repo = self.link,
+			link_indexer = self.link,
+			link_simcheck = self.link,
+			link_correspondence = self.link,
+			indexer = self.indexer,
 			category = 'Buku',
 			promotion = 'Lektor',
-			status = 'Not Reviewed Yet'
+			status = self.status
 		)
 
 		reviewers = User.objects.filter(role="Reviewer")
@@ -533,32 +538,32 @@ class SIPRDUnitTest(TestCase):
 
 		KaryaIlmiah.objects.create(
 			pemilik = self.tester,
-			judul = 'test judul',
-			journal_data = 'test journal',
-			link_origin = 'www.google.com',
-			link_repo = 'www.google.com',
-			link_indexer = 'www.google.com',
-			link_simcheck = 'www.google.com',
-			link_correspondence = 'www.google.com',
-			indexer = 'test indexer',
+			judul = self.title,
+			journal_data = self.journal_data,
+			link_origin = self.link,
+			link_repo = self.link,
+			link_indexer = self.link,
+			link_simcheck = self.link,
+			link_correspondence = self.link,
+			indexer = self.indexer,
 			category = 'Buku',
 			promotion = 'Lektor',
-			status = 'Not Reviewed Yet',
+			status = self.status,
 		)
 
 		karil2 = KaryaIlmiah.objects.create(
 			pemilik = self.tester,
 			judul = 'karil ep.2',
-			journal_data = 'test journal',
-			link_origin = 'www.google.com',
-			link_repo = 'www.google.com',
-			link_indexer = 'www.google.com',
-			link_simcheck = 'www.google.com',
-			link_correspondence = 'www.google.com',
-			indexer = 'test indexer',
+			journal_data = self.journal_data,
+			link_origin = self.link,
+			link_repo = self.link,
+			link_indexer = self.link,
+			link_simcheck = self.link,
+			link_correspondence = self.link,
+			indexer = self.indexer,
 			category = 'Buku',
 			promotion = 'Lektor',
-			status = 'Not Reviewed Yet'
+			status = self.status
 		)
 
 		assigned_reviewer = User.objects.filter(username='reviewer')
@@ -568,64 +573,3 @@ class SIPRDUnitTest(TestCase):
 		response = self.client.get(self.manage_karil_url)
 
 		self.assertEqual(response.status_code, 200)
-
-	# def test_get_karil_non_assigned_reviewer_returns_HTTP_NOT_FOUND(self):
-
-	# 	self.client.post(
-	# 		self.login_url,
-	# 		{
-	# 			'username': 'test',
-	# 			'password': 'test'
-	# 		}, format='json')
-
-	# 	false_reviewer = User.objects.create_user(
-	# 			username = 'false',
-	# 			email = self.email,
-	# 			password = self.password,
-	# 			full_name = self.full_name,
-	# 			university = 'UI',
-	# 			field_of_study = 'Art',
-	# 			position = 'Lektor',
-	# 			role = 'Reviewer'
-	# 	)
-
-	# 	KaryaIlmiah.objects.create(
-	# 		pemilik = self.tester,
-	# 		judul = 'test judul',
-	# 		journal_data = 'test journal',
-	# 		link_origin = 'www.google.com',
-	# 		link_repo = 'www.google.com',
-	# 		link_indexer = 'www.google.com',
-	# 		link_simcheck = 'www.google.com',
-	# 		link_correspondence = 'www.google.com',
-	# 		indexer = 'test indexer',
-	# 		category = 'Buku',
-	# 		promotion = 'Lektor',
-	# 		status = 'Not Reviewed Yet',
-	# 	)
-
-	# 	karil2 = KaryaIlmiah.objects.create(
-	# 		pemilik = self.tester,
-	# 		judul = 'karil ep.2',
-	# 		journal_data = 'test journal',
-	# 		link_origin = 'www.google.com',
-	# 		link_repo = 'www.google.com',
-	# 		link_indexer = 'www.google.com',
-	# 		link_simcheck = 'www.google.com',
-	# 		link_correspondence = 'www.google.com',
-	# 		indexer = 'test indexer',
-	# 		category = 'Buku',
-	# 		promotion = 'Lektor',
-	# 		status = 'Not Reviewed Yet'
-	# 	)
-
-	# 	assigned_reviewer = User.objects.filter(username='false')
-
-	# 	karil2.reviewers.set(assigned_reviewer)
-
-	# 	response = self.client.get(self.manage_karil_url)
-
-	# 	# self.assertEqual(response.status_code, 404)
-	# 	user = auth.get_user(self.client)
-
-	# 	self.assertEqual('false', user.username)

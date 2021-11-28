@@ -7,7 +7,7 @@ class TestKaril(TestCase):
 	email = "test.user@example.com"
 	full_name = "Karil Tester"
 	username = "kariltester"
-	password = "supersecure"
+	not_pass = "supersecure"
 	access = ""
 	karil_url = "/api/manage-reviews/"
 
@@ -17,7 +17,7 @@ class TestKaril(TestCase):
 		self.tester = User.objects.create_user(
 				username = self.username,
 				email = self.email,
-				password = self.password,
+				password = self.not_pass,
 				full_name = self.full_name,
 				university = 'UI',
 				field_of_study = 'Art',
@@ -29,7 +29,7 @@ class TestKaril(TestCase):
 			"/api/token/",
 			{
 				'username': self.username,
-				'password': self.password
+				'password': self.not_pass
 			}, format='json')
 
 		_, self.access = response.json().values()
