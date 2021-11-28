@@ -437,7 +437,7 @@ class SIPRDUnitTest(TestCase):
 	
 	def test_delete_review_form_as_non_dosen_returns_HTTP_UNAUTHORIZED(self):
 
-		access = self.login()
+		access = self.LoginReviewer()
 		self.client.credentials(HTTP_AUTHORIZATION=self.header_prefix + access)
 
 		karil = KaryaIlmiah.objects.create(
