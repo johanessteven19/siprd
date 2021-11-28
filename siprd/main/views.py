@@ -25,7 +25,7 @@ import logging
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 
 logger = logging.getLogger(__name__)
-
+user_does_not_exist_msg = {'message': 'The user does not exist'}
 
 class CustomRedirect(HttpResponsePermanentRedirect):
     allowed_schemes = [os.environ.get('APP_SCHEME'), 'http', 'https']
@@ -57,7 +57,6 @@ class ViewUserData(APIView):
     # Fetches the data of a user with a certain username
     def post(self, request):
         user_data = get_user_data(request)
-        user_role = user_data['role']
 
         username = request.data['username']
         try:
@@ -180,7 +179,7 @@ class ManageUsers(APIView):
             try:
                 user = User.objects.get(username=request.data['username'])
             except User.DoesNotExist:
-                return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND)
+                return Response(user_does_not_exist_msg, status=status.HTTP_404_NOT_FOUND)
             user = User.objects.get(username=request.data['username'])
 
             serializer = UserSerializer(user, data=request.data, partial=True)
@@ -200,15 +199,15 @@ class ManageUsers(APIView):
             try:
                 user = User.objects.get(username=request.data['username'])
             except User.DoesNotExist: 
-                return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND) 
+                return Response(user_does_not_exist_msg, status=status.HTTP_404_NOT_FOUND) 
             user.delete()
             return Response({request.data['username'] + ' was deleted successfully!'}, status=status.HTTP_200_OK)
         else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
 # Admin is able to approve user
 class ApproveUsers(APIView):
-    # permission_classes = [IsAuthenticated]
-    # forbidden_role_msg = {'message': 'You must be an Admin or SDM PT to perform this action.'}
+    permission_classes = [IsAuthenticated]
+    forbidden_role_msg = {'message': 'You must be an Admin or SDM PT to perform this action.'}
     def post(self, request):
         user_data = get_user_data(request)
         user_role = user_data['role']
@@ -216,7 +215,7 @@ class ApproveUsers(APIView):
             try:
                 user = User.objects.get(username=request.data['username'])
             except User.DoesNotExist:
-                return Response({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND)
+                return Response(user_does_not_exist_msg, status=status.HTTP_404_NOT_FOUND)
             user = User.objects.get(username=request.data['username'])
             data = {'approved' : True}
             serializer = UserSerializer(user, data=data, partial=True)
@@ -444,7 +443,6 @@ class ManageKarilReview(APIView):
 
         # Reviewers and Admins can review. Also checks if they are reviewing on their own behalf
         if ((user_role == 'Reviewer' or user_role == 'Admin') and request.data['reviewer'] == user_data['username']):
-            data = request.data
             try:
                 karil = KaryaIlmiah.objects.get(karil_id = request.data['karil_id'])
             except KaryaIlmiah.DoesNotExist:
@@ -457,11 +455,11 @@ class ManageKarilReview(APIView):
                 # Update karil reviews
                 review_id = new.review_id
                 print(review_id)
-                karilReviews = KaryaIlmiahSerializer(karil).data['reviews']
-                karilReviews.append(review_id)
-                karilSerializer = KaryaIlmiahSerializer(karil, data={'reviews': karilReviews}, partial=True)
-                karilSerializer.is_valid(raise_exception=True)
-                karilSerializer.save()
+                karil_reviews = KaryaIlmiahSerializer(karil).data['reviews']
+                karil_reviews.append(review_id)
+                karil_serializer = KaryaIlmiahSerializer(karil, data={'reviews': karil_reviews}, partial=True)
+                karil_serializer.is_valid(raise_exception=True)
+                karil_serializer.save()
 
                 return Response({'message': 'Review has successfully been created!'}, status=status.HTTP_201_CREATED)
             else:
