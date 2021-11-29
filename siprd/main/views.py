@@ -478,6 +478,18 @@ class ManageKarilReview(APIView):
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class GetReviewedKarils(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user_data = get_user_data(request)
+        try:
+            karils = KaryaIlmiah.objects.all().filter(reviewers__username = user_data['username'], status = 'Done')
+        except KaryaIlmiah.DoesNotExist:
+            return Response({'message': 'This review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = KaryaIlmiahSerializer(karils, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
     def post(self, request):
