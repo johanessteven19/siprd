@@ -348,9 +348,9 @@ export default {
 
       Vue.axios
         .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, data, config)
-        .then((res) => {
-          if (res.status === 200) {
-            this.karilData = res.data;
+        .then((response) => {
+          if (response.status === 200) {
+            this.karilData = response.data;
           }
         });
       const posData = {
