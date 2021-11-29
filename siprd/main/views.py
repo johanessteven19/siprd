@@ -283,6 +283,8 @@ class AssignReviewer(APIView):
         user_role = user_data['role']
 
         if ( user_role == "Admin" or user_role == "SDM PT" ):
+            if len(request.data['reviewers']) < 2:
+                return Response({'message': 'You must assign at least 2 reviewers!'}, status=status.HTTP_400_BAD_REQUEST)
             karil = KaryaIlmiah.objects.filter(karil_id=request.data['karil_id']).first()
 
             # Edit reviewers field in karil
