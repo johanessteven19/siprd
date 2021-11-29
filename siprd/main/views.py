@@ -278,6 +278,7 @@ class AssignReviewer(APIView):
     #   'reviewers': list of reviewer usernames,
     #   'karil_id': id of karil to be assigned
     # }
+    # TODO: Update karil status in frontend! Much easier that way.
     def post(self, request):
         user_data = get_user_data(request)
         user_role = user_data['role']
