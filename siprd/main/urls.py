@@ -18,6 +18,7 @@ urlpatterns = [
     path("api/get-karil-summary/", views.GetLinkedKarils.as_view()),
     path("api/manage-users/", views.ManageUsers.as_view()),
     path("api/manage-karil/", views.ManageKaril.as_view()),
+    path("api/download", views.DownloadKaril.as_view()),
     path('api/google/', include('rest_social_auth.urls_jwt_pair')),
     path(r'^auth/', include('rest_framework_social_oauth2.urls')),
     path("api/is-user-exists", views.IsUserExist.as_view()),
