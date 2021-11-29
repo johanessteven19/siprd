@@ -278,7 +278,6 @@ class AssignReviewer(APIView):
     #   'reviewers': list of reviewer usernames,
     #   'karil_id': id of karil to be assigned
     # }
-    # TODO: Update karil status in frontend! Much easier that way.
     def post(self, request):
         user_data = get_user_data(request)
         user_role = user_data['role']
@@ -290,7 +289,7 @@ class AssignReviewer(APIView):
 
             # Edit reviewers field in karil
             reviewers = User.objects.filter(username__in=request.data['reviewers'])
-            serializer = KaryaIlmiahSerializer(karil, data={'reviewers': reviewers}, partial=True)
+            serializer = KaryaIlmiahSerializer(karil, data={'reviewers': reviewers, 'status': 'Not Reviewed Yet'}, partial=True)
             if serializer.is_valid():
                 reviewform = serializer.save()
                 if reviewform:
