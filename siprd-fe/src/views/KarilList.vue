@@ -6,7 +6,15 @@
     <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
       <v-row>
         <v-col md="3">
-        <h1>Daftar Karya Ilmiah</h1>
+          <template v-if="dosen === true">
+            <h1>Daftar Karya Ilmiah oleh {{ ownerName }}</h1>
+          </template>
+          <template v-else-if="reviewer === true">
+            <h1>Daftar Karya Ilmiah di review oleh {{ ownerName }}</h1>
+          </template>
+          <template v-else>
+            <h1>Daftar Karya Ilmiah</h1>
+          </template>
         </v-col>
         <v-col md="3">
           <v-btn
@@ -115,6 +123,12 @@
         Lihat
         </v-btn>
       </template>
+      <template v-slot:item.pemilik="row">
+        <a
+        v-on:click="userKarils(row.item.pemilik)">
+          {{ row.item.pemilik }}
+        </a>
+      </template>
       </v-data-table>
       </v-container>
   </div>
@@ -163,6 +177,10 @@ export default {
       // 2: Done
       // 3: All
       tab: 3,
+      dosen: false,
+      reviewer: false,
+      username: null,
+      ownerName: '',
     };
   },
   methods: {
@@ -176,6 +194,9 @@ export default {
       console.log(karilId);
       this.$router.push(`/view-karil?id=${karilId}`);
     },
+    userKarils(pemilik) {
+      this.$router.push(`/karil-list?username=${pemilik}`);
+    },
   },
   beforeMount() {
     if (localStorage.access) {
@@ -183,17 +204,45 @@ export default {
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
-
-      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, config).then((res) => {
-        if (res.status === 200) {
-          console.log(res.data);
-          this.karilList = res.data;
-        } else {
-          this.$router.push('/');
-        }
-      }).catch((err) => {
-        console.log(err);
-      });
+      if (this.$route.query.username != null) {
+        this.username = this.$route.query.username;
+        this.dosen = true;
+        const data = {
+          username: this.username,
+        };
+        Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-karil-summary/`, data, config).then((res) => {
+          if (res.status === 200) {
+            console.log(res.data);
+            this.karilList = res.data;
+          } else {
+            this.$router.push('/');
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+        Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data, config).then((res) => {
+          if (res.status === 200) {
+            this.ownerName = res.data.full_name;
+          }
+        });
+      } else if (this.$route.query.reviewer != null) {
+        this.username = this.$route.query.reviewer;
+        this.reviewer = true;
+        const data = {
+          username: this.username,
+        };
+      } else {
+        Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, config).then((res) => {
+          if (res.status === 200) {
+            console.log(res.data);
+            this.karilList = res.data;
+          } else {
+            this.$router.push('/');
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+      }
     }
   },
 };
