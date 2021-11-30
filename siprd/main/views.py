@@ -511,6 +511,19 @@ class GetAssignedKarils(APIView):
         serializer = KaryaIlmiahSerializer(karils, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    def post(self, request):
+        requested_username = request.data['username']
+
+        karils = KaryaIlmiahSerializer(
+            KaryaIlmiah.objects.all().filter(reviewers__username = requested_username),
+            many=True)
+
+        if len(karils.data) != 0:
+            return Response(karils.data, status=status.HTTP_200_OK)
+        else:
+            # No matching karils
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
 # Handles downloading of Karil Info
 # Needs karil_id in request body
 # Will download a .xls file
