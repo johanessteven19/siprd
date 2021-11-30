@@ -44,13 +44,11 @@
               <validation-provider
                 v-slot="{ errors }"
                 name="Universitas"
-                rules="required"
               >
                 <v-text-field
                   v-model="university"
                   :error-messages="errors"
-                  label="Universitas*"
-                  required
+                  label="Universitas"
                 >
                 </v-text-field>
               </validation-provider>
@@ -118,8 +116,6 @@
                   :error-messages="errors"
                   label="Role*"
                   data-vv-name="select"
-                  readonly
-                  filled
                 >
                 </v-select>
               </validation-provider>
