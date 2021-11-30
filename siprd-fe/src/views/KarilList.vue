@@ -16,7 +16,7 @@
             <h1>Daftar Karya Ilmiah</h1>
           </template>
         </v-col>
-        <v-col md="3">
+        <v-col md="3" v-if="profile !== 1">
           <v-btn
             class="mr-4 white--text"
             :disabled="false"
@@ -39,7 +39,7 @@
         </template>
       </v-row>
       <v-row>
-        <v-col md="2">
+        <v-col md="2" v-if="profile !== 1">
           <v-btn
             class="mr-4"
             :class="{
@@ -178,7 +178,25 @@ export default {
         { text: 'Indexer', value: 'indexer', sortable: false },
         { text: 'Check Similarity', value: 'link_simcheck', sortable: false },
         { text: 'Reviewer', value: 'reviewer', sortable: false },
-        { text: 'Reviewed', value: 'status', sortable: false },
+        {
+          text: 'Reviewed',
+          value: 'status',
+          filter: (value) => {
+            // not shown if tab is
+            switch (this.tab) {
+              case 0:
+                return value === 'Not Assigned Yet';
+              case 1:
+                return value === 'Not Reviewed Yet';
+              case 2:
+                return value === 'Done';
+              case 3:
+                return true;
+              default:
+                return true;
+            }
+          },
+        },
         {
           text: 'Karil Id',
           value: 'karilId',
@@ -198,6 +216,10 @@ export default {
       reviewer: false,
       username: null,
       ownerName: '',
+      // Who's using it?
+      // Admin/Others: 0
+      // Reviewer: 1
+      profile: '',
     };
   },
   methods: {
@@ -224,20 +246,31 @@ export default {
       this.$router.go();
     },
   },
-  beforeMount() {
+  async beforeMount() {
     if (localStorage.access) {
       const accessToken = localStorage.access;
       const config = {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
-      if (this.$route.query.username != null) {
-        this.username = this.$route.query.username;
-        this.dosen = true;
-        const data = {
-          username: this.username,
-        };
-        Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-karil-summary/`, data, config).then((res) => {
+
+      console.log('First get!');
+      await Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, config).then((res) => {
+        console.log(res.data);
+        if (res.status === 200) {
+          if (res.data.role === 'Reviewer') {
+            console.log('First result get!');
+            this.profile = 1;
+          } else {
+            this.profile = 0;
+          }
+        }
+      });
+
+      console.log('Second get!');
+      if (this.profile === 1) {
+        Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-assigned-karils/`, config).then((res) => {
           if (res.status === 200) {
+            console.log('Reviewer get success!');
             console.log(res.data);
             this.karilList = res.data;
           } else {
@@ -245,44 +278,63 @@ export default {
           }
         }).catch((err) => {
           console.log(err);
-        });
-        Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data, config).then((res) => {
-          if (res.status === 200) {
-            this.ownerName = res.data.full_name;
-          }
-        });
-      } else if (this.$route.query.reviewer != null) {
-        this.username = this.$route.query.reviewer;
-        this.reviewer = true;
-        const data = {
-          username: this.username,
-        };
-        Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-assigned-karils/`, data, config).then((res) => {
-          if (res.status === 200) {
-            console.log(res.data);
-            this.karilList = res.data;
-          } else {
-            this.$router.push('/');
-          }
-        }).catch((err) => {
-          console.log(err);
-        });
-        Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data, config).then((res) => {
-          if (res.status === 200) {
-            this.ownerName = res.data.full_name;
-          }
         });
       } else {
-        Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, config).then((res) => {
-          if (res.status === 200) {
-            console.log(res.data);
-            this.karilList = res.data;
-          } else {
-            this.$router.push('/');
-          }
-        }).catch((err) => {
-          console.log(err);
-        });
+        if (this.$route.query.username != null) {
+          this.username = this.$route.query.username;
+          this.dosen = true;
+          const data = {
+            username: this.username,
+          };
+          Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-karil-summary/`, data, config).then((res) => {
+            if (res.status === 200) {
+              console.log(res.data);
+              this.karilList = res.data;
+            } else {
+              this.$router.push('/');
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
+          Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data, config).then((res) => {
+            if (res.status === 200) {
+              this.ownerName = res.data.full_name;
+            }
+          });
+        } else if (this.$route.query.reviewer != null) {
+          this.username = this.$route.query.reviewer;
+          this.reviewer = true;
+          const data = {
+            username: this.username,
+          };
+          Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-assigned-karils/`, data, config).then((res) => {
+            if (res.status === 200) {
+              console.log(res.data);
+              this.karilList = res.data;
+            } else {
+              this.$router.push('/');
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
+          Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data, config).then((res) => {
+            if (res.status === 200) {
+              this.ownerName = res.data.full_name;
+            }
+          });
+        } else {
+          Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, config).then((res) => {
+            if (res.status === 200) {
+              console.log('Admin get success!');
+              console.log(res.data);
+              this.karilList = res.data;
+            } else {
+              this.$router.push('/');
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
+        }
       }
     }
   },
