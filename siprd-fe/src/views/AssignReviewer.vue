@@ -177,8 +177,42 @@
               <v-row align="center" justify="center" row-gap="10px">
                   <v-col md="3" align="right">
                       <h1>Reviewer</h1>
-                      {{reviewerData.full_name}}
                       <br>
+                  </v-col>
+              </v-row>
+<!--
+              <v-row align="center" justify="center">
+                  <v-col md="3" align="right">
+                      Reviewer
+                  </v-col>
+                  <v-col md="4">
+                    <ul>
+                      <p v-for="reviewerProfile in reviewerProfiles"
+                      :key="reviewerProfile.namaReviewer">
+                        {{ reviewerProfile.full_name}} -
+                        {{reviewerProfile.position}} -
+                        {{reviewerProfile.field_of_study}} -
+                        {{reviewerProfile.university}}
+                      </p>
+                    </ul>
+                  </v-col>
+              </v-row> -->
+
+              <v-row align="center" justify="center">
+                  <v-col md="3" align="right">
+                      Nama Reviewer
+                  </v-col>
+                  <v-col md="2">
+                    <select class="form-control" v-model="reviewers.value" :required="true">
+                    <!-- <option :selected="true"> Select Reviewer</option> -->
+                    <option
+                      v-for="reviewerProfile in reviewerProfiles"
+                      :key="reviewerProfile.full_name"
+                      >{{ reviewerProfile.full_name }}-
+                        {{reviewerProfile.position}} -
+                        {{reviewerProfile.field_of_study}} -
+                        {{reviewerProfile.university}}</option>
+                    </select>
                   </v-col>
               </v-row>
 
@@ -188,15 +222,16 @@
                       {{reviewer.label}}
                   </v-col>
                   <v-col md="2">
-                    <v-select
-                      :id="reviewer.id"
-                      v-model="reviewer.id.value"
-                      :items="reviewerSelect"
-                      label="Reviewer"
-                      data-vv-name="select"
-                      outlined
-                    >
-                    </v-select>
+                    <select class="form-control" v-model="reviewers.value" :required="true">
+                    <!-- <option :selected="true">Select Reviewer</option> -->
+                    <option
+                      v-for="reviewerProfile in reviewerProfiles"
+                      :key="reviewerProfile.full_name"
+                      >{{ reviewerProfile.full_name }}-
+                        {{reviewerProfile.position}} -
+                        {{reviewerProfile.field_of_study}} -
+                        {{reviewerProfile.university}}</option>
+                    </select>
                   </v-col>
               </v-row>
               </div>
@@ -257,60 +292,67 @@ export default {
       status: 'Requested',
       karilId: null,
       counter: 0,
-      reviewerSelect: ['Dosen', 'Reviewer', 'SDM PT', 'Admin'],
+      // reviewerSelect: null,
+      // reviewerSelect: [{
+      //   full_name: this.full_name,
+      // }],
       reviewers: [{
         id: 'reviewer0',
         label: 'Nama Reviewer',
         value: '',
       }],
+      reviewerProfiles: null,
+      selected: 'Choose Province',
     };
   },
   methods: {
-    // submitForm() {
-    //   const data = {
+    submitForm() {
+      const data = {
+        karil_id: this.karilId,
+        pemilik: this.namaPenulis,
+        judul: this.judulKaril,
+        journal_data: this.dataJurnal,
+        link_origin: this.linkAsli,
+        link_repo: this.linkRepo,
+        link_indexer: this.linkIndexer,
+        link_simcheck: this.linkCheck,
+        link_correspondence: this.linkBukti,
+        indexer: this.pengIndex,
+        category: this.kategori,
+        status: this.status,
+        reviewers: this.selected,
+      };
+      if (localStorage.access) {
+        const accessToken = localStorage.access;
+        console.log(data);
+        const config = {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        };
+        Vue.axios
+          .put(`${process.env.VUE_APP_BACKEND_URL || ''}/api/assign-reviewer/`, data, config)
+          .then((res) => {
+            if (res.status === 200) {
+              console.log(res.data);
+              alert('Reviewers berhasil di assign!');
+              this.$router.push('/karil-list');
+            } else {
+              alert('Gagal');
+            }
+          })
 
-    //     pemilik: this.namaPenulis,
-    //     judul: this.judulKaril,
-    //     journal_data: this.dataJurnal,
-    //     link_origin: this.linkAsli,
-    //     link_repo: this.linkRepo,
-    //     link_indexer: this.linkIndexer,
-    //     link_simcheck: this.linkCheck,
-    //     link_correspondence: this.linkBukti,
-    //     indexer: this.pengIndex,
-    //     category: this.kategori,
-    //     status: this.status,
-    //   };
-    //   if (localStorage.access) {
-    //     const accessToken = localStorage.access;
-    //     console.log('something');
-    //     const config = {
-    //       headers: {
-    //         Authorization: `Bearer ${accessToken}`,
-    //       },
-    //     };
-    //     Vue.axios
-    //       .put(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, data, config)
-    //       .then((res) => {
-    //         console.log(res.data);
-    //         if (res.status === 200) {
-    //           this.$router.push('/your-account');
-    //         } else {
-    //           alert('Gagal');
-    //         }
-    //       })
-
-    //       .catch((err) => {
-    //         // TODO: Make this output more user-friendly!!!
-    //         // Clean string up with a function?
-    //         console.log(err);
-    //         // var responseErrors = JSON.stringify(err.response.data);
-    //         // console.log(responseErrors);
-    //         // var errMsg = "Edit gagal, errors: " + responseErrors;
-    //         // alert(errMsg);
-    //       });
-    //   }
-    // },
+          .catch((err) => {
+            // TODO: Make this output more user-friendly!!!
+            // Clean string up with a function?
+            console.log(err);
+            // var responseErrors = JSON.stringify(err.response.data);
+            // console.log(responseErrors);
+            // var errMsg = "Edit gagal, errors: " + responseErrors;
+            // alert(errMsg);
+          });
+      }
+    },
 
     checkForm() {
       this.$refs.observer.validate();
@@ -346,20 +388,24 @@ export default {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
 
-      Vue.axios
+      await Vue.axios
         .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, data, config)
         .then((response) => {
           if (response.status === 200) {
             this.karilData = response.data;
+            console.log(this.karilData);
           }
         });
       const posData = {
         position: this.karilData.promotion,
       };
+      console.log(posData);
       const res = await Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviewers/`, posData, config);
       console.log(res.data);
       if (res.status === 200) {
-        this.reviewerData = res.data;
+        this.reviewerSelect = res.data;
+        this.reviewerSelect.full_name = res.data.full_name;
+        this.reviewerProfiles = res.data;
       }
     } else { this.$router.push('/'); }
   },

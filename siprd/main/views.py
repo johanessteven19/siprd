@@ -278,7 +278,7 @@ class AssignReviewer(APIView):
     #   'reviewers': list of reviewer usernames,
     #   'karil_id': id of karil to be assigned
     # }
-    def post(self, request):
+    def put(self, request):
         user_data = get_user_data(request)
         user_role = user_data['role']
 
@@ -291,7 +291,7 @@ class AssignReviewer(APIView):
             if serializer.is_valid():
                 reviewform = serializer.save()
                 if reviewform:
-                    return Response({'Reviewers successfully assigned!'}, status=status.HTTP_200_OK)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else: return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:

@@ -40,6 +40,24 @@
             <template v-else>
               <v-col md="2" class="mr-auto">
                 <v-btn
+                  v-if="userData.role === 'Admin'"
+                  class="mr-4 white--text"
+                  v-on:click="assignReviewer(karilData.karil_id)"
+                  color="success"
+                  width="100%"
+                  > Assign Reviewer
+                </v-btn>
+                <v-btn
+                  v-if="userData.role === 'SDM PT'"
+                  class="mr-4 white--text"
+                  v-on:click="assignReviewer(karilData.karil_id)"
+                  color="success"
+                  width="100%"
+                  > Assign Reviewer
+                </v-btn>
+              </v-col>
+              <v-col md="2" class="mr-auto">
+                <v-btn
                   class="mr-4 white--text"
                   color="blue"
                   width="100%"
@@ -53,15 +71,6 @@
                   v-on:click="editKaril(karilData.karil_id)"
                   width="100%"
                   > Edit Karya Ilmiah
-                </v-btn>
-              </v-col>
-              <v-col md="2" class="mr-auto">
-                <v-btn
-                  class="mr-4 white--text"
-                  v-on:click="assignReviewer(karilData.karil_id)"
-                  color="success"
-                  width="100%"
-                  > Assign Reviewer
                 </v-btn>
               </v-col>
             </template>
