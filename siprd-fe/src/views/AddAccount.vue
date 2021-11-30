@@ -53,13 +53,11 @@
               <validation-provider
                 v-slot="{ errors }"
                 name="Universitas"
-                rules="required"
               >
                 <v-text-field
                   v-model="university"
                   :error-messages="errors"
                   label="Universitas*"
-                  required
                 >
                 </v-text-field>
               </validation-provider>

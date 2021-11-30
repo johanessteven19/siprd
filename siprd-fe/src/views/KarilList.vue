@@ -146,7 +146,7 @@ export default {
         { text: 'Repository', value: 'link_repo', sortable: false },
         { text: 'Indexer', value: 'indexer', sortable: false },
         { text: 'Check Similarity', value: 'link_simcheck', sortable: false },
-        { text: 'Reviewer', value: 'reviewer', sortable: false },
+        { text: 'Reviewer', value: 'reviewers', sortable: false },
         {
           text: 'Reviewed',
           value: 'status',

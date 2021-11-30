@@ -180,62 +180,29 @@
                       <br>
                   </v-col>
               </v-row>
-<!--
-              <v-row align="center" justify="center">
-                  <v-col md="3" align="right">
-                      Reviewer
-                  </v-col>
-                  <v-col md="4">
-                    <ul>
-                      <p v-for="reviewerProfile in reviewerProfiles"
-                      :key="reviewerProfile.namaReviewer">
-                        {{ reviewerProfile.full_name}} -
-                        {{reviewerProfile.position}} -
-                        {{reviewerProfile.field_of_study}} -
-                        {{reviewerProfile.university}}
-                      </p>
-                    </ul>
-                  </v-col>
-              </v-row> -->
 
-              <v-row align="center" justify="center">
+               <v-row align="center" justify="center"
+               v-for="(value, index) in selected" :key="index" >
                   <v-col md="3" align="right">
                       Nama Reviewer
                   </v-col>
                   <v-col md="2">
-                    <select class="form-control" v-model="reviewers.value" :required="true">
-                    <!-- <option :selected="true"> Select Reviewer</option> -->
-                    <option
-                      v-for="reviewerProfile in reviewerProfiles"
-                      :key="reviewerProfile.full_name"
-                      >{{ reviewerProfile.full_name }}-
-                        {{reviewerProfile.position}} -
-                        {{reviewerProfile.field_of_study}} -
-                        {{reviewerProfile.university}}</option>
-                    </select>
+              <v-select
+                v-model="selected[index]"
+                :items="reviewerProfiles"
+                :item-text="'full_name'"
+                item-value="reviewerProfiles.username"
+                label="Select"
+                return-object
+                single-line
+              >
+                <template v-slot:item="{item}">
+                  {{item.full_name}} - {{item.position}}
+                   - {{item.field_of_study}} - {{item.university}}
+                </template>
+              </v-select>
                   </v-col>
               </v-row>
-
-              <div class="reviewArea" v-for="reviewer in reviewers" :key="reviewer.id">
-              <v-row align="center" justify="center">
-                  <v-col md="3" align="right" :for="reviewer.id">
-                      {{reviewer.label}}
-                  </v-col>
-                  <v-col md="2">
-                    <select class="form-control" v-model="reviewers.value" :required="true">
-                    <!-- <option :selected="true">Select Reviewer</option> -->
-                    <option
-                      v-for="reviewerProfile in reviewerProfiles"
-                      :key="reviewerProfile.full_name"
-                      >{{ reviewerProfile.full_name }}-
-                        {{reviewerProfile.position}} -
-                        {{reviewerProfile.field_of_study}} -
-                        {{reviewerProfile.university}}</option>
-                    </select>
-                  </v-col>
-              </v-row>
-              </div>
-
               <v-row align="center" justify="center">
                   <v-col md="4" align="right">
                     <v-btn
@@ -246,7 +213,6 @@
                     </v-btn>
                   </v-col>
               </v-row>
-
           </div>
         </v-form>
 
@@ -289,20 +255,16 @@ export default {
       linkBukti: null,
       pengIndex: null,
       kategori: null,
-      status: 'Requested',
+      status: 'Not Reviewed Yet',
       karilId: null,
       counter: 0,
-      // reviewerSelect: null,
-      // reviewerSelect: [{
-      //   full_name: this.full_name,
-      // }],
       reviewers: [{
         id: 'reviewer0',
         label: 'Nama Reviewer',
         value: '',
       }],
       reviewerProfiles: null,
-      selected: 'Choose Province',
+      selected: [null, null],
     };
   },
   methods: {
@@ -320,28 +282,29 @@ export default {
         indexer: this.pengIndex,
         category: this.kategori,
         status: this.status,
-        reviewers: this.selected,
+        reviewers: this.selected.map((r) => r.username),
       };
       if (localStorage.access) {
         const accessToken = localStorage.access;
-        console.log(data);
         const config = {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         };
+        console.log(data);
         Vue.axios
-          .put(`${process.env.VUE_APP_BACKEND_URL || ''}/api/assign-reviewer/`, data, config)
+          .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/assign-reviewer/`, data, config)
           .then((res) => {
             if (res.status === 200) {
+              console.log('berhasil submit!');
               console.log(res.data);
+
               alert('Reviewers berhasil di assign!');
               this.$router.push('/karil-list');
             } else {
               alert('Gagal');
             }
           })
-
           .catch((err) => {
             // TODO: Make this output more user-friendly!!!
             // Clean string up with a function?
@@ -368,13 +331,8 @@ export default {
     },
 
     addNew() {
-      this.reviewers.push({
-        id: `reviewer${++this.counter}`,
-        label: 'Nama Reviewer',
-        value: '',
-      });
+      this.selected.push(null);
     },
-
   },
 
   async beforeMount() {
