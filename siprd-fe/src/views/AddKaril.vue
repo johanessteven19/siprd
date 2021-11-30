@@ -274,7 +274,7 @@ export default {
       kategoriSelect: ['Buku', 'Jurnal'],
       promotion: null,
       promotionSelect: ['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar/Professor'],
-      status: 'Not Reviewed Yet',
+      status: 'Not Assigned Yet',
       dialog: false,
     };
   },

@@ -7,7 +7,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework.generics import UpdateAPIView
 from .util import Util
 from .serializers import KaryaIlmiahSerializer, ReviewSerializer, UserSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer
-from django.http import JsonResponse, HttpResponse, HttpResponsePermanentRedirect, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponse, HttpResponsePermanentRedirect, HttpResponseRedirect, response
 from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -21,6 +21,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 import logging
+import io
+from io import BytesIO, StringIO
+import xlsxwriter
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 
@@ -283,11 +286,13 @@ class AssignReviewer(APIView):
         user_role = user_data['role']
 
         if ( user_role == "Admin" or user_role == "SDM PT" ):
+            if len(request.data['reviewers']) < 2:
+                return Response({'message': 'You must assign at least 2 reviewers!'}, status=status.HTTP_400_BAD_REQUEST)
             karil = KaryaIlmiah.objects.filter(karil_id=request.data['karil_id']).first()
 
             # Edit reviewers field in karil
             reviewers = User.objects.filter(username__in=request.data['reviewers'])
-            serializer = KaryaIlmiahSerializer(karil, data={'reviewers': reviewers}, partial=True)
+            serializer = KaryaIlmiahSerializer(karil, data={'reviewers': reviewers, 'status': 'Not Reviewed Yet'}, partial=True)
             if serializer.is_valid():
                 reviewform = serializer.save()
                 if reviewform:
@@ -367,6 +372,10 @@ class ManageReviewForm(APIView):
             karil = None
             try:
                 karil = KaryaIlmiah.objects.get(karil_id=request.data['karil_id'])
+                if (karil.status != 'In Review'):   # Status cannot be 'In Review'
+                    karil.status = 'Not Reviewed Yet'   ## Change status to Not Reviewed Yet after edit is called
+                else: return Response({'message': 'You may not edit a paper that is in review!'}, status=status.HTTP_401_UNAUTHORIZED)
+
             except KaryaIlmiah.DoesNotExist:
                 return Response({'message': 'This review form does not exist!'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -374,6 +383,7 @@ class ManageReviewForm(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
+
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else: return Response(self.forbidden_role_msg, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -475,6 +485,103 @@ class ManageKarilReview(APIView):
             return Response({'message': 'This review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class GetLinkedReviews(APIView):
+    permission_classes = [IsAuthenticated]
+    # Get review by id in request params (see url)
+    def get(self, request):
+        karil_id = request.query_params.get('id')
+        try:
+            karil = KaryaIlmiah.objects.get(karil_id = karil_id)
+        except KaryaIlmiah.DoesNotExist:
+            return Response({'message': 'This karil does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+        
+        review_id_list = KaryaIlmiahSerializer(karil).data['reviews']
+        try:
+            reviews = Review.objects.all().filter(review_id__in=review_id_list)
+        except Review.DoesNotExist:
+            return Response({'message': 'No Reviews linked to this karil!'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class GetAssignedKarils(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user_data = get_user_data(request)
+        try:
+            karils = KaryaIlmiah.objects.all().filter(reviewers__username = user_data['username'])
+        except KaryaIlmiah.DoesNotExist:
+            return Response({'message': 'This review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = KaryaIlmiahSerializer(karils, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+# Handles downloading of Karil Info
+# Needs karil_id in request body
+# Will download a .xls file
+class DownloadKaril(APIView):
+    def post(self, request):
+        logger.info("start of function")
+
+        row_num = 0
+        col_num = 0
+
+        logger.info("declaring column names...")
+        columns = ['Nama Penulis', 'Judul Karya Ilmiah', 'Data Jurnal', 'Link Asli Jurnal', 'Link Repository', 
+                    'Link Indexer', 'Link Check Similarity', 'Link Bukti Korespondensi', 
+                    'Peng-Index', 'Kategori Karya Ilmiah', ]
+
+        try:
+            # Get requested karil data
+            logger.info("getting karil info...")
+            karil = KaryaIlmiah.objects.get(karil_id = request.data['karil_id'])
+            
+        except KaryaIlmiah.DoesNotExist:
+            logger.warn("none found...")
+            return Response({'message': 'This review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+        
+        wb_title=karil.judul+'.xlsx'
+
+        output = BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        worksheet1 = workbook.add_worksheet()
+
+        bold = workbook.add_format({'bold': True, 'right':2})
+
+        worksheet1.set_column(col_num, col_num+1, 25)
+
+        for row_num in range(len(columns)):
+            worksheet1.write(row_num, col_num, columns[row_num], bold)
+
+        col_num += 1
+
+        logger.info("writing karil info...")
+        worksheet1.write(0, col_num, karil.pemilik.username) # format for ws.write is row_num, col_num, data, font styling
+        worksheet1.write(1, col_num, karil.judul)
+        worksheet1.write(2, col_num, karil.journal_data)
+        worksheet1.write_url(3, col_num, karil.link_origin)
+        worksheet1.write_url(4, col_num, karil.link_repo)
+        worksheet1.write_url(5, col_num, karil.link_indexer)
+        worksheet1.write_url(6, col_num, karil.link_simcheck)
+        worksheet1.write_url(7, col_num, karil.link_correspondence)
+        worksheet1.write(8, col_num, karil.indexer)
+        worksheet1.write(9, col_num, karil.category)
+
+        logger.info("saving workbook...")
+        workbook.close()
+
+        output.seek(0)
+        # xlsx_data = output.getvalue()
+
+        logger.info("serving download...")
+
+        response = HttpResponse(output.read(), content_type = 'application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(wb_title)
+
+        output.close()
+
+        return response
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
     serializer_class = ResetPasswordEmailRequestSerializer
