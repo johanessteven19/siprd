@@ -34,6 +34,8 @@ urlpatterns = [
     # I am so sorry for the confusing naming
     # Expected path: api/manage-karil-reviews?id=<review_id to get>
     re_path(r"^api\/manage-karil-reviews(\?id=(?P<id>.+))?.?$", views.ManageKarilReview.as_view()),
+    # Expected path: api/get-linked-reviews?id=<karil_id>
+    re_path(r"^api\/get-linked-reviews(\?id=(?P<id>.+))?.?$", views.GetLinkedReviews.as_view()),
 
     path("api/approve-user/", views.ApproveUsers.as_view()),
     

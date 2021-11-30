@@ -486,6 +486,25 @@ class ManageKarilReview(APIView):
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class GetLinkedReviews(APIView):
+    permission_classes = [IsAuthenticated]
+    # Get review by id in request params (see url)
+    def get(self, request):
+        karil_id = request.query_params.get('id')
+        try:
+            karil = KaryaIlmiah.objects.get(karil_id = karil_id)
+        except KaryaIlmiah.DoesNotExist:
+            return Response({'message': 'This karil does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+        
+        review_id_list = KaryaIlmiahSerializer(karil).data['reviews']
+        try:
+            reviews = Review.objects.all().filter(review_id__in=review_id_list)
+        except Review.DoesNotExist:
+            return Response({'message': 'No Reviews linked to this karil!'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 class GetAssignedKarils(APIView):
     permission_classes = [IsAuthenticated]
 
