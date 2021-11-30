@@ -126,35 +126,18 @@
       </template>
 
       <template v-slot:item.action="row">
-        <template v-if="reviewer === true">
-          <v-btn
-          depressed
-          color="success"
-          v-on:click="assign(row.item.karil_id)"
-          >
-          Lihat
-          </v-btn>
-        </template>
-        <template v-else>
-          <v-btn
-          depressed
-          color="success"
-          v-on:click="assign(row.item.karil_id)"
-          >
-          Lihat
-          </v-btn>
-        </template>
+        <v-btn
+        depressed
+        color="success"
+        v-on:click="assign(row.item.karil_id)"
+        >
+        Lihat
+        </v-btn>
       </template>
       <template v-if="profile === 0" v-slot:item.pemilik="row">
         <a
         v-on:click="userKarils(row.item.pemilik)">
           {{ row.item.pemilik }}
-        </a>
-      </template>
-      <template v-if="profile === 0" v-slot:item.reviewer="row">
-        <a
-        v-on:click="reviewerKarils(row.item.reviewer)">
-          {{ row.item.reviewer }}
         </a>
       </template>
       </v-data-table>
