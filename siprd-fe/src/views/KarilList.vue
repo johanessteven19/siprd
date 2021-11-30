@@ -147,7 +147,25 @@ export default {
         { text: 'Indexer', value: 'indexer', sortable: false },
         { text: 'Check Similarity', value: 'link_simcheck', sortable: false },
         { text: 'Reviewer', value: 'reviewer', sortable: false },
-        { text: 'Reviewed', value: 'status', sortable: false },
+        {
+          text: 'Reviewed',
+          value: 'status',
+          filter: (value) => {
+            // not shown if tab is
+            switch (this.tab) {
+              case 0:
+                return value === 'Not Assigned Yet';
+              case 1:
+                return value === 'Not Reviewed Yet';
+              case 2:
+                return value === 'Done';
+              case 3:
+                return true;
+              default:
+                return true;
+            }
+          },
+        },
         {
           text: 'Karil Id',
           value: 'karilId',
