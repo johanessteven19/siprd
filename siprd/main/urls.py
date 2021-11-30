@@ -28,6 +28,7 @@ urlpatterns = [
     path("api/get-review-form/", views.GetSpecificReviewForm.as_view()),
     path("api/manage-reviewers/", views.ManageReviewers.as_view()),
     path("api/assign-reviewer/", views.AssignReviewer.as_view()),
+    path("api/get-assigned-karils/", views.GetAssignedKarils.as_view()),
 
     # Review management
     # I am so sorry for the confusing naming
