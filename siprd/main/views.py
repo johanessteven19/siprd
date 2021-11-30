@@ -97,12 +97,25 @@ class IsUserExist(APIView):
 class GetLinkedKarils(APIView):
     permission_classes = [IsAuthenticated]
 
+    # Fetches Karils associated with current user's username
     def get(self, request):
         logger.info("Checking for linked karils...")
         requested_username = request.user.username
         
         karils = KaryaIlmiahSerializer(KaryaIlmiah.objects.filter(pemilik=requested_username), many=True)
         
+        if len(karils.data) != 0:
+            return Response(karils.data, status=status.HTTP_200_OK)
+        else:
+            # No matching karils
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+    # Fetches Karils associated with requested user's username
+    def post(self, request):
+        requested_username = request.data['username']
+
+        karils = KaryaIlmiahSerializer(KaryaIlmiah.objects.filter(pemilik=requested_username), many=True)
+
         if len(karils.data) != 0:
             return Response(karils.data, status=status.HTTP_200_OK)
         else:
@@ -516,6 +529,19 @@ class GetAssignedKarils(APIView):
             return Response({'message': 'This review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
         serializer = KaryaIlmiahSerializer(karils, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        requested_username = request.data['username']
+
+        karils = KaryaIlmiahSerializer(
+            KaryaIlmiah.objects.all().filter(reviewers__username = requested_username),
+            many=True)
+
+        if len(karils.data) != 0:
+            return Response(karils.data, status=status.HTTP_200_OK)
+        else:
+            # No matching karils
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Handles downloading of Karil Info
 # Needs karil_id in request body
