@@ -21,7 +21,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 import logging
-import xlwt
+import io
+from io import BytesIO, StringIO
+import xlsxwriter
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 
@@ -328,8 +330,8 @@ class GetSpecificReviewForm(APIView):
 # NOTE: This is NOT for reviews! Only for review forms, which are basically karil entries.
 # NOTE: This is also not for reviewers, see ManageReviewers and AssignReviewer
 class ManageReviewForm(APIView):
-    permission_classes = [IsAuthenticated]
-    forbidden_role_msg = {'message': 'You are not authorized to modify this review form.'}
+    # permission_classes = [IsAuthenticated]
+    # forbidden_role_msg = {'message': 'You are not authorized to modify this review form.'}
     serializer_class = KaryaIlmiahSerializer
 
     # Passes request data to serializer
@@ -497,13 +499,13 @@ class ManageKarilReview(APIView):
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class GetReviewedKarils(APIView):
+class GetAssignedKarils(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         user_data = get_user_data(request)
         try:
-            karils = KaryaIlmiah.objects.all().filter(reviewers__username = user_data['username'], status = 'Done')
+            karils = KaryaIlmiah.objects.all().filter(reviewers__username = user_data['username'])
         except KaryaIlmiah.DoesNotExist:
             return Response({'message': 'This review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
         serializer = KaryaIlmiahSerializer(karils, many=True)
@@ -515,57 +517,64 @@ class GetReviewedKarils(APIView):
 class DownloadKaril(APIView):
     def post(self, request):
         logger.info("start of function")
-        response = HttpResponse(content_type = 'application/ms-excel')
-        response['Content-Disposition'] = 'attachment; filename="Review.xls"'
-        
-        logger.info("creating excel workbook...")
-        wb=xlwt.Workbook(encoding='utf-8')
-        logger.info("adding sheets to workbook...")
-        ws = wb.add_sheet("sheet1")
 
         row_num = 0
         col_num = 0
-
-        logger.info("setting font styles...")
-        font_style = xlwt.XFStyle()
-        font_style.font.bold = True
 
         logger.info("declaring column names...")
         columns = ['Nama Penulis', 'Judul Karya Ilmiah', 'Data Jurnal', 'Link Asli Jurnal', 'Link Repository', 
                     'Link Indexer', 'Link Check Similarity', 'Link Bukti Korespondensi', 
                     'Peng-Index', 'Kategori Karya Ilmiah', ]
 
-        logger.info("writing column headers...")
-        for row_num in range(len(columns)):
-            ws.write(row_num, col_num, columns[row_num], font_style)
-        
-        logger.info("resetting font styles...")
-        font_style = xlwt.XFStyle()
-
         try:
             # Get requested karil data
             logger.info("getting karil info...")
             karil = KaryaIlmiah.objects.get(karil_id = request.data['karil_id'])
-            col_num += 1
-            logger.info("writing karil info...")
-            ws.write(0, col_num, karil.pemilik.username, font_style) # format for ws.write is row_num, col_num, data, font styling
-            ws.write(1, col_num, karil.judul, font_style)
-            ws.write(2, col_num, karil.journal_data, font_style)
-            ws.write(3, col_num, karil.link_origin, font_style)
-            ws.write(4, col_num, karil.link_repo, font_style)
-            ws.write(5, col_num, karil.link_indexer, font_style)
-            ws.write(6, col_num, karil.link_simcheck, font_style)
-            ws.write(7, col_num, karil.link_correspondence, font_style)
-            ws.write(8, col_num, karil.indexer, font_style)
-            ws.write(9, col_num, karil.category, font_style)
             
         except KaryaIlmiah.DoesNotExist:
             logger.warn("none found...")
             return Response({'message': 'This review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+        
+        wb_title=karil.judul+'.xlsx'
+
+        output = BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        worksheet1 = workbook.add_worksheet()
+
+        bold = workbook.add_format({'bold': True, 'right':2})
+
+        worksheet1.set_column(col_num, col_num+1, 25)
+
+        for row_num in range(len(columns)):
+            worksheet1.write(row_num, col_num, columns[row_num], bold)
+
+        col_num += 1
+
+        logger.info("writing karil info...")
+        worksheet1.write(0, col_num, karil.pemilik.username) # format for ws.write is row_num, col_num, data, font styling
+        worksheet1.write(1, col_num, karil.judul)
+        worksheet1.write(2, col_num, karil.journal_data)
+        worksheet1.write_url(3, col_num, karil.link_origin)
+        worksheet1.write_url(4, col_num, karil.link_repo)
+        worksheet1.write_url(5, col_num, karil.link_indexer)
+        worksheet1.write_url(6, col_num, karil.link_simcheck)
+        worksheet1.write_url(7, col_num, karil.link_correspondence)
+        worksheet1.write(8, col_num, karil.indexer)
+        worksheet1.write(9, col_num, karil.category)
 
         logger.info("saving workbook...")
-        wb.save(response)
+        workbook.close()
+
+        output.seek(0)
+        # xlsx_data = output.getvalue()
+
         logger.info("serving download...")
+
+        response = HttpResponse(output.read(), content_type = 'application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(wb_title)
+
+        output.close()
+
         return response
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
