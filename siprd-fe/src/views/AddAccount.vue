@@ -57,7 +57,7 @@
                 <v-text-field
                   v-model="university"
                   :error-messages="errors"
-                  label="Universitas*"
+                  label="Universitas"
                 >
                 </v-text-field>
               </validation-provider>

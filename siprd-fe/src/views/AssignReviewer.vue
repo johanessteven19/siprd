@@ -255,7 +255,7 @@ export default {
       linkBukti: null,
       pengIndex: null,
       kategori: null,
-      status: 'Not Reviewed Yet',
+      status: 'Done',
       karilId: null,
       counter: 0,
       reviewers: [{
