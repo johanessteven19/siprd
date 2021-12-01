@@ -51,7 +51,7 @@
                         :value= "assigned"
                         color="blue"
                         >
-                            <strong>{{assigned}}</strong>
+                            <strong>{{assigned}}%</strong>
                         </v-progress-circular>
                     </v-card-text>
                 </v-card>
@@ -68,7 +68,7 @@
                         :value= "reviewed"
                         color="blue"
                         >
-                            <strong>{{reviewed}}</strong>
+                            <strong>{{reviewed}}%</strong>
                         </v-progress-circular>
                     </v-card-text>
                 </v-card>
@@ -85,7 +85,7 @@
                         :value= "done"
                         color="amber"
                         >
-                            <strong>{{done}}</strong>
+                            <strong>{{done}}%</strong>
                         </v-progress-circular>
                     </v-card-text>
                 </v-card>
@@ -111,8 +111,8 @@
                             <strong>Reviewer:</strong>
                             <span
                             v-for="reviewer in karil.reviewers"
-                            :key="reviewer.username">
-                              {{reviewer.full_name}},
+                            :key="reviewer">
+                              <br>{{reviewer}}
                             </span>
                           </div>
                           <div v-else>
@@ -206,9 +206,9 @@ export default {
               asum += 1;
             }
           });
-          this.assigned = (asum / this.karils.length) * 100;
-          this.reviewed = (rsum / this.karils.length) * 100;
-          this.done = (dsum / this.karils.length) * 100;
+          this.assigned = Math.round((asum / this.karils.length) * 100);
+          this.reviewed = Math.round((rsum / this.karils.length) * 100);
+          this.done = Math.round((dsum / this.karils.length) * 100);
         } else {
           console.log('fetch failed or no karil');
         }

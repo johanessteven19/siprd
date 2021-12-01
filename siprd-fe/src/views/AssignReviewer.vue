@@ -177,30 +177,32 @@
               <v-row align="center" justify="center" row-gap="10px">
                   <v-col md="3" align="right">
                       <h1>Reviewer</h1>
-                      {{reviewerData.full_name}}
                       <br>
                   </v-col>
               </v-row>
 
-              <div class="reviewArea" v-for="reviewer in reviewers" :key="reviewer.id">
-              <v-row align="center" justify="center">
-                  <v-col md="3" align="right" :for="reviewer.id">
-                      {{reviewer.label}}
+               <v-row align="center" justify="center"
+               v-for="(value, index) in selected" :key="index" >
+                  <v-col md="3" align="right">
+                      Nama Reviewer
                   </v-col>
                   <v-col md="2">
-                    <v-select
-                      :id="reviewer.id"
-                      v-model="reviewer.id.value"
-                      :items="reviewerSelect"
-                      label="Reviewer"
-                      data-vv-name="select"
-                      outlined
-                    >
-                    </v-select>
+              <v-select
+                v-model="selected[index]"
+                :items="reviewerProfiles"
+                :item-text="'full_name'"
+                item-value="reviewerProfiles.username"
+                label="Select"
+                return-object
+                single-line
+              >
+                <template v-slot:item="{item}">
+                  {{item.full_name}} - {{item.position}}
+                   - {{item.field_of_study}} - {{item.university}}
+                </template>
+              </v-select>
                   </v-col>
               </v-row>
-              </div>
-
               <v-row align="center" justify="center">
                   <v-col md="4" align="right">
                     <v-btn
@@ -211,7 +213,6 @@
                     </v-btn>
                   </v-col>
               </v-row>
-
           </div>
         </v-form>
 
@@ -254,63 +255,67 @@ export default {
       linkBukti: null,
       pengIndex: null,
       kategori: null,
-      status: 'Requested',
+      status: 'Done',
       karilId: null,
       counter: 0,
-      reviewerSelect: ['Dosen', 'Reviewer', 'SDM PT', 'Admin'],
       reviewers: [{
         id: 'reviewer0',
         label: 'Nama Reviewer',
         value: '',
       }],
+      reviewerProfiles: null,
+      selected: [null, null],
     };
   },
   methods: {
-    // submitForm() {
-    //   const data = {
+    submitForm() {
+      const data = {
+        karil_id: this.karilId,
+        pemilik: this.namaPenulis,
+        judul: this.judulKaril,
+        journal_data: this.dataJurnal,
+        link_origin: this.linkAsli,
+        link_repo: this.linkRepo,
+        link_indexer: this.linkIndexer,
+        link_simcheck: this.linkCheck,
+        link_correspondence: this.linkBukti,
+        indexer: this.pengIndex,
+        category: this.kategori,
+        status: this.status,
+        reviewers: this.selected.map((r) => r.username),
+      };
+      if (localStorage.access) {
+        const accessToken = localStorage.access;
+        const config = {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        };
+        console.log(data);
+        Vue.axios
+          .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/assign-reviewer/`, data, config)
+          .then((res) => {
+            if (res.status === 200) {
+              console.log('berhasil submit!');
+              console.log(res.data);
 
-    //     pemilik: this.namaPenulis,
-    //     judul: this.judulKaril,
-    //     journal_data: this.dataJurnal,
-    //     link_origin: this.linkAsli,
-    //     link_repo: this.linkRepo,
-    //     link_indexer: this.linkIndexer,
-    //     link_simcheck: this.linkCheck,
-    //     link_correspondence: this.linkBukti,
-    //     indexer: this.pengIndex,
-    //     category: this.kategori,
-    //     status: this.status,
-    //   };
-    //   if (localStorage.access) {
-    //     const accessToken = localStorage.access;
-    //     console.log('something');
-    //     const config = {
-    //       headers: {
-    //         Authorization: `Bearer ${accessToken}`,
-    //       },
-    //     };
-    //     Vue.axios
-    //       .put(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviews/`, data, config)
-    //       .then((res) => {
-    //         console.log(res.data);
-    //         if (res.status === 200) {
-    //           this.$router.push('/your-account');
-    //         } else {
-    //           alert('Gagal');
-    //         }
-    //       })
-
-    //       .catch((err) => {
-    //         // TODO: Make this output more user-friendly!!!
-    //         // Clean string up with a function?
-    //         console.log(err);
-    //         // var responseErrors = JSON.stringify(err.response.data);
-    //         // console.log(responseErrors);
-    //         // var errMsg = "Edit gagal, errors: " + responseErrors;
-    //         // alert(errMsg);
-    //       });
-    //   }
-    // },
+              alert('Reviewers berhasil di assign!');
+              this.$router.push('/karil-list');
+            } else {
+              alert('Gagal');
+            }
+          })
+          .catch((err) => {
+            // TODO: Make this output more user-friendly!!!
+            // Clean string up with a function?
+            console.log(err);
+            // var responseErrors = JSON.stringify(err.response.data);
+            // console.log(responseErrors);
+            // var errMsg = "Edit gagal, errors: " + responseErrors;
+            // alert(errMsg);
+          });
+      }
+    },
 
     checkForm() {
       this.$refs.observer.validate();
@@ -326,13 +331,8 @@ export default {
     },
 
     addNew() {
-      this.reviewers.push({
-        id: `reviewer${++this.counter}`,
-        label: 'Nama Reviewer',
-        value: '',
-      });
+      this.selected.push(null);
     },
-
   },
 
   async beforeMount() {
@@ -346,20 +346,24 @@ export default {
         headers: { Authorization: `Bearer ${accessToken}` },
       };
 
-      Vue.axios
+      await Vue.axios
         .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, data, config)
         .then((response) => {
           if (response.status === 200) {
             this.karilData = response.data;
+            console.log(this.karilData);
           }
         });
       const posData = {
         position: this.karilData.promotion,
       };
+      console.log(posData);
       const res = await Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-reviewers/`, posData, config);
       console.log(res.data);
       if (res.status === 200) {
-        this.reviewerData = res.data;
+        this.reviewerSelect = res.data;
+        this.reviewerSelect.full_name = res.data.full_name;
+        this.reviewerProfiles = res.data;
       }
     } else { this.$router.push('/'); }
   },
