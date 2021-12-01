@@ -24,6 +24,7 @@
           <v-btn
             style='z-index:-0'
             class="mr-4 white--text"
+            v-on:click="backRedir"
             :disabled="false"
             color="red"
             width="100%"
@@ -176,21 +177,9 @@
                     Kategori Karya Ilmiah
                 </v-col>
                 <v-col md="3">
-                  <validation-provider
-                    v-slot="{ errors }"
-                    name="Kategori Karil"
-                    rules="required"
-                  >
-                    <v-select
-                      v-model="kategori"
-                      :error-messages="errors"
-                      :items="kategoriSelect"
-                      label="Kategori Karil*"
-                      data-vv-name="select"
-                      outlined
-                    >
-                    </v-select>
-                  </validation-provider>
+                    <treeselect v-model="kategori" :multiple="false"
+                     :options="options" :disable-branch-nodes="true"
+                     :show-count="true" placeholder="Kategori*"/>
                 </v-col>
             </v-row>
         </div>
@@ -242,7 +231,9 @@ import {
   ValidationObserver,
   ValidationProvider,
 } from 'vee-validate';
+import Treeselect from '@riophae/vue-treeselect';
 import Navigation from '../components/Navigation.vue';
+import '@riophae/vue-treeselect/dist/vue-treeselect.css';
 
 extend('required', {
   ...required,
@@ -258,6 +249,7 @@ export default {
     ValidationProvider,
     ValidationObserver,
     Navigation,
+    Treeselect,
   },
   data() {
     return {
@@ -271,11 +263,47 @@ export default {
       linkBukti: null,
       pengIndex: null,
       kategori: null,
-      kategoriSelect: ['Buku', 'Jurnal'],
       promotion: null,
       promotionSelect: ['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar/Professor'],
       status: 'Not Assigned Yet',
       dialog: false,
+      // define options
+      options: [{
+        id: 'Buku',
+        label: 'Buku',
+        children: [{
+          id: 'Buku referensi',
+          label: 'Buku referensi',
+        },{
+          id: 'Buku monograph',
+          label: 'Buku monograph',
+        },{
+          id: 'Book chapter (internasional)',
+          label: 'Book chapter (internasional)',
+        },{
+          id: 'Book chapter (nasional)',
+          label: 'Book chapter (nasional)',
+        }],},
+        {
+        id: 'Jurnal',
+        label: 'Jurnal',
+        children: [{
+          id: 'Jurnal internasional bereputasi (terindeks pada database internasional bereputasi dan berfaktor dampak)',
+          label: 'Jurnal internasional bereputasi (terindeks pada database internasional bereputasi dan berfaktor dampak)',
+        },{
+          id: 'Jurnal internasional terindeks pada basis data internasional bereputasi',
+          label: 'Jurnal internasional terindeks pada basis data internasional bereputasi',
+        },{
+          id: 'Jurnal internasional terindeks pada basis data non bereputasi',
+          label: 'Jurnal internasional terindeks pada basis data non bereputasi ',
+        },{
+          id: 'Jurnal nasional terakreditasi Kemenristek Dikti',
+          label: 'Jurnal nasional terakreditasi Kemenristek Dikti',
+        },{
+          id: 'Jurnal nasional terakreditasi Kemenristek Dikti peringkat 1 dan 2',
+          label: 'Jurnal nasional terakreditasi Kemenristek Dikti peringkat 1 dan 2',
+        }],
+      }],
     };
   },
   methods: {
@@ -323,6 +351,10 @@ export default {
     checkForm() {
       this.$refs.observer.validate();
       this.submitForm();
+    },
+
+    backRedir() {
+      this.$router.push('/karil-list');
     },
 
   },
