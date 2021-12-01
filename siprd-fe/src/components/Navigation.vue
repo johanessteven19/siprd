@@ -2,6 +2,7 @@
   <header :class="{ 'scrolled-nav': scrolledNav }">
     <nav style='z-index:999'>
       <div class="branding">
+        <img src="@/assets/logo.png" style="width: 35px; padding-right: 10px;">
         <a href="">SIPEERKI</a>
       </div>
       <ul v-show="!mobile" class="menu">

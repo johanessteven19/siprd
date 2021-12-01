@@ -15,18 +15,25 @@
             width="48px"
           />
         </div>
-        <h1 class="text-left"><strong>Your<br>Dashboard</strong></h1>
-        <p class="text-left">
+        <div>
+          <div v-if="userData.role === 'Admin'">
+            <h1 class="text-left" ><strong>Admin<br>Dashboard</strong></h1>
+          </div>
+          <div v-else>
+            <h1 class="text-left" ><strong>Your<br>Dashboard</strong></h1>
+          </div>
+          <p class="text-center">
           Sistem Informasi Peer Review Karya Ilmiah
-        </p>
-        <div class="txt-xs-center">
-          <v-btn
-            class="ml-auto white--text"
-            color="#8D38E3"
-            width="100%"
-          >
-            Daftar Karya Ilmiah
-          </v-btn>
+          </p>
+          <div class="txt-xs-center">
+            <v-btn
+              class="ml-auto white--text"
+              color="#8D38E3"
+              width="80%"
+            >
+              Daftar Karya Ilmiah
+            </v-btn>
+          </div>
         </div>
         <br>
         <br>
