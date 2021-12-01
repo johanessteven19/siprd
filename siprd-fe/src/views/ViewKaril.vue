@@ -237,6 +237,21 @@
                   </v-col>
               </v-row>
           </div>
+          <div class="identitas" style="margin-top: 2rem; width: 100%;" justify="center">
+            <v-row align="center" justify="center">
+              <v-col md="1" align="right">
+                Reviewer
+              </v-col>
+              <v-col md="2">
+                <v-select
+                v-model="reviewer"
+                :items="karilData.reviewers"
+                label="Select"
+                single-line
+                @input="revSelect"></v-select>
+              </v-col>
+            </v-row>
+          </div>
           <div v-if="reviewData != null">
             <v-card>
               <div
@@ -492,7 +507,9 @@ export default {
       userData: '',
       karilData: '',
       reviewerData: null,
+      reviewer: null,
       reviewData: null,
+      reviews: null,
       namaPenulis: null,
       judulKaril: null,
       dataJurnal: null,
@@ -529,6 +546,31 @@ export default {
 
     link(link) {
       window.open(link);
+    },
+    revSelect() {
+      if (localStorage.access) {
+        this.reviewerData = null;
+        this.reviewData = null;
+        const accessToken = localStorage.access;
+        const data = {
+          username: this.reviewer,
+        };
+        const config = {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        };
+        Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data, config).then((res) => {
+          if (res.status === 200) {
+            this.reviewerData = res.data;
+          } else {
+            this.$router.push('/');
+          }
+        });
+        this.reviews.forEach((element) => {
+          if (element.reviewer === this.reviewer) {
+            this.reviewData = element;
+          }
+        });
+      }
     },
 
     deleteKaril(karilId) {
@@ -572,56 +614,14 @@ export default {
       Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-review-form/`, data, config).then((res) => {
         if (res.status === 200) {
           this.karilData = res.data;
-          if (this.$route.query.reviewer != null) {
-            const data1 = {
-              username: this.$route.query.reviewer,
-            };
-            Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data1, config).then((res1) => {
-              if (res1.status === 200) {
-                this.reviewerData = res1.data;
-              } else {
-                this.$router.push('/');
-              }
-            });
-            Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-linked-reviews?id=${this.karilId}`, config).then((res1) => {
-              if (res1.status === 200) {
-                res1.data.forEach((element) => {
-                  if (element.reviewer === this.reviewerData.username) {
-                    this.reviewData = element;
-                  }
-                });
-              }
-            });
-          } else if (res.data.reviews.length !== 0) {
-            Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-karil-reviews?id=${res.data.reviews[0]}`, config).then((res1) => {
-              if (res1.status === 200) {
-                this.reviewData = res1.data[0];
-                const data1 = {
-                  username: res1.data[0].reviewer,
-                };
-                console.log(res1.data[0].reviewer);
-                Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data1, config).then((res2) => {
-                  console.log(res2.data);
-                  if (res2.status === 200) {
-                    this.reviewerData = res2.data;
-                  }
-                });
-              }
-            });
-          } else {
-            const data2 = {
-              username: res.data.reviewers[0],
-            };
-            Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, data2, config).then((res3) => {
-              if (res3.status === 200) {
-                this.reviewerData = res3.data;
-              }
-            });
-          }
+          Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-linked-reviews?id=${this.karilId}`, config).then((res5) => {
+            if (res5.status === 200) {
+              this.reviews = res5.data;
+            }
+          });
         }
       });
       Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/user`, config).then((res) => {
-        console.log(res.data);
         if (res.status === 200) {
           this.userData = res.data;
         }
