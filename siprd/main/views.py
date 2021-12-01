@@ -317,8 +317,8 @@ class GetSpecificReviewForm(APIView):
 # NOTE: This is NOT for reviews! Only for review forms, which are basically karil entries.
 # NOTE: This is also not for reviewers, see ManageReviewers and AssignReviewer
 class ManageReviewForm(APIView):
-    # permission_classes = [IsAuthenticated]
-    # forbidden_role_msg = {'message': 'You are not authorized to modify this review form.'}
+    permission_classes = [IsAuthenticated]
+    forbidden_role_msg = {'message': 'You are not authorized to modify this review form.'}
     serializer_class = KaryaIlmiahSerializer
 
     # Passes request data to serializer
