@@ -140,6 +140,16 @@
           {{ row.item.pemilik }}
         </a>
       </template>
+      <template v-if="profile === 0" v-slot:item.reviewers="row">
+        <span
+        v-for="(reviewer,index) in row.item.reviewers"
+        :key="reviewer">
+        <a
+        v-on:click="reviewerKarils(row.item.reviewers[index])">
+          {{ row.item.reviewers[index] }}
+        </a>
+        </span>
+      </template>
       </v-data-table>
       </v-container>
   </div>
