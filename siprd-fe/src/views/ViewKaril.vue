@@ -64,7 +64,7 @@
                   > Download to Excel
                 </v-btn>
               </v-col>
-              <v-col md="2" class="mr-auto" 
+              <v-col md="2" class="mr-auto"
               v-if="karilData.status !== 'Done' && karilData.status !== 'In Review'">
                 <v-btn
                   class="mr-4 white--text"
