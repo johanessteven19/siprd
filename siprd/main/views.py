@@ -317,8 +317,8 @@ class GetSpecificReviewForm(APIView):
 # NOTE: This is NOT for reviews! Only for review forms, which are basically karil entries.
 # NOTE: This is also not for reviewers, see ManageReviewers and AssignReviewer
 class ManageReviewForm(APIView):
-    permission_classes = [IsAuthenticated]
-    forbidden_role_msg = {'message': 'You are not authorized to modify this review form.'}
+    # permission_classes = [IsAuthenticated]
+    # forbidden_role_msg = {'message': 'You are not authorized to modify this review form.'}
     serializer_class = KaryaIlmiahSerializer
 
     # Passes request data to serializer
@@ -836,12 +836,16 @@ class DownloadReviewForm(APIView):
         worksheet1.set_column(0, 0, 3)
         worksheet1.set_column(1, 6, 16)
 
+
+        ## WRITING TITLE
         worksheet1.merge_range('A1:G1', '', merge_format_title)
         worksheet1.write_rich_string('A1', bold, 'HASIL PENILAIAN SEJAWAT SEBIDANG ATAU ', bolditalic, 'PEER REVIEW', merge_format_title)
         worksheet1.write('A2', 'A', merge_format_number)
         worksheet1.merge_range('B2:G2', '', merge_format_justified_content)
         worksheet1.write('B2', 'Identitas karya ilmiah (diisi sesuai standar referensi)')
 
+
+        ## == KARIL INFO ==
         worksheet1.set_row(2, 50, merge_format)
         worksheet1.write('A3', '1', merge_format_number)
         worksheet1.write('B3', 'Judul', merge_format_justified_category_1)
@@ -896,11 +900,13 @@ class DownloadReviewForm(APIView):
         worksheet1.merge_range('C11:G11', '', merge_format_justified_content)
         worksheet1.write_rich_string('C11', merge_format, ': ', karil.indexer, merge_format_justified_content)
 
+
+        ## == KARIL CATEGORIES (35 kinds) ==
         worksheet1.set_row(11, 30, merge_format)
         worksheet1.write('A12', 'C', merge_format_number)
         worksheet1.merge_range('B12:F12', '', merge_format_justified_content)
         worksheet1.write('B12', 'Kategori karya ilmiah, dan nilai maksimal (pilih salah satu dengan memberikan tanda P)', merge_format_justified_category_1)
-        worksheet1.write('G12', '', merge_format_justified_content)
+        worksheet1.write('G12', 'AK', merge_format_justified_content_3)
 
         worksheet1.set_row(12, 18, merge_format)
         worksheet1.merge_range('A13:G13', '', merge_format_justified_content)
@@ -930,7 +936,6 @@ class DownloadReviewForm(APIView):
         worksheet1.merge_range('A18:G18', '', merge_format_justified_content)
         worksheet1.write('A18', 'Jurnal', merge_format_justified_content)
 
-        # worksheet1.set_row(18, 30, merge_format)
         worksheet1.write('A19', '5', merge_format_number)
         worksheet1.merge_range('B19:F19', '', merge_format_justified_content)
         worksheet1.write('B19', 'Jurnal internasional bereputasi (terindeks pada database internasional bereputasi dan berfaktor dampak)', merge_format_justified_category_1)
@@ -1069,7 +1074,7 @@ class DownloadReviewForm(APIView):
 
         worksheet1.set_row(45, 30, merge_format)
         worksheet1.merge_range('A46:G46', '', merge_format_justified_content)
-        worksheet1.write('A46', 'HAKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional', merge_format_justified_content)
+        worksheet1.write('A46', 'HKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional', merge_format_justified_content)
 
         worksheet1.write('A47', '28', merge_format_number)
         worksheet1.merge_range('B47:F47', '', merge_format_justified_content)
@@ -1116,7 +1121,9 @@ class DownloadReviewForm(APIView):
         worksheet1.merge_range('B55:F55', '', merge_format_justified_content_2)
         worksheet1.write('B55', 'Rancangan dan karya seni yang tidak terdaftar HAKI', merge_format_justified_category_5)
         worksheet1.write('G55', '', merge_format_justified_content_2)
+        ## ================================================================================================================= ##
 
+        ## == COMMENT ON LINEARITY AND PLAGIARISM == ##
         worksheet1.merge_range('A58:G58', 'Hasil penilaian validasi', merge_format_bordered)
 
         worksheet1.write('B59', 'Aspek', merge_format_bordered)
@@ -1135,6 +1142,8 @@ class DownloadReviewForm(APIView):
         worksheet1.merge_range('A62:G62', '', merge_format_bordered)
         worksheet1.write_rich_string('A62', merge_format_bordered, 'Hasil penilaian ', italic, 'peer review', merge_format_bordered)
 
+        ## == PEER REVIEW GRADING ==
+        ## AUTO-GENERATED ACCORDING TO CHOSEN CATEGORY
         worksheet1.set_row(62, 60, merge_format)
         worksheet1.write('B63', 'Komponen yang dinilai', merge_format_bordered)
         worksheet1.merge_range('C63:D63', 'Komentar/ulasan peer reviewer (wajib diisi dan hindari komentar yang hanya memuat satu dua kata seperti: sangat dalam, cukup baik, sangat berkualitas)', merge_format_justified_category_bordered)
@@ -1145,35 +1154,138 @@ class DownloadReviewForm(APIView):
         worksheet1.set_row(63, 75, merge_format)
         worksheet1.write('B64', 'Kelengkapan dan kesesuaian unsur publikasi (10%)', merge_format_justified_category_bordered)
         worksheet1.merge_range('C64:D64', '', merge_format_justified_category_bordered)
-        worksheet1.write('E64', '', merge_format_bordered)
-        worksheet1.merge_range('F64:G64', '', merge_format_bordered)
 
         worksheet1.write('A65', 'G', merge_format_number_bordered)
         worksheet1.set_row(64, 90, merge_format)
         worksheet1.write('B65', 'Ruang lingkup,  kedalaman pembahasan, keterbaruan (30%)', merge_format_justified_category_bordered)
         worksheet1.merge_range('C65:D65', '', merge_format_justified_category_bordered)
-        worksheet1.write('E65', '', merge_format_bordered)
-        worksheet1.merge_range('F65:G65', '', merge_format_bordered)
 
         worksheet1.write('A66', 'H', merge_format_number_bordered)
         worksheet1.set_row(65, 90, merge_format)
         worksheet1.write('B66', 'Kecukupan dan kemutakhiran data/informasi dan metodologi (30%)', merge_format_justified_category_bordered)
         worksheet1.merge_range('C66:D66', '', merge_format_justified_category_bordered)
-        worksheet1.write('E66', '', merge_format_bordered)
-        worksheet1.merge_range('F66:G66', '', merge_format_bordered)
 
         worksheet1.write('A67', 'I', merge_format_number_bordered)
         worksheet1.set_row(66, 75, merge_format)
         worksheet1.write('B67', 'Kelengkapan unsur dan kualitas penerbit, hasil dan manfaat (30%)', merge_format_justified_category_bordered)
         worksheet1.merge_range('C67:D67', '', merge_format_justified_category_bordered)
-        worksheet1.write('E67', '', merge_format_bordered)
-        worksheet1.merge_range('F67:G67', '', merge_format_bordered)
 
         worksheet1.write('A68', 'J', merge_format_number_bordered)
         worksheet1.set_row(67, 30, merge_format)
         worksheet1.merge_range('B68:D68', 'Jumlah Total = (100%)', merge_format_justified_category_bordered)
-        worksheet1.write('E68', '', merge_format_bordered)
-        worksheet1.merge_range('F68:G68', '', merge_format_bordered)
+
+        ## CONDITIONAL BASED ON CHOSEN CATEGORY ##
+
+        ### Lists of categories based on max nilai:
+        list_60 = ["""HKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional - 
+        Internasional (paling sedikit diakui oleh 4 negara)"""]
+
+        list_40 = ["Buku referensi", 
+        "Jurnal internasional bereputasi (terindeks pada database internasional bereputasi dan berfaktor", 
+        "HKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional - Nasional"]
+
+        list_30 = ["Jurnal internasional terindeks pada basis data internasional bereputasi", 
+        "Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional terindeks pada Scimagojr dan Scopus"]
+        
+        list_25 = ["Jurnal nasional terakreditasi Kemenristek Dikti" or "Jurnal nasional terakreditasi Kemenristek Dikti peringkat 1 dan 2", 
+        "Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional terindeks pada Scopus/IEEE Explore/SPIE"]
+
+        list_20 = ["Buku monograph", 
+        "Jurnal internasional terindeks pada basis data non bereputasi", 
+        """Jurnal nasional berbahasa Inggris atau bahasa resmi (PBB) terindeks pada basis data yang diakui Kemenristekdikti, 
+        contoh: CABI atau Index Copernicus International (ICI)""", 
+        """HKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional - 
+        Nasional, dalam bentuk paten sederhana yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham""", 
+        """Membuat rancangan dan karya teknologi yang tidak dipatenkan; rancangan dan karya seni monumental yang tidak terdaftar di HAKI tetapi 
+        telah dipresentasikan pada forum yang teragenda - Internasional"""]
+
+        list_15 = ["Book chapter (internasional)", 
+        "Jurnal nasional berbahasa Indonesia terindeks pada basis data yang diakui Kemenristekdikti, contoh: akreditasi peringkat 5 dan 6", 
+        "Direpresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional", 
+        """Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya, tetapi dimuat dalam prosiding - 
+        Menerjemahkan/menyadur buku ilmiah, diterbitkan dan diedarkan secara nasional""", 
+        """HKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional - 
+        Karya ciptaan desain industri, indikasi geografis yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham 
+        (termasuk kategori ini: Buku/Modul Ajar")""", 
+        """Membuat rancangan dan karya teknologi yang tidak dipatenkan; rancangan dan karya seni monumental yang tidak terdaftar di HAKI 
+        tetapi telah dipresentasikan pada forum yang teragenda - Nasional"""]
+
+        list_10 = ["Book chapter (nasional)", 
+        "Jurnal nasional", 
+        "Jurnal ilmiah yang ditulis dalam Bahasa Resmi PBB namun tidak memenuhi syarat syarat sebagai jurnal ilmiah internasional",
+        "Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Nasional",
+        "Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan - Internasional",
+        "Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya, tetapi dimuat dalam prosiding - Internasional",
+        "Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya, tetapi dimuat dalam prosiding - Mengedit/menyunting karya ilmiah, diterbitkan dan diedarkan secara nasional",
+        "Membuat rancangan dan karya teknologi yang tidak dipatenkan; rancangan dan karya seni monumental yang tidak terdaftar di HAKI tetapi telah dipresentasikan pada forum yang teragenda - Lokal"]
+
+        list_5 = ["Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan - Nasional", 
+        "Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan - Internasional (bukti sertifikat)", 
+        "Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya, tetapi dimuat dalam prosiding - Nasional"]
+
+        list_3 = ["Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan - Nasional (bukti sertifikat)"]
+
+        list_2 = ["Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya, tetapi dimuat dalam prosiding - Hasil penelitian atau pemikiran atau kerjasama industri yang tidak dipublikasikan (tersimpan dalam perpustakaan) yang dilakukan secara melembaga"]
+        
+        list_1 = ["Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya, tetapi dimuat dalam prosiding - Hasil penelitian/pemikiran yang disajikan dalam koran/majalah populer/umum"]
+
+        ## Max = 60:
+        if (karil.category in list_60):
+            max_nilai = 60
+
+        ## Max = 40:
+        elif (karil.category in list_40):
+            max_nilai = 40
+        
+        ## Max = 30:
+        elif (karil.category in list_30):
+            max_nilai = 30
+
+        ## Max = 25:
+        elif (karil.category in list_25):
+            max_nilai = 25
+        
+        ## Max = 20:
+        elif (karil.category in list_20):
+            max_nilai = 20
+        
+        ## Max = 15:
+        elif (karil.category in list_15):
+            max_nilai = 15
+
+        ## Max = 10:
+        elif (karil.category in list_10):
+            max_nilai = 10
+        
+        ## Max = 5:
+        elif (karil.category in list_5):
+            max_nilai = 5
+        
+        ## Max = 3:
+        elif (karil.category in list_3):
+            max_nilai = 3
+        
+        ## Max = 2:
+        elif (karil.category in list_2):
+            max_nilai = 2
+        
+        ## Max = 1:
+        elif (karil.category in list_1):
+            max_nilai = 1
+
+        else: max_nilai = 0
+
+        worksheet1.write_number('E64', 0.1*max_nilai, merge_format_bordered)  # Nilai Max Kelengkapan dan kesesuaian unsur publikasi (10%)
+        worksheet1.write_number('E65', 0.3*max_nilai, merge_format_bordered) # Nilai Max Ruang lingkup,  kedalaman pembahasan, keterbaruan (30%)
+        worksheet1.write_number('E66', 0.3*max_nilai, merge_format_bordered) # Nilai Max Kecukupan dan kemutakhiran data/informasi dan metodologi (30%)
+        worksheet1.write_number('E67', 0.3*max_nilai, merge_format_bordered) # Nilai Max Kelengkapan unsur dan kualitas penerbit, hasil dan manfaat (30%)
+        worksheet1.write_number('E68', max_nilai, merge_format_bordered) # Nilai Max dari category (100%)
+
+        worksheet1.merge_range('F64:G64', '', merge_format_bordered) # Nilai Review (empty)
+        worksheet1.merge_range('F65:G65', '', merge_format_bordered) # Nilai Review (empty)
+        worksheet1.merge_range('F66:G66', '', merge_format_bordered) # Nilai Review (empty)
+        worksheet1.merge_range('F67:G67', '', merge_format_bordered) # Nilai Review (empty)
+        worksheet1.merge_range('F68:G68', '', merge_format_bordered) # Nilai Total Review (empty)
 
         worksheet1.write('A69', 'K', merge_format_number_bordered)
         worksheet1.set_row(68, 30, merge_format)
