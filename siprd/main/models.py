@@ -55,7 +55,7 @@ class KaryaIlmiah(models.Model):
     link_simcheck = models.TextField(max_length=None, blank=True, null=True)
     link_correspondence = models.TextField(max_length=None, blank=True, null=True)
     indexer = models.TextField(max_length=254, blank=True, null=True)
-    category = models.CharField(max_length=254)
+    category = models.TextField(max_length=None)
     status = models.CharField(max_length=254, choices=STATUS_CHOICES)
     promotion = models.CharField(max_length=254, choices=PROMOTION_LEVELS)
     reviewers = models.ManyToManyField(User, blank=True, related_name='assigned_reviewers')
