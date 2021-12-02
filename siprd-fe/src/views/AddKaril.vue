@@ -274,32 +274,33 @@ export default {
         children: [{
           id: 'Buku referensi',
           label: 'Buku referensi',
-        },{
+        }, {
           id: 'Buku monograph',
           label: 'Buku monograph',
-        },{
+        }, {
           id: 'Book chapter (internasional)',
           label: 'Book chapter (internasional)',
-        },{
+        }, {
           id: 'Book chapter (nasional)',
           label: 'Book chapter (nasional)',
-        }],},
-        {
+        }],
+      },
+      {
         id: 'Jurnal',
         label: 'Jurnal',
         children: [{
           id: 'Jurnal internasional bereputasi (terindeks pada database internasional bereputasi dan berfaktor dampak)',
           label: 'Jurnal internasional bereputasi (terindeks pada database internasional bereputasi dan berfaktor dampak)',
-        },{
+        }, {
           id: 'Jurnal internasional terindeks pada basis data internasional bereputasi',
           label: 'Jurnal internasional terindeks pada basis data internasional bereputasi',
-        },{
+        }, {
           id: 'Jurnal internasional terindeks pada basis data non bereputasi',
           label: 'Jurnal internasional terindeks pada basis data non bereputasi ',
-        },{
+        }, {
           id: 'Jurnal nasional terakreditasi Kemenristek Dikti',
           label: 'Jurnal nasional terakreditasi Kemenristek Dikti',
-        },{
+        }, {
           id: 'Jurnal nasional terakreditasi Kemenristek Dikti peringkat 1 dan 2',
           label: 'Jurnal nasional terakreditasi Kemenristek Dikti peringkat 1 dan 2',
         }],
