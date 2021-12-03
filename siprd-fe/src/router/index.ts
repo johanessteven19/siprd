@@ -24,6 +24,7 @@ import ForgetPasswordRequestSuccess from "../views/ForgetPasswordRequestSuccess.
 import ResetPassword from "../views/ResetPassword.vue";
 import ForgetPasswordSuccess from "../views/ForgetPasswordSuccess.vue";
 import TokenError from "../views/TokenError.vue";
+import Panduan from '../views/Panduan.vue';
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
@@ -157,7 +158,11 @@ const routes: Array<RouteConfig> = [
     name: "TokenError",
     component: TokenError,
   },
-
+  {
+    path: "/panduan",
+    name: "Panduan",
+    component: Panduan,
+  },
 
 ];
 
