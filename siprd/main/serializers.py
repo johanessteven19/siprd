@@ -101,6 +101,7 @@ class KaryaIlmiahSerializer(serializers.ModelSerializer):
         ]
 
 class ReviewSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Review
         fields = [
@@ -113,10 +114,17 @@ class ReviewSerializer(serializers.ModelSerializer):
             'score_2',
             'score_3',
             'score_4',
+            'max_1',
+            'max_2',
+            'max_3',
+            'max_4',
+            'max_total',
+            'score_total',
             'comment_1',
             'comment_2',
             'comment_3',
             'comment_4',
+            'chosen_proposer',
             'score_proposer'
         ]
 

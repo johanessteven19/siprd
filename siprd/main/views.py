@@ -8,6 +8,7 @@ from rest_framework.generics import UpdateAPIView
 from .util import Util
 from .serializers import KaryaIlmiahSerializer, ReviewSerializer, UserSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer
 from django.http import JsonResponse, HttpResponse, HttpResponsePermanentRedirect, HttpResponseRedirect, response
+from django.forms.models import model_to_dict
 from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -24,6 +25,8 @@ import logging
 import io
 from io import BytesIO, StringIO
 import xlsxwriter
+import openpyxl
+from decimal import Decimal
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 
@@ -846,6 +849,10 @@ class DownloadReviewForm(APIView):
 
 
         ## == KARIL INFO ==
+
+        worksheet1.set_column('H:H', None, None, {'hidden': 1})
+        worksheet1.write('H1', karil.karil_id, merge_format)
+
         worksheet1.set_row(2, 50, merge_format)
         worksheet1.write('A3', '1', merge_format_number)
         worksheet1.write('B3', 'Judul', merge_format_justified_category_1)
@@ -1349,3 +1356,108 @@ class DownloadReviewForm(APIView):
         output.close()
 
         return response
+
+
+## Handles uploading the download review form functionality
+## Will read the filled data from the .xlsx file
+## Will create a Review object filled with the provided data
+class UploadReviewForm(APIView):
+
+    def post(self, request):
+        user_data = get_user_data(request)
+
+        excel_file = request.FILES["excel_file"]
+
+        wb = openpyxl.load_workbook(excel_file) # openpyxl library can be read at https://openpyxl.readthedocs.io/en/stable/index.html
+        ws = wb.active
+
+        ## Check for filled score_proposer
+        
+        cell_1 = ws['F70']
+        cell_2 = ws['F71']
+        cell_3 = ws['F72']
+        cell_4 = ws['F73']
+        cell_5 = ws['F74']
+        cell_6 = ws['F75']
+
+        if cell_1.value is None:
+            pass
+        else:
+            cp = ws['B70']
+            sp = cell_1
+
+        if cell_2.value is None:
+            pass
+        else:
+            cp = ws['B71']
+            sp = cell_2
+
+        if cell_3.value is None:
+            pass
+        else:
+            cp = ws['B72']
+            sp = cell_3
+
+        if cell_4.value is None:
+            pass
+        else:
+            cp = ws['B73']
+            sp = cell_4
+
+        if cell_5.value is None:
+            pass
+        else:
+            cp = ws['B74']
+            sp = cell_5
+        
+        if cell_6.value is None:
+            pass
+        else:
+            cp = ws['B75']
+            sp = cell_6
+
+        karil = KaryaIlmiah.objects.get(karil_id = ws['H1'].value)
+
+        # Create a review based on excel data
+        review_form = Review.objects.create( 
+            karil_id = karil,   # This has to be a KaryaIlmiah instance
+            reviewer = request.user,    # This has to be a user instance
+            plagiarism_percentage = ws['C60'].value,
+            linearity = ws['C61'].value,
+            score_1 = Decimal(ws['F64'].value), # Use .value to get the value of the specified cells
+            score_2 = Decimal(ws['F65'].value),
+            score_3 = Decimal(ws['F66'].value),
+            score_4 = Decimal(ws['F67'].value),
+            max_1 = Decimal(ws['E64'].value),
+            max_2 = Decimal(ws['E65'].value),
+            max_3 = Decimal(ws['E66'].value),
+            max_4 = Decimal(ws['E67'].value),
+            max_total= ws['E68'].value,
+            score_total = Decimal(ws['F68'].value),
+            comment_1 = ws['C64'].value,
+            comment_2 = ws['C65'].value,
+            comment_3 = ws['C66'].value,
+            comment_4 = ws['C67'].value,
+            chosen_proposer = cp.value,
+            score_proposer = Decimal(sp.value)
+        )
+
+        dict_obj = model_to_dict(review_form)
+        serializer = ReviewSerializer(data=dict_obj)
+        if serializer.is_valid():
+            review = serializer.save()
+            if review:
+                return Response(status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Only for debugging
+# class GetAllReviews(APIView):
+
+#     def get(self, request):
+#         review_list = Review.objects.all()
+#         serializer = ReviewSerializer(review_list, many=True)
+
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
