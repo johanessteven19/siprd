@@ -176,10 +176,14 @@
                 <v-col md="2" align="right">
                     Kategori Karya Ilmiah
                 </v-col>
-                <v-col md="3">
+            </v-row>
+            <v-row align="center" justify="center">
+                <v-col md="10">
                     <treeselect v-model="kategori" :multiple="false"
                      :options="options" :disable-branch-nodes="true"
-                     :show-count="true" placeholder="Kategori*"/>
+                     :show-count="true" placeholder="Kategori*">
+                     <div slot="value-label" slot-scope="{ node }">{{ node.raw.customLabel }}</div>
+                    </treeselect>
                 </v-col>
             </v-row>
         </div>
@@ -272,39 +276,218 @@ export default {
         id: 'Buku',
         label: 'Buku',
         children: [{
-          id: 'Buku referensi',
+          id: 'Referensi',
           label: 'Buku referensi',
+          customLabel: 'Buku referensi',
         }, {
           id: 'Buku monograph',
           label: 'Buku monograph',
+          customLabel: 'Buku monograph',
         }, {
-          id: 'Book chapter (internasional)',
-          label: 'Book chapter (internasional)',
-        }, {
-          id: 'Book chapter (nasional)',
-          label: 'Book chapter (nasional)',
+          id: 'Book chapter',
+          label: 'Book chapter',
+          children: [{
+            id: 'Book chapter-nasional',
+            label: 'Nasional',
+            customLabel: 'Book Chapter - Nasional',
+          }, {
+            id: 'Book chapter-internasional',
+            label: 'Internasional',
+            customLabel: 'Book chapter - Internasional',
+          }],
         }],
       },
       {
         id: 'Jurnal',
         label: 'Jurnal',
         children: [{
-          id: 'Jurnal internasional bereputasi (terindeks pada database internasional bereputasi dan berfaktor dampak)',
-          label: 'Jurnal internasional bereputasi (terindeks pada database internasional bereputasi dan berfaktor dampak)',
+          id: 'Internasional',
+          label: 'Internasional',
+          children: [
+            {
+              id: 'Bereputasi',
+              label: 'Bereputasi (terindeks pada database internasional bereputasi dan berfaktor dampak)',
+            },
+            {
+              id: 'Terindex',
+              label: 'Terindex',
+              children: [
+                {
+                  id: 'Pada database bereputasi',
+                  label: 'Pada database bereputasi',
+                  customLabel: 'Jurnal Internasional Terindex di DB bereputasi',
+                },
+                {
+                  id: 'Pada database tidak bereputasi',
+                  label: 'Pada database tidak bereputasi',
+                  customLabel: 'Jurnal Internasional Terindex di DB non-reputasi',
+                }],
+            },
+          ],
         }, {
-          id: 'Jurnal internasional terindeks pada basis data internasional bereputasi',
-          label: 'Jurnal internasional terindeks pada basis data internasional bereputasi',
-        }, {
-          id: 'Jurnal internasional terindeks pada basis data non bereputasi',
-          label: 'Jurnal internasional terindeks pada basis data non bereputasi ',
-        }, {
-          id: 'Jurnal nasional terakreditasi Kemenristek Dikti',
-          label: 'Jurnal nasional terakreditasi Kemenristek Dikti',
-        }, {
-          id: 'Jurnal nasional terakreditasi Kemenristek Dikti peringkat 1 dan 2',
-          label: 'Jurnal nasional terakreditasi Kemenristek Dikti peringkat 1 dan 2',
+          id: 'Nasional',
+          label: 'Nasional',
+          children: [
+            {
+              id: 'Terakreditasi',
+              label: 'Terakreditasi',
+              children: [
+                {
+                  id: 'Oleh Kemenristekdikti',
+                  label: 'Oleh Kemenristekdikti',
+                  customLabel: 'Jurnal Nasional Terakreditasi oleh Kemenristekdikti',
+                },
+                {
+                  id: 'Oleh Kemenristekdikti peringkat 1 dan 2',
+                  label: 'Oleh Kemenristekdikti peringkat 1 dan 2',
+                  customLabel: 'Jurnal Nasional Terakreditasi oleh Kemenristekdikti peringkat 1 dan 2',
+                }],
+            },
+            {
+              id: 'Jurnal Nasional',
+              label: 'Jurnal Nasional',
+              customLabel: 'Jurnal Nasional',
+            },
+            {
+              id: 'Jurnal nasional terindex di Kemenristekdikti approved DB ',
+              label: 'Jurnal nasional terindex di Kemenristekdikti approved DB',
+              children: [
+                {
+                  id: 'Jurnal nasional terindex di Kemenristekdikti approved DB Bahasa Inggris',
+                  label: 'Bahasa Inggris',
+                  customLabel: 'Jurnal nasional berbahasa Inggris atau bahasa resmi (PBB) terindeks pada basis data yang diakui Kemenristekdikti',
+                },
+                {
+                  id: 'Jurnal nasional terindex di Kemenristekdikti approved DB Bahasa Indonesia',
+                  label: 'Bahasa Indonesia',
+                  customLabel: 'Jurnal nasional berbahasa Indonesia terindeks pada basis data yang diakui Kemenristekdikti',
+                }],
+            },
+            {
+              id: 'Jurnal ilmiah yang ditulis dalam Bahasa Resmi PBB ',
+              label: 'Jurnal ilmiah yang ditulis dalam Bahasa Resmi PBB namun tidak memenuhi syarat syarat sebagai jurnal ilmiah internasional',
+              customLabel: 'Jurnal ilmiah yang ditulis dalam Bahasa Resmi PBB namun tidak memenuhi syarat syarat sebagai jurnal ilmiah internasional',
+            },
+          ],
         }],
-      }],
+      }, {
+        id: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN)',
+        label: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN)',
+        children: [{
+          id: 'Nasional',
+          label: 'Nasional',
+          customLabel: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Nasional',
+        }, {
+          id: 'Internasional',
+          label: 'Internasional',
+          children: [{
+            id: 'Internasional',
+            label: 'Internasional',
+            customLabel: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional',
+          }, {
+            id: 'terindeks pada Scimagojr dan Scopus',
+            label: 'Terindeks pada Scimagojr dan Scopus',
+            customLabel: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional - terindeks pada Scimagojr dan Scopus',
+          }, {
+            id: 'Internasional terindeks pada Scopus/IEEE Explore/SPIE',
+            label: 'Terindeks pada Scopus/IEEE Explore/SPIE',
+            customLabel: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional - terindeks pada Scopus/IEEE Explore/SPIE',
+          }],
+        }],
+      }, {
+        id: 'Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan',
+        label: 'Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan',
+        children: [{
+          id: 'Internasional',
+          label: 'Internasional',
+          customLabel: 'Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan - Internasional',
+        }, {
+          id: 'Nasional',
+          label: 'Nasional',
+          customLabel: 'Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan - Nasional',
+        }],
+      }, {
+        id: 'Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan',
+        label: 'Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan',
+        children: [{
+          id: 'Internasional',
+          label: 'Internasional (bukti sertifikat)',
+          customLabel: 'Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan - Internasional',
+        }, {
+          id: 'Nasional',
+          label: 'Nasional (bukti sertifikat)',
+          customLabel: 'Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan - Nasional',
+        }],
+      }, {
+        id: 'Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya tetapi dimuat dalam prosiding',
+        label: 'Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya tetapi dimuat dalam prosiding',
+        children: [{
+          id: 'Internasional',
+          label: 'Internasional',
+          customLabel: 'Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya tetapi dimuat dalam prosiding - Internasional',
+        }, {
+          id: 'Nasional',
+          label: 'Nasional',
+          customLabel: 'Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya tetapi dimuat dalam prosiding - Nasional',
+        }],
+      }, {
+        id: 'Hasil penelitian/pemikiran yang disajikan dalam koran/majalah populer/umum',
+        label: 'Hasil penelitian/pemikiran yang disajikan dalam koran/majalah populer/umum',
+        children: [{
+          id: 'tidak dipublikasikan',
+          label: 'Tidak dipublikasikan (tersimpan dalam perpustakaan) yang dilakukan secara melembaga',
+          customLabel: 'Hasil penelitian atau pemikiran atau kerjasama industri yang tidak dipublikasikan (tersimpan dalam perpustakaan) yang dilakukan secara melembaga',
+        }, {
+          id: 'Menerjemahkan/menyadur buku ilmiah, Diterbitkan dan diedarkan secara nasional',
+          label: 'Menerjemahkan/menyadur buku ilmiah, Diterbitkan dan diedarkan secara nasional',
+          customLabel: 'Menerjemahkan/menyadur buku ilmiah, Diterbitkan dan diedarkan secara nasional',
+        }, {
+          id: 'Mengedit/menyunting karya ilmiah, Diterbitkan dan diedarkan secara nasional',
+          label: 'Mengedit/menyunting karya ilmiah, Diterbitkan dan diedarkan secara nasional',
+          customLabel: 'Mengedit/menyunting karya ilmiah, Diterbitkan dan diedarkan secara nasional',
+        }],
+      }, {
+        id: 'HKI',
+        label: 'HKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI',
+        children: [{
+          id: 'Internasional (paling sedikit diakui oleh 4 negara)',
+          label: 'Internasional (paling sedikit diakui oleh 4 negara)',
+          customLabel: 'HKI - Internasional (paling sedikit diakui oleh 4 negara)',
+        }, {
+          id: 'Nasional',
+          label: 'Nasional',
+          customLabel: 'HKI - Nasional',
+        }, {
+          id: 'Nasional, dalam bentuk paten sederhana yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham',
+          label: 'Nasional, dalam bentuk paten sederhana yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham',
+          customLabel: 'HKI - Nasional - Paten sederhana yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham',
+        }, {
+          id: 'Karya ciptaan desain industri, indikasi geografis yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham ',
+          label: 'Karya ciptaan desain industri, indikasi geografis yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham ',
+          customLabel: 'HKI - Karya ciptaan desain industri, indikasi geografis yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham',
+        }],
+      }, {
+        id: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda',
+        label: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda',
+        children: [{
+          id: 'Internasional',
+          label: 'Internasional',
+          customLabel: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda - Internasional',
+        }, {
+          id: 'Nasional',
+          label: 'Nasional',
+          customLabel: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda - Nasional',
+        }, {
+          id: 'Lokal',
+          label: 'Lokal',
+          customLabel: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda - Lokal',
+        }, {
+          id: 'Rancangan dan karya seni yang tidak terdaftar HAKI',
+          label: 'Rancangan dan karya seni yang tidak terdaftar HAKI',
+          customLabel: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda -Rancangan dan karya seni yang tidak terdaftar HAKI',
+        }],
+      },
+      ],
     };
   },
   methods: {
