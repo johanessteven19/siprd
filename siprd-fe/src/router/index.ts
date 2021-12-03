@@ -20,6 +20,7 @@ import KarilList from '../views/KarilList.vue';
 import ViewKaril from '../views/ViewKaril.vue';
 import AddKarilReview from '../views/AddKarilReview.vue';
 import ForgetPasswordRequest from "../views/ForgetPasswordRequest.vue";
+import Panduan from '../views/Panduan.vue';
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
@@ -132,6 +133,11 @@ const routes: Array<RouteConfig> = [
     path: "/forget",
     name: "Forget",
     component: ForgetPasswordRequest,
+  },
+  {
+    path: "/panduan",
+    name: "Panduan",
+    component: Panduan,
   },
 
 ];

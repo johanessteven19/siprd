@@ -18,7 +18,7 @@
           <router-link class="link" :to="{ name: 'AccountList' }">Daftar Akun</router-link>
         </li>
         <li>
-          <router-link class="link" :to="{ name: 'Success' }">Panduan</router-link>
+          <router-link class="link" :to="{ name: 'Panduan' }">Panduan</router-link>
         </li>
 
         <li @mouseover="profileList = true" @mouseleave="profileList = false">
