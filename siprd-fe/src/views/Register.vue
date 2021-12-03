@@ -1,9 +1,9 @@
 <template>
-  <v-container style="margin-top: 2rem; width: 60%; padding: 80px 0">
+  <v-container style="margin: auto; width: 60%; padding: 70px 0">
     <validation-observer ref="observer" v-slot="{ invalid }">
       <h2>Buat Akun Baru</h2>
       <br />
-      <v-form @submit.prevent="checkForm" ref="form" v-model="valid" lazy-validation>
+      <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
         <v-row>
           <v-col md="5">
             <div v-if="google_signed != null">
@@ -18,7 +18,7 @@
             <div v-else>
               <validation-provider
                 v-slot="{ errors }"
-                name="Email"
+                name="email"
                 rules="required|email"
               >
                 <v-text-field
@@ -33,7 +33,7 @@
 
             <validation-provider
               v-slot="{ errors }"
-              name="Username"
+              name="username"
               rules="required"
             >
               <v-text-field
@@ -46,30 +46,35 @@
             </validation-provider>
 
             <validation-provider
-              name="Universitas"
+              v-slot="{ errors }"
+              name="university"
+              rules="required"
             >
               <v-text-field
                 v-model="university"
-                label="Universitas"
+                :error-messages="errors"
+                label="Universitas*"
+                required
               >
               </v-text-field>
             </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="Bidang Keahlian">
+            <validation-provider v-slot="{ errors }" name="fieldOfStudy">
               <v-text-field
                 v-model="fieldOfStudy"
                 :error-messages="errors"
                 label="Bidang Keahlian"
+                required
               >
               </v-text-field>
             </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="Jabatan" rules="required">
+            <validation-provider v-slot="{ errors }" name="position">
               <v-select
                 v-model="position"
                 :items="posSelect"
                 :error-messages="errors"
-                label="Jabatan*"
+                label="Jabatan"
                 data-vv-name="select"
                 required
               >
@@ -78,23 +83,34 @@
           </v-col>
 
           <v-col md="5" class="ml-auto">
+            <div v-if="google_signed != null">
+              <v-text-field
+                :value="full_name"
+                label="Nama lengkap (Filled)"
+                filled
+                readonly
+              >
+              </v-text-field>
+            </div>
+            <div v-else>
               <validation-provider
                 v-slot="{ errors }"
-                name="Nama Lengkap"
+                name="fullname"
                 rules="required"
               >
                 <v-text-field
-                  v-model="fullName"
+                  v-model="full_name"
                   :error-messages="errors"
                   label="Nama Lengkap*"
                   required
                 >
                 </v-text-field>
               </validation-provider>
+            </div>
 
             <validation-provider
               v-slot="{ errors }"
-              name="Password"
+              name="password"
               rules="required"
             >
               <v-text-field
@@ -107,19 +123,19 @@
               </v-text-field>
             </validation-provider>
 
-            <validation-provider v-slot="{ errors }" name="NIP" rules="numeric">
+            <validation-provider v-slot="{ errors }" name="nip">
               <v-text-field
                 v-model="nip"
                 :error-messages="errors"
                 label="NIP"
-                numeric
+                required
               >
               </v-text-field>
             </validation-provider>
 
             <validation-provider
               v-slot="{ errors }"
-              name="Role"
+              name="role"
               rules="required"
             >
               <v-select
@@ -144,7 +160,6 @@
               type="submit"
               color="#8D38E3"
               width="100%"
-              v-on:click="submitForm"
             >
               Daftar
             </v-btn>
@@ -162,7 +177,7 @@
                 :onSuccess="onSuccess"
                 :onFailure="onFailure"
               >
-                &nbsp; Daftar dengan Google
+                &nbsp; Masuk dengan Google
               </GoogleLogin>
             </v-btn>
           </v-col>
@@ -175,36 +190,32 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import axios from 'axios';
-import { required, email, numeric } from 'vee-validate/dist/rules';
+import Vue from "vue";
+import axios from "axios";
+import { required, email } from "vee-validate/dist/rules";
 import {
   extend,
   ValidationObserver,
   ValidationProvider,
   setInteractionMode,
-} from 'vee-validate';
-import GoogleLogin from 'vue-google-login';
+} from "vee-validate";
+import GoogleLogin from "vue-google-login";
 
-setInteractionMode('eager');
+setInteractionMode("eager");
 
-extend('required', {
+extend("required", {
   ...required,
-  message: '{_field_} tidak boleh kosong',
+  message: "{_field_} can not be empty",
 });
 
-extend('email', {
+extend("email", {
   ...email,
-  message: 'Pastikan Email anda benar',
-});
-
-extend('numeric', {
-  ...numeric,
-  message: '{_field_} hanya berupa angka.',
+  message: "Email must be valid",
 });
 export default {
-  name: 'Register',
+  name: "Register",
   components: {
+    // UserPanel,
     ValidationProvider,
     ValidationObserver,
     GoogleLogin,
@@ -221,17 +232,17 @@ export default {
       fieldOfStudy: null,
       position: null,
       posSelect: [
-        'Asisten Ahli',
-        'Lektor',
-        'Lektor Kepala',
-        'Guru Besar/Professor',
+        "Asisten Ahli",
+        "Lektor",
+        "Lektor Kepala",
+        "Guru Besar/Professor",
       ],
       role: null,
-      roleSelect: ['Dosen', 'Reviewer', 'SDM PT', 'Admin'],
+      roleSelect: ["Dosen", "Reviewer", "SDM PT", "Admin"],
       user: {},
       params: {
         client_id:
-          '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com',
+          "7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com",
       },
       renderParams: {
         width: 357,
@@ -246,7 +257,7 @@ export default {
         username: this.username,
         email: this.email,
         password: this.password,
-        full_name: this.fullName,
+        full_name: this.full_name,
         university: this.university,
         nip: this.nip,
         field_of_study: this.fieldOfStudy,
@@ -254,35 +265,35 @@ export default {
         role: this.role,
       };
       Vue.axios
-        .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/register`, data)
+        .post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/register", data)
         .then((res) => {
           if (res.status === 201) {
-            console.log('YES');
-            this.$router.push('/welcome');
+            alert("Akun berhasil dibuat.");
+            console.log("YES");
+            this.$router.push("/welcome");
           } else {
-            alert('Gagal');
+            alert("Gagal");
           }
         })
         .catch((err) => {
           // TODO: Make this output more user-friendly!!!
           // Clean string up with a function?
           console.log(err.response);
-          let errResponseData = '';
-          errResponseData = err.response.data;
-          const responseErrors = JSON.stringify(errResponseData);
+          var responseErrors = JSON.stringify(err.response.data);
           console.log(responseErrors);
-          const errMsg = `Register gagal, errors: ${responseErrors}`;
+          var errMsg = "Login gagal, errors: " + responseErrors;
           alert(errMsg);
         });
     },
 
-    checkForm() {
+    checkForm: function (e) {
       this.$refs.observer.validate();
-      // this.submitForm();
+      this.submitForm();
+      return;
     },
 
-    loginRedir() {
-      this.$router.push('/login');
+    loginRedir: function (e) {
+      this.$router.push("/login");
     },
 
     onSuccess(googleUser) {
@@ -290,26 +301,26 @@ export default {
 
       // This only gets the user information: id, name, imageUrl and email
       console.log(googleUser.getBasicProfile());
-      this.google_signed = 'true';
-      this.fullName = googleUser.getBasicProfile().getName();
+      this.google_signed = "true";
+      this.full_name = googleUser.getBasicProfile().getName();
       this.email = googleUser.getBasicProfile().getEmail();
     },
     onGoogleSignInSuccess(resp) {
       const token = resp.Zi.access_token;
       axios
-        .post(`${process.env.VUE_APP_BACKEND_URL || ''}/auth/google/`, {
+        .post(( process.env.VUE_APP_BACKEND_URL || "" )+"/auth/google/", {
           access_token: token,
         })
-        .then((res) => {
-          this.user = res.data.user;
+        .then((resp) => {
+          this.user = resp.data.user;
         })
         .catch((err) => {
           console.log(err.response);
         });
     },
     onGoogleSignInError(error) {
-      console.log('OH NOES', error);
-      alert('Maaf, layanan Google tidak dapat dihubungi.');
+      console.log("OH NOES", error);
+      alert("Maaf, layanan Google tidak dapat dihubungi.");
     },
     isEmpty(obj) {
       return Object.keys(obj).length === 0;
@@ -317,8 +328,8 @@ export default {
   },
 
   beforeMount() {
-    console.log('test');
-    Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/register`).then((res) => {
+    console.log("test");
+    Vue.axios.post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/register").then((res) => {
       this.register = res.data;
       console.log(res);
     });

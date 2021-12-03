@@ -1,32 +1,33 @@
 <template>
   <v-container style="margin: auto; width: 60%; padding: 70px 0">
-    <h1>Reset password for username: {{ $route.params.username }}</h1>
+    <h1>Lupa Kata Sandi</h1>
     <validation-observer ref="observer" v-slot="{ invalid }">
       <v-form @submit.prevent="checkForm" ref="form" v-model="valid">
         <v-row>
           <validation-provider
             v-slot="{ errors }"
-            name="password"
+            name="Kata Sandi"
             rules="required"
           >
             <v-text-field
               v-model="password"
               :error-messages="errors"
-              label="Password*"
+              label="Kata Sandi"
               type="password"
               required
             >
             </v-text-field>
+             <br />
           </validation-provider>
           <validation-provider
             v-slot="{ errors }"
-            name="re-password"
+            name="Konfirmasi Kata sandi"
             rules="required"
           >
             <v-text-field
               v-model="confirmPassword"
               :error-messages="errors"
-              label="confirmPassword*"
+              label="Konfirmasi Kata sandi"
               type="password"
               required
             >
@@ -88,11 +89,10 @@ export default {
       axios.patch(`${process.env.VUE_APP_BACKEND_URL || ''}/api/password-reset-complete`, data).then(
         (res) => {
           if (res.status === 200) {
-            alert('pergantian password berhasil');
-            this.$router.push('/your-account');
+            this.$router.push('/reset-success');
           } else {
             alert('terjadi kesalahan pada server');
-            this.$router.push('/');
+            this.$router.go();
           }
         },
       );

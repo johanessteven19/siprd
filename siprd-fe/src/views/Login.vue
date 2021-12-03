@@ -40,7 +40,9 @@
             :rules="passRules"
             required
           ></v-text-field>
-
+            <p style="margin-top: 20px" class="register">
+          <span> <a href="/forget">Lupa Kata Sandi?</a></span>
+        </p>
           <div
             style="margin-top: 10px"
             v-if="password === '' || username === ''"
