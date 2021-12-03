@@ -22,8 +22,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 import logging
-import io
-from io import BytesIO, StringIO
+from io import BytesIO
 import xlsxwriter
 import openpyxl
 from decimal import Decimal
@@ -1348,7 +1347,6 @@ class DownloadReviewForm(APIView):
         workbook.close()
 
         output.seek(0)
-        # xlsx_data = output.getvalue()
 
         logger.info("serving download...")
 
@@ -1363,6 +1361,7 @@ class DownloadReviewForm(APIView):
 ## Handles uploading the download review form functionality
 ## Will read the filled data from the .xlsx file
 ## Will create a Review object filled with the provided data
+## UPLOADED EXCEL FILE NEEDS KEY: "excel_file"
 class UploadReviewForm(APIView):
 
     def post(self, request):
@@ -1374,7 +1373,6 @@ class UploadReviewForm(APIView):
         ws = wb.active
 
         ## Check for filled score_proposer
-        
         cell_1 = ws['F70']
         cell_2 = ws['F71']
         cell_3 = ws['F72']
