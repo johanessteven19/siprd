@@ -1074,7 +1074,7 @@ class DownloadReviewForm(APIView):
 
         worksheet1.set_row(45, 30, merge_format)
         worksheet1.merge_range('A46:G46', '', merge_format_justified_content)
-        worksheet1.write('A46', 'HKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional', merge_format_justified_content)
+        worksheet1.write('A46', 'HAKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional', merge_format_justified_content)
 
         worksheet1.write('A47', '28', merge_format_number)
         worksheet1.merge_range('B47:F47', '', merge_format_justified_content)
@@ -1177,12 +1177,12 @@ class DownloadReviewForm(APIView):
         ## CONDITIONAL BASED ON CHOSEN CATEGORY ##
 
         ### Lists of categories based on max nilai:
-        list_60 = ["""HKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional - 
+        list_60 = ["""HAKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional - 
         Internasional (paling sedikit diakui oleh 4 negara)"""]
 
         list_40 = ["Buku referensi", 
         "Jurnal internasional bereputasi (terindeks pada database internasional bereputasi dan berfaktor", 
-        "HKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional - Nasional"]
+        "HAKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional - Nasional"]
 
         list_30 = ["Jurnal internasional terindeks pada basis data internasional bereputasi", 
         "Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional terindeks pada Scimagojr dan Scopus"]
@@ -1194,7 +1194,7 @@ class DownloadReviewForm(APIView):
         "Jurnal internasional terindeks pada basis data non bereputasi", 
         """Jurnal nasional berbahasa Inggris atau bahasa resmi (PBB) terindeks pada basis data yang diakui Kemenristekdikti, 
         contoh: CABI atau Index Copernicus International (ICI)""", 
-        """HKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional - 
+        """HAKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional - 
         Nasional, dalam bentuk paten sederhana yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham""", 
         """Membuat rancangan dan karya teknologi yang tidak dipatenkan; rancangan dan karya seni monumental yang tidak terdaftar di HAKI tetapi 
         telah dipresentasikan pada forum yang teragenda - Internasional"""]
@@ -1204,7 +1204,7 @@ class DownloadReviewForm(APIView):
         "Direpresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional", 
         """Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya, tetapi dimuat dalam prosiding - 
         Menerjemahkan/menyadur buku ilmiah, diterbitkan dan diedarkan secara nasional""", 
-        """HKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional - 
+        """HAKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI secara nasional atau internasional - 
         Karya ciptaan desain industri, indikasi geografis yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham 
         (termasuk kategori ini: Buku/Modul Ajar")""", 
         """Membuat rancangan dan karya teknologi yang tidak dipatenkan; rancangan dan karya seni monumental yang tidak terdaftar di HAKI 
