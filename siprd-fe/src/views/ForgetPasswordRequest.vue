@@ -34,6 +34,7 @@
         </v-row>
       </v-form>
     </validation-observer>
+    <p>Ingat Kata Sandi <a href="/login">Masuk</a></p>
   </v-container>
 </template>
 
@@ -61,6 +62,18 @@ export default {
   },
   methods: {
     submitForm() {
+      if (!this.username) {
+        this.errors.push('Username required.');
+      }
+      console.log(this.errors);
+      if (this.errors.length) {
+        let message = '';
+        for (let i = 0; i < this.errors.length; i++) {
+          message += `${this.errors[i]} `;
+        }
+        alert(message);
+        return;
+      }
       const data = {
         username: this.username,
       };
@@ -68,8 +81,19 @@ export default {
       axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/request-reset-email/`, data).then(
         (res) => {
           console.log(res.data);
+          this.$router.push('/forget-success');
         },
-      );
+      ).catch((err) => {
+        // NOTE: Do not make this more specific, for security reasons.
+        console.log(err.response);
+        if (typeof err.response !== 'undefined') {
+          // Backend accessible, but credentials incorrect
+          alert('Username tidak ditemukan.');
+        } else {
+          // Backend inaccessible (no response)
+          alert('Maaf, server SIPEERKI tidak dapat dihubungi.');
+        }
+      });
     },
     checkForm() {
       this.$refs.observer.validate();
