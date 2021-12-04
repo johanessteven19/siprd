@@ -469,7 +469,7 @@ class ManageKarilReview(APIView):
                 print(review_id)
                 karil_reviews = KaryaIlmiahSerializer(karil).data['reviews']
                 karil_reviews.append(review_id)
-                karil_serializer = KaryaIlmiahSerializer(karil, data={'reviews': karil_reviews}, partial=True)
+                karil_serializer = KaryaIlmiahSerializer(karil, data={'reviews': karil_reviews, 'status': 'Done'}, partial=True)
                 karil_serializer.is_valid(raise_exception=True)
                 karil_serializer.save()
 
@@ -514,6 +514,14 @@ class GetAssignedKarils(APIView):
         user_data = get_user_data(request)
         try:
             karils = KaryaIlmiah.objects.all().filter(reviewers__username = user_data['username'])
+        except KaryaIlmiah.DoesNotExist:
+            return Response({'message': 'This review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = KaryaIlmiahSerializer(karils, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        try:
+            karils = KaryaIlmiah.objects.all().filter(reviewers__username = request.data['username'])
         except KaryaIlmiah.DoesNotExist:
             return Response({'message': 'This review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
         serializer = KaryaIlmiahSerializer(karils, many=True)
