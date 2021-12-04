@@ -269,7 +269,6 @@ export default {
       const doc = new JsPDF({ putOnlyUsedFonts: true, orientation: 'landscape' });
       const label = [
         'no',
-        'karil_id',
         'pemilik',
         'judul',
         'journal_data',
@@ -285,14 +284,24 @@ export default {
           id: i,
           name: i,
           prompt: i,
-          width: 65,
+          width: 80,
           align: 'center',
           padding: 0,
         });
       });
-      this.karilList.forEach((j, n) => {
+      let numb = 1;
+      this.karilList.forEach((j) => {
         if (j.status.includes('Done')) {
-          doneData.push({ ...j, ...{ no: n + 1 } });
+          doneData.push({
+            no: String(numb++),
+            pemilik: j.pemilik,
+            judul: j.judul,
+            journal_data: j.journal_data,
+            link_repo: j.link_repo,
+            indexer: j.indexer,
+            link_simcheck: j.link_simcheck,
+            reviewers: j.reviewers,
+          });
         }
       });
       console.log(doneData);
