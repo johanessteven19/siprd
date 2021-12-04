@@ -11,10 +11,7 @@
             width="48px"
           />
         </div>
-        <h1 class="text-center">Token Error</h1>
-        <p class="text-center">
-         Silahkan kembali lagi untuk mengulang proses mengatur ulang kata sandi.
-        </p>
+        <h1 class="text-center"> Anda berhasil mengubah kata sandi.</h1>
         <div class="txt-xs-center">
           <v-btn
             class="ml-auto white--text"
@@ -22,23 +19,25 @@
             width="100%"
             @click.stop="proceed()"
           >
-            Kembali ke SIPEERKI
+            Masuk ke SIPEERKI
           </v-btn>
         </div>
       </v-layout>
     </v-row>
   </v-container>
 </template>
+
 <script>
 import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-// import Vuetify from "vuetify";
+import Vuetify from 'vuetify';
 
 Vue.use(VueAxios, axios);
+Vue.use(Vuetify);
 
 export default {
-  name: 'TokenError',
+  name: 'ForgetPasswordSuccess',
   data() {
     return null;
   },

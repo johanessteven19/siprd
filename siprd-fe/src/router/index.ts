@@ -20,6 +20,10 @@ import KarilList from '../views/KarilList.vue';
 import ViewKaril from '../views/ViewKaril.vue';
 import AddKarilReview from '../views/AddKarilReview.vue';
 import ForgetPasswordRequest from "../views/ForgetPasswordRequest.vue";
+import ForgetPasswordRequestSuccess from "../views/ForgetPasswordRequestSuccess.vue"
+import ResetPassword from "../views/ResetPassword.vue";
+import ForgetPasswordSuccess from "../views/ForgetPasswordSuccess.vue";
+import TokenError from "../views/TokenError.vue";
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
@@ -133,6 +137,27 @@ const routes: Array<RouteConfig> = [
     name: "Forget",
     component: ForgetPasswordRequest,
   },
+  {
+    path: "/forget-success",
+    name: "ForgetPasswordRequestSuccess",
+    component: ForgetPasswordRequestSuccess,
+  }, 
+  {
+    path: "/reset-password/:token/:uidb",
+    name: "ResetPassword",
+    component: ResetPassword,
+  },
+  {
+    path: "/reset-success",
+    name: "ForgetPasswordSuccess",
+    component: ForgetPasswordSuccess,
+  },
+  {
+    path: "/token-error",
+    name: "TokenError",
+    component: TokenError,
+  },
+
 
 ];
 

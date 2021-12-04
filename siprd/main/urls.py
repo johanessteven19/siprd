@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView
 )
 
-from .views import RequestPasswordResetEmail, PasswordTokenCheckAPI, SetNewPasswordAPIView
+# from .views import RequestPasswordResetEmail, PasswordTokenCheckAPI, SetNewPasswordAPIView
 
 app_name = "main"
 
@@ -40,9 +40,9 @@ urlpatterns = [
     path("api/approve-user/", views.ApproveUsers.as_view()),
     
     # Reset password endpoints
-    path('api/request-reset-email/', RequestPasswordResetEmail.as_view(), name="request-reset-email"),
-    path('api/password-reset/<uidb64>/<token>/<username>', PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
-    path('api/password-reset-complete', SetNewPasswordAPIView.as_view(), name='password-reset-complete'),
+    path('api/request-reset-email/', views.RequestPasswordResetEmail.as_view(), name="request-reset-email"),
+    path('api/password-reset/<uidb64>/<token>', views.PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
+    path('api/password-reset-complete', views.SetNewPasswordAPIView.as_view(), name='password-reset-complete'),
 
     # NOTE: Grants users a Refresh-Access token pair.
     # Input: JSON file containing username and password
