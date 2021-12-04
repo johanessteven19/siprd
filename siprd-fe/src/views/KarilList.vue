@@ -237,8 +237,9 @@ export default {
       username: null,
       ownerName: '',
       // Who's using it?
-      // Admin/Others: 0
+      // Admin/SDMPT: 0
       // Reviewer: 1
+      // Dosen: 2
       profile: '',
     };
   },
@@ -323,6 +324,8 @@ export default {
           if (res.data.role === 'Reviewer') {
             console.log('First result get!');
             this.profile = 1;
+          } else if (res.data.role === 'Dosen') {
+            this.profile = 2;
           } else {
             this.profile = 0;
           }
@@ -336,6 +339,20 @@ export default {
             console.log('Reviewer get success!');
             console.log(res.data);
             this.karilList = res.data;
+          } else {
+            this.$router.push('/');
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+      } else if (this.profile === 2) {
+        Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-karil-summary/`, config).then((res) => {
+          if (res.status === 200) {
+            console.log('Dosen get success!');
+            console.log(res.data);
+            this.karilList = res.data;
+          } else if (res.status === 204) {
+            this.karilList = [];
           } else {
             this.$router.push('/');
           }
