@@ -4,7 +4,7 @@
       <v-layout column align-center justify-center>
         <div style="padding-left: 320px">
           <v-img
-            :src="require('@/assets/asterisk.svg')" 
+            :src="require('@/assets/asterisk.svg')"
             class="asterisk"
             contain
             height="48px"
@@ -13,7 +13,7 @@
         </div>
         <h1 class="text-center">Lupa Kata Sandi</h1>
         <p class="text-center">
-          Kami sudah mengirim verifikasi ke email Anda. 
+          Kami sudah mengirim verifikasi ke email Anda.
           <br />Silahkan periksa email Anda untuk mengatur ulang kata sandi.
         </p>
         <div class="txt-xs-center">

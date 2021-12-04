@@ -190,30 +190,30 @@
 </template>
 
 <script>
-import Vue from "vue";
-import axios from "axios";
-import { required, email } from "vee-validate/dist/rules";
+import Vue from 'vue';
+import axios from 'axios';
+import { required, email } from 'vee-validate/dist/rules';
 import {
   extend,
   ValidationObserver,
   ValidationProvider,
   setInteractionMode,
-} from "vee-validate";
-import GoogleLogin from "vue-google-login";
+} from 'vee-validate';
+import GoogleLogin from 'vue-google-login';
 
-setInteractionMode("eager");
+setInteractionMode('eager');
 
-extend("required", {
+extend('required', {
   ...required,
-  message: "{_field_} can not be empty",
+  message: '{_field_} can not be empty',
 });
 
-extend("email", {
+extend('email', {
   ...email,
-  message: "Email must be valid",
+  message: 'Email must be valid',
 });
 export default {
-  name: "Register",
+  name: 'Register',
   components: {
     // UserPanel,
     ValidationProvider,
@@ -232,17 +232,17 @@ export default {
       fieldOfStudy: null,
       position: null,
       posSelect: [
-        "Asisten Ahli",
-        "Lektor",
-        "Lektor Kepala",
-        "Guru Besar/Professor",
+        'Asisten Ahli',
+        'Lektor',
+        'Lektor Kepala',
+        'Guru Besar/Professor',
       ],
       role: null,
-      roleSelect: ["Dosen", "Reviewer", "SDM PT", "Admin"],
+      roleSelect: ['Dosen', 'Reviewer', 'SDM PT', 'Admin'],
       user: {},
       params: {
         client_id:
-          "7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com",
+          '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com',
       },
       renderParams: {
         width: 357,
@@ -265,35 +265,34 @@ export default {
         role: this.role,
       };
       Vue.axios
-        .post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/register", data)
+        .post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/register`, data)
         .then((res) => {
           if (res.status === 201) {
-            alert("Akun berhasil dibuat.");
-            console.log("YES");
-            this.$router.push("/welcome");
+            alert('Akun berhasil dibuat.');
+            console.log('YES');
+            this.$router.push('/welcome');
           } else {
-            alert("Gagal");
+            alert('Gagal');
           }
         })
         .catch((err) => {
           // TODO: Make this output more user-friendly!!!
           // Clean string up with a function?
           console.log(err.response);
-          var responseErrors = JSON.stringify(err.response.data);
+          const responseErrors = JSON.stringify(err.response.data);
           console.log(responseErrors);
-          var errMsg = "Login gagal, errors: " + responseErrors;
+          const errMsg = `Login gagal, errors: ${responseErrors}`;
           alert(errMsg);
         });
     },
 
-    checkForm: function (e) {
+    checkForm() {
       this.$refs.observer.validate();
       this.submitForm();
-      return;
     },
 
-    loginRedir: function (e) {
-      this.$router.push("/login");
+    loginRedir() {
+      this.$router.push('/login');
     },
 
     onSuccess(googleUser) {
@@ -301,26 +300,26 @@ export default {
 
       // This only gets the user information: id, name, imageUrl and email
       console.log(googleUser.getBasicProfile());
-      this.google_signed = "true";
+      this.google_signed = 'true';
       this.full_name = googleUser.getBasicProfile().getName();
       this.email = googleUser.getBasicProfile().getEmail();
     },
     onGoogleSignInSuccess(resp) {
       const token = resp.Zi.access_token;
       axios
-        .post(( process.env.VUE_APP_BACKEND_URL || "" )+"/auth/google/", {
+        .post(`${process.env.VUE_APP_BACKEND_URL || ''}/auth/google/`, {
           access_token: token,
         })
-        .then((resp) => {
-          this.user = resp.data.user;
+        .then((res) => {
+          this.user = res.data.user;
         })
         .catch((err) => {
           console.log(err.response);
         });
     },
     onGoogleSignInError(error) {
-      console.log("OH NOES", error);
-      alert("Maaf, layanan Google tidak dapat dihubungi.");
+      console.log('OH NOES', error);
+      alert('Maaf, layanan Google tidak dapat dihubungi.');
     },
     isEmpty(obj) {
       return Object.keys(obj).length === 0;
@@ -328,8 +327,8 @@ export default {
   },
 
   beforeMount() {
-    console.log("test");
-    Vue.axios.post(( process.env.VUE_APP_BACKEND_URL || "" )+"/api/register").then((res) => {
+    console.log('test');
+    Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}/api/register`).then((res) => {
       this.register = res.data;
       console.log(res);
     });

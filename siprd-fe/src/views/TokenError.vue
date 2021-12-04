@@ -4,7 +4,7 @@
       <v-layout column align-center justify-center>
         <div style="padding-left: 320px">
           <v-img
-            :src="require('@/assets/asterisk.svg')" 
+            :src="require('@/assets/asterisk.svg')"
             class="asterisk"
             contain
             height="48px"
