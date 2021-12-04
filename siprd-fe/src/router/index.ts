@@ -20,10 +20,13 @@ import KarilList from '../views/KarilList.vue';
 import ViewKaril from '../views/ViewKaril.vue';
 import AddKarilReview from '../views/AddKarilReview.vue';
 import ForgetPasswordRequest from "../views/ForgetPasswordRequest.vue";
+<<<<<<< HEAD
 import ForgetPasswordRequestSuccess from "../views/ForgetPasswordRequestSuccess.vue"
 import ResetPassword from "../views/ResetPassword.vue";
 import ForgetPasswordSuccess from "../views/ForgetPasswordSuccess.vue";
 import TokenError from "../views/TokenError.vue";
+=======
+>>>>>>> a459223f754d5b4de1a108ede1010327291bff60
 import Panduan from '../views/Panduan.vue';
 
 Vue.use(VueRouter);
