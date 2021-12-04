@@ -267,6 +267,7 @@ export default {
       this.$router.go();
     },
     donePDF() {
+      console.log('Creating PDF!');
       const doc = new JsPDF({ putOnlyUsedFonts: true, orientation: 'landscape' });
       const label = [
         'no',
@@ -306,8 +307,12 @@ export default {
         }
       });
       console.log(doneData);
+      console.log(headers);
+      console.log('Creating Table..');
       doc.table(1, 1, doneData, headers, { autoSize: true });
+      console.log('Saving PDF..');
       doc.save('DoneKarils.pdf');
+      console.log('PDF Created!');
     },
   },
   async beforeMount() {
