@@ -30,6 +30,7 @@
               class="ml-auto white--text"
               color="#8D38E3"
               width="80%"
+              v-on:click="karilList()"
             >
               Daftar Karya Ilmiah
             </v-btn>
