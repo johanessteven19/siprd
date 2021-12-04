@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="position: fixed; top: 0;">
+    <div style="position: fixed; top: 0; z-index: 100">
     <Navigation />
     </div>
     <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">

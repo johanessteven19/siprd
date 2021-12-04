@@ -147,7 +147,7 @@ export default {
 <style lang="scss" scoped>
 header {
   // background-color: rgba(0, 0, 0, 0.8);
-  z-index: 9999;
+  z-index: 999;
   width: 100%;
   position: fixed;
   transition: 0.5s ease all;
