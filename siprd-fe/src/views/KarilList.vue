@@ -95,6 +95,21 @@
           > Semua
           </v-btn>
         </v-col>
+        <template v-if="tab === 2">
+          <v-col md="2"></v-col>
+          <v-col
+          md="2">
+            <v-btn
+            color="primary"
+            width="100%"
+            v-on:click="donePDF">
+              <v-icon>
+                mdi-download
+              </v-icon>
+              Download to PDF
+            </v-btn>
+          </v-col>
+        </template>
       </v-row>
       <br>
       <v-data-table
@@ -160,6 +175,7 @@ import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import Vuetify from 'vuetify';
+import { jsPDF as JsPDF } from 'jspdf';
 import Navigation from '../components/Navigation.vue';
 
 Vue.use(Vuetify);
@@ -248,6 +264,40 @@ export default {
     reviewerKarils(reviewer) {
       this.$router.push(`/karil-list?reviewer=${reviewer}`);
       this.$router.go();
+    },
+    donePDF() {
+      const doc = new JsPDF({ putOnlyUsedFonts: true, orientation: 'landscape' });
+      const label = [
+        'no',
+        'karil_id',
+        'pemilik',
+        'judul',
+        'journal_data',
+        'link_repo',
+        'indexer',
+        'link_simcheck',
+        'reviewers',
+      ];
+      const headers = [];
+      const doneData = [];
+      label.forEach((i) => {
+        headers.push({
+          id: i,
+          name: i,
+          prompt: i,
+          width: 65,
+          align: 'center',
+          padding: 0,
+        });
+      });
+      this.karilList.forEach((j, n) => {
+        if (j.status.includes('Done')) {
+          doneData.push({ ...j, ...{ no: n + 1 } });
+        }
+      });
+      console.log(doneData);
+      doc.table(1, 1, doneData, headers, { autoSize: true });
+      doc.save('DoneKarils.pdf');
     },
   },
   async beforeMount() {
