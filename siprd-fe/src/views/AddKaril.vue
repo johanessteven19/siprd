@@ -307,6 +307,7 @@ export default {
             {
               id: 'Jurnal internasional bereputasi (terindeks pada database internasional bereputasi dan berfaktor dampak)',
               label: 'Bereputasi (terindeks pada database internasional bereputasi dan berfaktor dampak)',
+              customLabel: 'Bereputasi (terindeks pada database internasional bereputasi dan berfaktor dampak)',
             },
             {
               id: 'Terindex',
