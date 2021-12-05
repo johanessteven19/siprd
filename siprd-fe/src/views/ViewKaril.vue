@@ -403,7 +403,7 @@
                   </v-row>
                   <v-row style="margin-top: 1rem;margin-bottom: 1rem" row-gap="3px">
                       <v-col cols="6" align="right">
-                          {{ (reviewData.chosen_proposer !== null ?
+                          {{ (reviewData.chosen_proposer === null ?
                             'Nilai Pengusul' : reviewData.chosen_proposer ) }}
                       </v-col>
                       <v-col md="4" cols="8">
