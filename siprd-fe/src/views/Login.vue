@@ -40,7 +40,9 @@
             :rules="passRules"
             required
           ></v-text-field>
-
+            <p style="margin-top: 20px" class="register">
+          <span> <a href="/forget">Lupa Kata Sandi?</a></span>
+        </p>
           <div
             style="margin-top: 10px"
             v-if="password === '' || username === ''"
@@ -158,7 +160,7 @@ export default {
       passRules: [(v) => !!v || 'Kata sandi tidak sesuai'],
       params: {
         client_id:
-          '7984133184-8qrtflgutpulc7lsb5ml0amv8u58qdu3.apps.googleusercontent.com',
+          `${process.env.VUE_APP_CLIENT_ID}`,
       },
       renderParams: {
         width: 460,

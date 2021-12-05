@@ -198,7 +198,94 @@
               justify="center">
                 <v-row align="center" justify="center" row-gap="3px">
                     <v-col md="5" align="center">
-                        <h1>Hasil Penilaian Peer Review</h1>
+                        <h1>Hasil Penilaian Peer Review
+                          <v-tooltip bottom
+                          outlined
+                          color="#F5F5F5"
+                          content-class="black--text">
+                            <template v-slot:activator="{ on, attrs }">
+                              <v-icon
+                                color="grey"
+                                dark
+                                v-bind="attrs"
+                                v-on="on"
+                              >
+                                mdi-information
+                              </v-icon>
+                            </template>
+                            <strong>
+                              Petunjuk Pengisian Kolom Uraian untuk Penilaian Peer Review<br>
+                              1. Kelengkapan dan Kesesuaian Unsur Publikasi (10%)
+                            </strong>
+                            <ol type="a">
+                              <li>
+                                Kelengkapan: Sistematika sesuai penulisan Intruction for Authors
+                              </li>
+                              <li>
+                                Kesesuaian: Ada tidak benang merah antara TITLE dengan IMRaDC
+                              </li>
+                            </ol>
+                            <strong>
+                              Ruang lingkup,  kedalaman pembahasan, keterbaruan (30%)
+                            </strong>
+                            <ol type="a">
+                              <li>
+                                Ruang Lingkup: Kesesuaian Bidang Ilmu Penulis
+                              </li>
+                              <li>
+                                Kedalaman: % (persentase) yang dilibatkan dalam proses membahas
+                              </li>
+                              <li>
+                                Keterbaruan: Keterbaruan artikel yang dibahas
+                              </li>
+                            </ol>
+                            <strong>
+                              Kecukupan dan kemutakhiran data/informasi dan metodologi (30%)
+                            </strong>
+                            <ol type="a">
+                              <li>
+                                Kecukupan/Kemuktahiran: Tinjauan Pustaka Primer dan masa
+                                 (misalnya 5 - 10 tahun terakhir)
+                              </li>
+                              <li>
+                                Metodology: Adakah unsur novelty (inovasi dan invensi)
+                              </li>
+                            </ol>
+                            <strong>
+                              Kelengkapan unsur dan kualitas penerbit,  hasil dan manfaat(30%)
+                            </strong>
+                            <ol type="a">
+                              <li>
+                                Cek Online Artikel: ada/tidak
+                              </li>
+                              <li>
+                                Cek Kebenaran ISSN/ISBN
+                              </li>
+                              <li>
+                                Cek Apakah termasuk "Predatory"/tidak (baik jurnal maupun penerbit)
+                              </li>
+                              <li>
+                                Cek Konsistensi penulisan antara "Instruction for Author"
+                                 dengan fakta artikel
+                              </li>
+                              <li>
+                                Cek Kategori Nasional atau Internasional
+                              </li>
+                              <li>
+                                Cek Indexing Jurnal
+                              </li>
+                              <li>
+                                Cek syarat komposisi "Editor Board"
+                              </li>
+                              <li>
+                                Cek syarat kontributor penulis artikel
+                              </li>
+                              <li>
+                                Cek keberkalaan penerbitan
+                              </li>
+                            </ol>
+                          </v-tooltip>
+                        </h1>
                     </v-col>
                 </v-row>
                 <v-row>

@@ -30,7 +30,11 @@
               class="ml-auto white--text"
               color="#8D38E3"
               width="80%"
+<<<<<<< HEAD
               v-on:click="karilList"
+=======
+              v-on:click="karilList()"
+>>>>>>> a138361e5759003268b81f62240cf6cd36545fe6
             >
               Daftar Karya Ilmiah
             </v-btn>
@@ -384,7 +388,7 @@ export default {
       Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-karil-summary/`, config).then((res) => {
         console.log(res.data);
         if (res.status === 200) {
-          this.karils = res.data;
+          this.karils = res.data.reverse();
           let asum = 0;
           let rsum = 0;
           let dsum = 0;

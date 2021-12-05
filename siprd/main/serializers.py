@@ -51,7 +51,7 @@ class ResetPasswordEmailRequestSerializer(serializers.Serializer):
 
 class SetNewPasswordSerializer(serializers.Serializer):
     password = serializers.CharField(
-        min_length=6, max_length=68, write_only=True)
+        min_length=1, max_length=68, write_only=True)
     token = serializers.CharField(
         min_length=1, write_only=True)
     uidb64 = serializers.CharField(
@@ -67,7 +67,7 @@ class SetNewPasswordSerializer(serializers.Serializer):
             uidb64 = attrs.get('uidb64')
 
             id = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=id)
+            user = User.objects.filter(username=id).first()
             if not PasswordResetTokenGenerator().check_token(user, token):
                 raise AuthenticationFailed('The reset link is invalid', 401)
 

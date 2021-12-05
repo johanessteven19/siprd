@@ -95,6 +95,21 @@
           > Semua
           </v-btn>
         </v-col>
+        <template v-if="tab === 2">
+          <v-col md="2"></v-col>
+          <v-col
+          md="2">
+            <v-btn
+            color="primary"
+            width="100%"
+            v-on:click="donePDF">
+              <v-icon>
+                mdi-download
+              </v-icon>
+              Download to PDF
+            </v-btn>
+          </v-col>
+        </template>
       </v-row>
       <br>
       <v-data-table
@@ -160,6 +175,7 @@ import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import Vuetify from 'vuetify';
+import { jsPDF as JsPDF } from 'jspdf';
 import Navigation from '../components/Navigation.vue';
 
 Vue.use(Vuetify);
@@ -221,8 +237,9 @@ export default {
       username: null,
       ownerName: '',
       // Who's using it?
-      // Admin/Others: 0
+      // Admin/SDMPT: 0
       // Reviewer: 1
+      // Dosen: 2
       profile: '',
     };
   },
@@ -249,6 +266,49 @@ export default {
       this.$router.push(`/karil-list?reviewer=${reviewer}`);
       this.$router.go();
     },
+    donePDF() {
+      const doc = new JsPDF({ putOnlyUsedFonts: true, orientation: 'landscape' });
+      const label = [
+        'no',
+        'pemilik',
+        'judul',
+        'journal_data',
+        'link_repo',
+        'indexer',
+        'link_simcheck',
+        'reviewers',
+      ];
+      const headers = [];
+      const doneData = [];
+      label.forEach((i) => {
+        headers.push({
+          id: i,
+          name: i,
+          prompt: i,
+          width: 80,
+          align: 'center',
+          padding: 0,
+        });
+      });
+      let numb = 1;
+      this.karilList.forEach((j) => {
+        if (j.status.includes('Done')) {
+          doneData.push({
+            no: String(numb++),
+            pemilik: j.pemilik,
+            judul: j.judul,
+            journal_data: j.journal_data,
+            link_repo: j.link_repo,
+            indexer: j.indexer,
+            link_simcheck: j.link_simcheck,
+            reviewers: j.reviewers,
+          });
+        }
+      });
+      console.log(doneData);
+      doc.table(1, 1, doneData, headers, { autoSize: true });
+      doc.save('DoneKarils.pdf');
+    },
   },
   async beforeMount() {
     if (localStorage.access) {
@@ -264,6 +324,8 @@ export default {
           if (res.data.role === 'Reviewer') {
             console.log('First result get!');
             this.profile = 1;
+          } else if (res.data.role === 'Dosen') {
+            this.profile = 2;
           } else {
             this.profile = 0;
           }
@@ -277,6 +339,20 @@ export default {
             console.log('Reviewer get success!');
             console.log(res.data);
             this.karilList = res.data;
+          } else {
+            this.$router.push('/');
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
+      } else if (this.profile === 2) {
+        Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-karil-summary/`, config).then((res) => {
+          if (res.status === 200) {
+            console.log('Dosen get success!');
+            console.log(res.data);
+            this.karilList = res.data;
+          } else if (res.status === 204) {
+            this.karilList = [];
           } else {
             this.$router.push('/');
           }
