@@ -296,13 +296,13 @@ export default {
         if (j.status.includes('Done')) {
           doneData.push({
             no: String(numb++),
-            pemilik: j.pemilik,
-            judul: j.judul,
-            journal_data: j.journal_data,
-            link_repo: j.link_repo,
-            indexer: j.indexer,
-            link_simcheck: j.link_simcheck,
-            reviewers: j.reviewers,
+            pemilik: (j.pemilik === null ? '-' : j.pemilik),
+            judul: (j.judul === null ? '-' : j.judul),
+            journal_data: (j.journal_data === null ? '-' : j.journal_data),
+            link_repo: (j.link_repo === null ? '-' : j.link_repo),
+            indexer: (j.indexer === null ? '-' : j.indexer),
+            link_simcheck: (j.link_simcheck === null ? '-' : j.link_simcheck),
+            reviewers: (j.reviewers === null ? '-' : j.reviewers),
           });
         }
       });
