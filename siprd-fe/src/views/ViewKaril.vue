@@ -101,7 +101,6 @@
           <v-row >
               <v-col md="3" class="mr-auto">
                   Dosen : {{ karilData.pemilik }} <br>
-                  Jabatan: {{ karilData.position }} <br>
                   Kenaikan Jabatan: {{ karilData.promotion }}
               </v-col>
           </v-row>
@@ -237,7 +236,7 @@
                   </v-col>
               </v-row>
           </div>
-          <div class="identitas" style="margin-top: 2rem; width: 100%;" justify="center">
+          <div class="identitas" v-if="userData.role !== 'Reviewer'" style="margin-top: 2rem; width: 100%;" justify="center">
             <v-row align="center" justify="center">
               <v-col md="1" align="right">
                 Reviewer
