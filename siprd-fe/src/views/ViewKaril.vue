@@ -363,10 +363,10 @@
                       {{ reviewData.score_4 }}
                     </v-col>
                     <v-col align="center" style="margin-bottom: 1.5rem;">
-                        <strong>{{ reviewData.score_1
-                          + reviewData.score_2
-                          + reviewData.score_3
-                          + reviewData.score_4}}</strong>
+                        <strong>{{ parseInt(reviewData.score_1, 10)
+                          + parseInt(reviewData.score_2, 10)
+                          + parseInt(reviewData.score_3, 10)
+                          + parseInt(reviewData.score_4, 10)}}</strong>
                     </v-col>
                 </v-row>
                 <v-row align="center" justify="center" row-gap="3px">
