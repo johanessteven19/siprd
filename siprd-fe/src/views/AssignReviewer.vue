@@ -14,7 +14,7 @@
               <v-btn
                 class="mr-4 white--text"
                 :disabled="invalid"
-                type="submit"
+                @click="dialog = true"
                 color="success"
                 width="100%"
               > Accept
@@ -214,6 +214,36 @@
                   </v-col>
               </v-row>
           </div>
+          <v-dialog
+          v-model="dialog"
+          persistent
+          max-width="350">
+            <v-card class="mx-auto my-0" max-width="350">
+              <v-card-title class="justify-center text-h5 ">
+                Izin Diperlukan
+              </v-card-title>
+              <v-card-text style="text-align:center">
+                Anda yakin ingin assign reviewer?
+              </v-card-text>
+              <v-card-actions class="justify-center">
+                <v-btn
+                style='z-index:0'
+                text
+                @click="dialog = false"
+                >
+                  Kembali
+                </v-btn>
+                <v-btn
+                color="blue"
+                text
+                type="submit"
+                 @click="checkForm();dialog = false"
+                >
+                  Iya
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-form>
 
       </validation-observer>
@@ -258,6 +288,7 @@ export default {
       status: 'Done',
       karilId: null,
       counter: 0,
+      dialog: false,
       reviewers: [{
         id: 'reviewer0',
         label: 'Nama Reviewer',
@@ -370,3 +401,13 @@ export default {
 
 };
 </script>
+<style scoped>
+  .identitas{
+    background-color: #F9F9F9;
+    border-radius: 25px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  }
+  .v-btn{
+    z-index: 0;
+  }
+</style>
