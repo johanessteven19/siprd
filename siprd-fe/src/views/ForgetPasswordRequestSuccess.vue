@@ -11,9 +11,10 @@
             width="48px"
           />
         </div>
-        <h1 class="text-center">Token Error</h1>
+        <h1 class="text-center">Lupa Kata Sandi</h1>
         <p class="text-center">
-         Silahkan kembali lagi untuk mengulang proses mengatur ulang kata sandi.
+          Kami sudah mengirim verifikasi ke email Anda.
+          <br />Silahkan periksa email Anda untuk mengatur ulang kata sandi.
         </p>
         <div class="txt-xs-center">
           <v-btn
@@ -29,22 +30,24 @@
     </v-row>
   </v-container>
 </template>
+
 <script>
 import Vue from 'vue';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-// import Vuetify from "vuetify";
+import Vuetify from 'vuetify';
 
 Vue.use(VueAxios, axios);
+Vue.use(Vuetify);
 
 export default {
-  name: 'TokenError',
+  name: 'ForgetPasswordSuccess',
   data() {
     return null;
   },
   methods: {
     proceed() {
-      this.$router.push('/login');
+      this.$router.push('/');
     },
   },
 };

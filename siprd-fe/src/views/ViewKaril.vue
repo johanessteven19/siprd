@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="position: fixed; top: 0;">
+    <div style="position: fixed; top: 0; z-index: 100">
       <Navigation />
     </div>
     <v-container style="margin-top: 2rem; width: 100%; padding: 80px 0">
@@ -71,7 +71,7 @@
                   color="purple"
                   v-on:click="editKaril(karilData.karil_id)"
                   width="100%"
-                  > Edit Karya Ilmiah
+                  > <i class="far fa-edit"></i> Edit Karya Ilmiah
                 </v-btn>
               </v-col>
             </template>
@@ -150,7 +150,7 @@
                       color="black"
                       v-on:click="link(karilData.link_origin)"
                       width="100%"
-                    > Link
+                    > <i class="fas fa-link"></i> Link
                     </v-btn>
                   </v-col>
               </v-row>
@@ -166,7 +166,7 @@
                       color="black"
                       v-on:click="link(karilData.link_repo)"
                       width="100%"
-                    > Link
+                    > <i class="fas fa-link"></i>  Link
                     </v-btn>
                   </v-col>
               </v-row>
@@ -182,7 +182,7 @@
                       color="black"
                       v-on:click="link(karilData.link_indexer)"
                       width="100%"
-                    > Link
+                    > <i class="fas fa-link"></i>  Link
                     </v-btn>
                   </v-col>
               </v-row>
@@ -198,7 +198,7 @@
                       color="black"
                       v-on:click="link(karilData.link_simcheck)"
                       width="100%"
-                    > Link
+                    > <i class="fas fa-link"></i> Link
                     </v-btn>
                   </v-col>
               </v-row>
@@ -214,7 +214,7 @@
                       color="black"
                       v-on:click="link(karilData.link_correspondence)"
                       width="100%"
-                    > Link
+                    > <i class="fas fa-link"></i> Link
                     </v-btn>
                   </v-col>
               </v-row>

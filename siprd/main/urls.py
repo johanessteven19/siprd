@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView
 )
 
-from .views import RequestPasswordResetEmail, PasswordTokenCheckAPI, SetNewPasswordAPIView
+# from .views import RequestPasswordResetEmail, PasswordTokenCheckAPI, SetNewPasswordAPIView
 
 app_name = "main"
 
@@ -19,6 +19,9 @@ urlpatterns = [
     path("api/manage-users/", views.ManageUsers.as_view()),
     path("api/manage-karil/", views.ManageKaril.as_view()),
     path("api/download", views.DownloadKaril.as_view()),
+    path("api/download-review-form", views.DownloadReviewForm.as_view()),
+    path("api/upload-review-form", views.UploadReviewForm.as_view()),
+    # path("api/get-all-reviews", views.GetAllReviews.as_view()), --> only for debugging, can be deleted
     path('api/google/', include('rest_social_auth.urls_jwt_pair')),
     path(r'^auth/', include('rest_framework_social_oauth2.urls')),
     path("api/is-user-exists", views.IsUserExist.as_view()),
@@ -40,9 +43,9 @@ urlpatterns = [
     path("api/approve-user/", views.ApproveUsers.as_view()),
     
     # Reset password endpoints
-    path('api/request-reset-email/', RequestPasswordResetEmail.as_view(), name="request-reset-email"),
-    path('api/password-reset/<uidb64>/<token>/<username>', PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
-    path('api/password-reset-complete', SetNewPasswordAPIView.as_view(), name='password-reset-complete'),
+    path('api/request-reset-email/', views.RequestPasswordResetEmail.as_view(), name="request-reset-email"),
+    path('api/password-reset/<uidb64>/<token>', views.PasswordTokenCheckAPI.as_view(), name='password-reset-confirm'),
+    path('api/password-reset-complete', views.SetNewPasswordAPIView.as_view(), name='password-reset-complete'),
 
     # NOTE: Grants users a Refresh-Access token pair.
     # Input: JSON file containing username and password

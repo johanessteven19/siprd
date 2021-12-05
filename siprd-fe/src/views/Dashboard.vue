@@ -1,10 +1,10 @@
 <template>
   <div>
-  <div style="position: fixed; top: 0;">
+  <div style="position: fixed; top: 0; z-index: 100">
   <Navigation />
   </div>
   <v-container style="padding: 140px 0">
-    <v-row>
+    <v-row >
       <v-layout column align-center justify-center>
         <div style="padding-left: 320px">
           <v-img
@@ -15,21 +15,27 @@
             width="48px"
           />
         </div>
-        <h1 class="text-left"><strong>Your<br>Dashboard</strong></h1>
-        <p class="text-left">
+        <div>
+          <div v-if="userData.role === 'Admin'">
+            <h1 class="text-left" ><strong>Admin<br>Dashboard</strong></h1>
+          </div>
+          <div v-else>
+            <h1 class="text-left" ><strong>Your<br>Dashboard</strong></h1>
+          </div>
+          <p class="text-center">
           Sistem Informasi Peer Review Karya Ilmiah
-        </p>
-        <div class="txt-xs-center">
-          <v-btn
-            class="ml-auto white--text"
-            color="#8D38E3"
-            width="100%"
-          >
-            Daftar Karya Ilmiah
-          </v-btn>
+          </p>
+          <div class="txt-xs-center">
+            <v-btn
+              class="ml-auto white--text"
+              color="#8D38E3"
+              width="80%"
+              v-on:click="karilList()"
+            >
+              Daftar Karya Ilmiah
+            </v-btn>
+          </div>
         </div>
-        <br>
-        <br>
         <br>
         <br>
         <br>
@@ -38,16 +44,20 @@
         <br>
         <h2 class="text-center"><strong>Summary Karya Ilmiah {{ userData.full_name }}</strong></h2>
         <br>
-        <v-row>
+        <v-row  style="padding-bottom: 0px">
             <v-col>
-                <v-card outlined>
+              <!-- eslint-disable no-trailing-spaces -->
+                <v-card 
+                outlined
+                :min-height="300"
+                :min-width="280">
                     <v-card-text class="text-center black--text font-weight-black">
                       ASSIGNED
                       <br><br>
                         <v-progress-circular
                         :rotate="-90"
-                        :size="140"
-                        :width="15"
+                        :size="190"
+                        :width="25"
                         :value= "assigned"
                         color="blue"
                         >
@@ -57,14 +67,14 @@
                 </v-card>
             </v-col>
             <v-col>
-                <v-card outlined>
+                <v-card outlined :min-height="300" :min-width="280">
                     <v-card-text class="text-center black--text font-weight-black">
                       REVIEWED
                       <br><br>
                         <v-progress-circular
                         :rotate="-90"
-                        :size="140"
-                        :width="15"
+                        :size="190"
+                        :width="25"
                         :value= "reviewed"
                         color="blue"
                         >
@@ -74,14 +84,14 @@
                 </v-card>
             </v-col>
             <v-col>
-                <v-card outlined>
+                <v-card outlined :min-height="300" :min-width="280">
                     <v-card-text class="text-center black--text font-weight-black">
                       DONE
                       <br><br>
                         <v-progress-circular
                         :rotate="-90"
-                        :size="140"
-                        :width="15"
+                        :size="190"
+                        :width="25"
                         :value= "done"
                         color="amber"
                         >
@@ -93,34 +103,63 @@
         </v-row>
         <v-row>
           <div
-            v-for="(karil,index) in karils"
-            :key="karil.karil_id">
-            <v-col v-if="index < 3">
-                <v-card outlined>
-                    <v-card-title>
-                        {{karil.judul}}
-                    </v-card-title>
-                    <v-card-text>
-                        Pemilik: {{ userData.full_name }}<br>
-                        Data: {{karil.journal_data}}<br>
-                        Indexer: {{karil.indexer}}<br>
-                        <a :href="karil.link_repo">Repository</a><br>
-                        <a :href="karil.link_correspondence">Bukti Korespondensi</a>
-                        <v-card color="#8D38E3" dark>
-                          <div v-if="karil.reviewers.length > 0">
-                            <strong>Reviewer:</strong>
-                            <span
-                            v-for="reviewer in karil.reviewers"
-                            :key="reviewer">
-                              <br>{{reviewer}}
-                            </span>
-                          </div>
-                          <div v-else>
-                            <strong>Reviewer:</strong>   Not assigned
-                          </div>
-                        </v-card>
-                    </v-card-text>
-                </v-card>
+          v-for="(karil,index) in karils"
+          :key="karil.karil_id">
+          <v-col v-if="index < 3" class="mt-n9">
+              <v-card elevation="1"
+                  outlined
+                  :loading="loading"
+                  class="mx-auto my-12"
+                  min-height="280"
+                  min-width="280">
+                  <v-card-title>
+                      {{karil.judul}}
+                  </v-card-title>
+                  <v-card-text class="pb-1">
+                      <strong >Pemilik:</strong> {{ userData.full_name }}<br>
+                  </v-card-text>
+                  <v-card-text class="pb-0 pt-1">
+                      <strong>Data:</strong>  {{karil.journal_data}}<br>
+                  </v-card-text>
+                  <v-card-text class="pb-1 pt-1">
+                      <strong>Indexer:</strong>  {{karil.indexer}}<br>
+                  </v-card-text>
+                  <v-card-text class="pb-1 pt-1">
+                      <v-btn
+                      v-if="karil.link_repo != null"
+                      outlined
+                      color="#8D38E3"
+                      v-on:click="link(karil.link_repo)"
+                      width="80%"
+                    >Repository
+                    </v-btn>
+                  </v-card-text>
+                  <v-card-text class="pb-0 pt-1">
+                      <v-btn
+                      v-if="karil.link_correspondence != null"
+                      outlined
+                      color="#8D38E3"
+                      v-on:click="link(karil.link_correspondence)"
+                      width="80%"
+                    >Bukti Korespondensi
+                    </v-btn>
+                  </v-card-text>
+                  <v-card-text>
+                    <v-card color="#8D38E3" dark class="pb-2 pt-2 pl-2 mx-auto my-auto">
+                        <div v-if="karil.reviewers.length > 0">
+                          <strong>Reviewer:</strong>
+                          <span
+                          v-for="reviewer in karil.reviewers"
+                          :key="reviewer">
+                            <br>{{reviewer}}
+                          </span>
+                        </div>
+                        <div v-else>
+                          <strong>Reviewer:</strong>   Not assigned
+                        </div>
+                      </v-card>
+                  </v-card-text>
+              </v-card>
             </v-col>
           </div>
         </v-row>
@@ -129,10 +168,10 @@
           <v-btn
             class="ml-auto white--text"
             color="#8D38E3"
-            width="100%"
+            width="190px"
             v-on:click="karilList"
           >
-            See All List
+            See All List <span><i class="fas fa-arrow-right"></i></span>
           </v-btn>
         </div>
       </v-layout>
@@ -172,6 +211,9 @@ export default {
     karilList() {
       this.$router.push('/karil-list');
     },
+    link(link) {
+      window.open(link);
+    },
   },
   beforeMount() {
     if (localStorage.access) {
@@ -190,7 +232,7 @@ export default {
       Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-karil-summary/`, config).then((res) => {
         console.log(res.data);
         if (res.status === 200) {
-          this.karils = res.data;
+          this.karils = res.data.reverse();
           let asum = 0;
           let rsum = 0;
           let dsum = 0;

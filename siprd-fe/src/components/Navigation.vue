@@ -2,6 +2,7 @@
   <header :class="{ 'scrolled-nav': scrolledNav }">
     <nav style='z-index:999'>
       <div class="branding">
+        <img src="@/assets/logo.png" style="width: 35px; padding-right: 10px;">
         <a href="">SIPEERKI</a>
       </div>
       <ul v-show="!mobile" class="menu">
@@ -17,7 +18,7 @@
           <router-link class="link" :to="{ name: 'AccountList' }">Daftar Akun</router-link>
         </li>
         <li>
-          <router-link class="link" :to="{ name: 'Success' }">Panduan</router-link>
+          <router-link class="link" :to="{ name: 'Panduan' }">Panduan</router-link>
         </li>
 
         <li @mouseover="profileList = true" @mouseleave="profileList = false">
@@ -146,7 +147,7 @@ export default {
 <style lang="scss" scoped>
 header {
   // background-color: rgba(0, 0, 0, 0.8);
-  z-index: 9999;
+  z-index: 999;
   width: 100%;
   position: fixed;
   transition: 0.5s ease all;

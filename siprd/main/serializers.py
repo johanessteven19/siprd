@@ -51,7 +51,7 @@ class ResetPasswordEmailRequestSerializer(serializers.Serializer):
 
 class SetNewPasswordSerializer(serializers.Serializer):
     password = serializers.CharField(
-        min_length=6, max_length=68, write_only=True)
+        min_length=1, max_length=68, write_only=True)
     token = serializers.CharField(
         min_length=1, write_only=True)
     uidb64 = serializers.CharField(
@@ -67,7 +67,7 @@ class SetNewPasswordSerializer(serializers.Serializer):
             uidb64 = attrs.get('uidb64')
 
             id = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=id)
+            user = User.objects.filter(username=id).first()
             if not PasswordResetTokenGenerator().check_token(user, token):
                 raise AuthenticationFailed('The reset link is invalid', 401)
 
@@ -101,6 +101,7 @@ class KaryaIlmiahSerializer(serializers.ModelSerializer):
         ]
 
 class ReviewSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Review
         fields = [
@@ -113,10 +114,17 @@ class ReviewSerializer(serializers.ModelSerializer):
             'score_2',
             'score_3',
             'score_4',
+            'max_1',
+            'max_2',
+            'max_3',
+            'max_4',
+            'max_total',
+            'score_total',
             'comment_1',
             'comment_2',
             'comment_3',
             'comment_4',
+            'chosen_proposer',
             'score_proposer'
         ]
 
