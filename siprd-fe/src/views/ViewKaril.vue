@@ -654,3 +654,13 @@ export default {
 
 };
 </script>
+<style scoped>
+  .identitas{
+    background-color: #F9F9F9;
+    border-radius: 25px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  }
+  .v-btn{
+    z-index: 0;
+  }
+</style>
