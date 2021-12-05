@@ -509,9 +509,7 @@ export default {
           })
           .catch((err) => {
             console.log(err.response);
-            if (err.response.status === 404) {
-              alert('Masukan nama penulis yang sudah terdaftar.');
-            } else if (err.response.status === 400) {
+            if (err.response.status === 400) {
               alert('Harap isi kategori karya ilmiah.');
             }
           });
