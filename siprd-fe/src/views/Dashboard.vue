@@ -30,11 +30,7 @@
               class="ml-auto white--text"
               color="#8D38E3"
               width="80%"
-<<<<<<< HEAD
-              v-on:click="karilList"
-=======
               v-on:click="karilList()"
->>>>>>> a138361e5759003268b81f62240cf6cd36545fe6
             >
               Daftar Karya Ilmiah
             </v-btn>
@@ -243,10 +239,10 @@
                         :rotate="-90"
                         :size="190"
                         :width="25"
-                        :value= "total"
+                        :value= "100"
                         color="amber"
                         >
-                            <strong>{{total}}%</strong>
+                            <strong>{{total}}</strong>
                         </v-progress-circular>
                     </v-card-text>
                 </v-card>
@@ -254,61 +250,34 @@
         </v-row>
         <v-row>
           <div
-          v-for="(karil,index) in karils"
-          :key="karil.karil_id">
+          v-for="(user,index) in users"
+          :key="user.Username">
           <v-col v-if="index < 3" class="mt-n9">
               <v-card elevation="1"
                   outlined
                   :loading="loading"
                   class="mx-auto my-12"
-                  min-height="280"
+                  min-height="220"
                   min-width="280">
-                  <v-card-title>
-                      {{userData.full_name}}
+                  <v-card-title class="pl-0 pb-0">
+                    <v-col class="ml-1">
+                      {{user.full_name}}
+                      <v-chip class="ml-9">{{user.role}}</v-chip>
+                    </v-col>
                   </v-card-title>
                   <v-card-text class="pb-1">
-                      <strong >Pemilik:</strong> {{ userData.full_name }}<br>
-                  </v-card-text>
-                  <v-card-text class="pb-0 pt-1">
-                      <strong>Data:</strong>  {{karil.journal_data}}<br>
+                    {{user.email}}
                   </v-card-text>
                   <v-card-text class="pb-1 pt-1">
-                      <strong>Indexer:</strong>  {{karil.indexer}}<br>
+                    {{user.username}}
                   </v-card-text>
-                  <v-card-text class="pb-1 pt-1">
-                      <v-btn
-                      v-if="karil.link_repo != null"
-                      outlined
-                      color="#8D38E3"
-                      v-on:click="link(karil.link_repo)"
-                      width="80%"
-                    >Repository
-                    </v-btn>
+                  <v-card-text v-if="user.university !== null" class="pb-2 pt-1" >
+                    <!-- eslint-disable max-len -->
+                    <strong class="pr-1"><i class="fas fa-map-marker-alt"> </i></strong> {{user.university}}
                   </v-card-text>
-                  <v-card-text class="pb-0 pt-1">
-                      <v-btn
-                      v-if="karil.link_correspondence != null"
-                      outlined
-                      color="#8D38E3"
-                      v-on:click="link(karil.link_correspondence)"
-                      width="80%"
-                    >Bukti Korespondensi
-                    </v-btn>
-                  </v-card-text>
-                  <v-card-text>
-                    <v-card color="#8D38E3" dark class="pb-2 pt-2 pl-2 mx-auto my-auto">
-                        <div v-if="karil.reviewers.length > 0">
-                          <strong>Reviewer:</strong>
-                          <span
-                          v-for="reviewer in karil.reviewers"
-                          :key="reviewer">
-                            <br>{{reviewer}}
-                          </span>
-                        </div>
-                        <div v-else>
-                          <strong>Reviewer:</strong>   Not assigned
-                        </div>
-                      </v-card>
+                  <v-card-text v-if="user.field_of_study !== null" class="pb-1 pt-1">
+                    <!-- eslint-disable max-len -->
+                    <strong class="pr-1"><i class="fas fa-suitcase"></i> </strong> {{user.field_of_study}}
                   </v-card-text>
               </v-card>
             </v-col>
@@ -320,7 +289,7 @@
             class="ml-auto white--text"
             color="#8D38E3"
             width="200px"
-            v-on:click="AccountList"
+            v-on:click="accountList()"
           >
             Lihat Semua List <span> <i class="fas fa-arrow-right"></i></span>
           </v-btn>
@@ -367,6 +336,9 @@ export default {
     karilList() {
       this.$router.push('/karil-list');
     },
+    accountList() {
+      this.$router.push('/account-list');
+    },
     link(link) {
       window.open(link);
     },
@@ -412,27 +384,26 @@ export default {
         }
       });
       Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-users/`, config).then((res) => {
+        console.log('hello');
         if (res.status === 200) {
           console.log(res.data);
           this.users = res.data;
           let needSum = 0;
           let approvedSum = 0;
-          let totalSum = 0;
           this.users.forEach((item) => {
             console.log(item.status);
-            if (item.status.includes('Done')) {
+            if (item.approved === false) {
               needSum += 1;
-            }
-            if (item.reviews.length !== 0) {
+            } else {
               approvedSum += 1;
-            }
-            if (item.reviewers.length !== 0) {
-              totalSum += 1;
             }
           });
           this.need = Math.round((needSum / this.users.length) * 100);
+          console.log(this.need);
           this.approved = Math.round((approvedSum / this.users.length) * 100);
-          this.total = Math.round((totalSum / this.users.length) * 100);
+          console.log(this.approved);
+          this.total = this.users.length;
+          console.log(this.total);
         } else {
           console.log('fetch failed or no user');
         }
