@@ -486,21 +486,27 @@
                     <v-col style="margin-top: 1rem" cols="5" align="right">
                         Nilai Pengusul
                     </v-col>
-                    <v-col md="4" cols="8">
-                        <validation-provider
-                        v-slot="{ errors }"
-                        name="Nilai Pengusul"
-                        rules="required|double:2,dot|max_value:40|min_value:0"
-                        >
-                            <v-text-field
-                            :error-messages="errors"
-                            v-model="proposer_score"
-                            placeholder="0-40"
-                            required
-                            numeric
-                            outlined></v-text-field>
-                        </validation-provider>
+                    <v-col md="4" cols="8" align="left">
+                      <v-select
+                        class="pb-4"
+                        style="z-index: 0"
+                        v-model="chosen_proposer"
+                        :items="score_types"
+                        :error-messages="errors"
+                        label="Pilih jenis nilai pengusul yang sesuai*"
+                        data-vv-name="select"
+                        required
+                        outlined
+                      >
+                      </v-select>
                     </v-col>
+                </v-row>
+                <v-row row-gap="0px" v-if="chosen_proposer !== ''">
+                  <v-col style="margin-bottom: 1rem" align="center"
+                      v-if="chosen_proposer !== ''"
+                    >
+                    {{ 'Nilai total = ' + calculateTotal() }}
+                  </v-col>
                 </v-row>
             </div>
           </v-card>
@@ -664,8 +670,17 @@ export default {
       score3: 0,
       score4: 0,
       totalscore: 0,
+      chosen_proposer: '',
       proposer_score: 0,
       dialog: false,
+      score_types: [
+        'Nilai pengusul (penulis mandiri sekaligus koresponden) = 100%',
+        'Nilai pengusul (penulis pertama sekaligus koresponden) =60%',
+        'Nilai pengusul (penulis pertama bukan koresponden atau penulis koresponden bukan penulis pertama, jumlah penulis 2) = 50%',
+        'Nilai pengusul (penulis pertama bukan koresponden atau penulis koresponden bukan penulis pertama, jumlah penulis > 2) =40%',
+        'Nilai pengusul (penulis pendamping, penulis pertama sekaligus koresponden) = 40% dibagi jumlah penulis pendamping',
+        'Nilai pengusul (penulis pendamping, penulis pertama bukan koresponden) = 20% dibagi jumlah penulis pendamping',
+      ],
     };
   },
   methods: {
@@ -686,6 +701,29 @@ export default {
       + parseInt(this.score4, 10);
     },
 
+    calculateTotal() {
+      const total = parseInt(this.score1, 10)
+        + parseInt(this.score2, 10)
+        + parseInt(this.score3, 10)
+        + parseInt(this.score4, 10);
+      switch (this.chosen_proposer) {
+        case this.score_types[0]:
+          return total;
+        case this.score_types[1]:
+          return total * 0.6;
+        case this.score_types[2]:
+          return total * 0.5;
+        case this.score_types[3]:
+          return total * 0.4;
+        case this.score_types[4]:
+          return total * 0.4;
+        case this.score_types[5]:
+          return total * 0.2;
+        default:
+          return total;
+      }
+    },
+
     submitForm() {
       const data = {
         karil_id: this.karilId,
@@ -700,6 +738,7 @@ export default {
         comment_2: this.komen2,
         comment_3: this.komen3,
         comment_4: this.komen4,
+        chosen_proposer: this.chosen_proposer,
         score_proposer: this.proposer_score,
       };
       if (localStorage.access) {
