@@ -267,6 +267,7 @@ export default {
       this.$router.go();
     },
     donePDF() {
+      console.log('Creating PDF!');
       const doc = new JsPDF({ putOnlyUsedFonts: true, orientation: 'landscape' });
       const label = [
         'no',
@@ -295,19 +296,23 @@ export default {
         if (j.status.includes('Done')) {
           doneData.push({
             no: String(numb++),
-            pemilik: j.pemilik,
-            judul: j.judul,
-            journal_data: j.journal_data,
-            link_repo: j.link_repo,
-            indexer: j.indexer,
-            link_simcheck: j.link_simcheck,
-            reviewers: j.reviewers,
+            pemilik: (j.pemilik === null ? '-' : j.pemilik),
+            judul: (j.judul === null ? '-' : j.judul),
+            journal_data: (j.journal_data === null ? '-' : j.journal_data),
+            link_repo: (j.link_repo === null ? '-' : j.link_repo),
+            indexer: (j.indexer === null ? '-' : j.indexer),
+            link_simcheck: (j.link_simcheck === null ? '-' : j.link_simcheck),
+            reviewers: (j.reviewers === null ? '-' : j.reviewers),
           });
         }
       });
       console.log(doneData);
+      console.log(headers);
+      console.log('Creating Table..');
       doc.table(1, 1, doneData, headers, { autoSize: true });
+      console.log('Saving PDF..');
       doc.save('DoneKarils.pdf');
+      console.log('PDF Created!');
     },
   },
   async beforeMount() {

@@ -16,6 +16,7 @@
                   class="mr-4 white--text"
                   color="blue"
                   width="100%"
+                  v-on:click="downloadExcel()"
                   > Download to Excel
                 </v-btn>
               </v-col>
@@ -101,7 +102,6 @@
           <v-row >
               <v-col md="3" class="mr-auto">
                   Dosen : {{ karilData.pemilik }} <br>
-                  Jabatan: {{ karilData.position }} <br>
                   Kenaikan Jabatan: {{ karilData.promotion }}
               </v-col>
           </v-row>
@@ -237,7 +237,12 @@
                   </v-col>
               </v-row>
           </div>
-          <div class="identitas" style="margin-top: 2rem; width: 100%;" justify="center">
+          <div
+            class="identitas"
+            v-if="userData.role !== 'Reviewer'"
+            style="margin-top: 2rem; width: 100%;"
+            justify="center"
+          >
             <v-row align="center" justify="center">
               <v-col md="1" align="right">
                 Reviewer
@@ -599,6 +604,26 @@ export default {
           });
       }
     },
+
+    downloadExcel() {
+      console.log('downloading!');
+      if (localStorage.access) {
+        const accessToken = localStorage.access;
+
+        Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}api/download-review-form`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          data: {
+            karil_id: this.karilId,
+          },
+        }).then((res) => {
+          if (res.status === 200) {
+            console.log('download success');
+          }
+        });
+      }
+    },
   },
 
   beforeMount() {
@@ -633,3 +658,13 @@ export default {
 
 };
 </script>
+<style scoped>
+  .identitas{
+    background-color: #F9F9F9;
+    border-radius: 25px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  }
+  .v-btn{
+    z-index: 0;
+  }
+</style>
