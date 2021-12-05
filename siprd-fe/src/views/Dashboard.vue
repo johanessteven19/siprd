@@ -232,7 +232,7 @@ export default {
       Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/get-karil-summary/`, config).then((res) => {
         console.log(res.data);
         if (res.status === 200) {
-          this.karils = res.data;
+          this.karils = res.data.reverse();
           let asum = 0;
           let rsum = 0;
           let dsum = 0;

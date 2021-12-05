@@ -111,6 +111,14 @@ class GetLinkedKarils(APIView):
             # No matching karils
             return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def post(self, request):
+        try:
+            karils = KaryaIlmiah.objects.all().filter(pemilik = request.data['username'])
+        except KaryaIlmiah.DoesNotExist:
+            return Response({'message': 'This review does not exist!'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = KaryaIlmiahSerializer(karils, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 # Will return all user data for the given email
 # only succeeds if the authenticated user's email
 # is the one being queried
