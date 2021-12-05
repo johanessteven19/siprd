@@ -237,7 +237,12 @@
                   </v-col>
               </v-row>
           </div>
-          <div class="identitas" v-if="userData.role !== 'Reviewer'" style="margin-top: 2rem; width: 100%;" justify="center">
+          <div
+            class="identitas"
+            v-if="userData.role !== 'Reviewer'"
+            style="margin-top: 2rem; width: 100%;"
+            justify="center"
+          >
             <v-row align="center" justify="center">
               <v-col md="1" align="right">
                 Reviewer
