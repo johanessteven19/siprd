@@ -1,9 +1,9 @@
 <template>
   <div>
-  <div style="position: fixed; top: 0; z-index: 100">
-  <Navigation />
-  </div>
-  <v-container style="padding: 140px 0">
+    <div style="position: fixed; top: 0; z-index: 100">
+      <Navigation />
+    </div>
+  <v-container style="padding: 140px 50px 0px;">
     <v-row >
       <v-layout column align-center justify-center>
         <div style="padding-left: 320px">
@@ -42,7 +42,14 @@
         <br>
         <br>
         <br>
-        <h2 class="text-center"><strong>Summary Karya Ilmiah {{ userData.full_name }}</strong></h2>
+      </v-layout>
+    </v-row>
+  </v-container>
+  <div style="background-color: #F9F9F9">
+    <v-container style="padding: 50px 140px 100px 140px;">
+    <v-row >
+      <v-layout column align-center justify-center>
+        <h1 class="text-center"><strong>Summary Karya Ilmiah {{ userData.full_name }}</strong></h1>
         <br>
         <v-row  style="padding-bottom: 0px">
             <v-col>
@@ -52,8 +59,8 @@
                 :min-height="300"
                 :min-width="280">
                     <v-card-text class="text-center black--text font-weight-black">
-                      ASSIGNED
-                      <br><br>
+                      <h2>Assigned</h2>
+                      <br>
                         <v-progress-circular
                         :rotate="-90"
                         :size="190"
@@ -69,8 +76,8 @@
             <v-col>
                 <v-card outlined :min-height="300" :min-width="280">
                     <v-card-text class="text-center black--text font-weight-black">
-                      REVIEWED
-                      <br><br>
+                      <h2>Reviewed</h2>
+                      <br>
                         <v-progress-circular
                         :rotate="-90"
                         :size="190"
@@ -86,8 +93,8 @@
             <v-col>
                 <v-card outlined :min-height="300" :min-width="280">
                     <v-card-text class="text-center black--text font-weight-black">
-                      DONE
-                      <br><br>
+                      <h2>Done</h2>
+                      <br>
                         <v-progress-circular
                         :rotate="-90"
                         :size="190"
@@ -168,15 +175,129 @@
           <v-btn
             class="ml-auto white--text"
             color="#8D38E3"
-            width="190px"
+            width="200px"
             v-on:click="karilList"
           >
-            See All List <span><i class="fas fa-arrow-right"></i></span>
+            Lihat Semua List <span> <i class="fas fa-arrow-right"></i></span>
           </v-btn>
         </div>
       </v-layout>
     </v-row>
   </v-container>
+  </div>
+  <div v-if="userData.role === 'Admin'" >
+    <v-container style="padding: 60px 50px 50px;">
+      <v-row >
+      <v-layout column align-center justify-center>
+        <h1 class="text-center"><strong>Summary Akun</strong></h1>
+        <br>
+        <v-row  style="padding-bottom: 0px">
+            <v-col>
+              <!-- eslint-disable no-trailing-spaces -->
+                <v-card 
+                outlined
+                :min-height="300"
+                :min-width="280">
+                    <v-card-text class="text-center black--text font-weight-black">
+                      <h2>Need Approval</h2>
+                      <br>
+                        <v-progress-circular
+                        :rotate="-90"
+                        :size="190"
+                        :width="25"
+                        :value= "need"
+                        color="blue"
+                        >
+                            <strong>{{need}}%</strong>
+                        </v-progress-circular>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+            <v-col>
+                <v-card outlined :min-height="300" :min-width="280">
+                    <v-card-text class="text-center black--text font-weight-black">
+                      <h2>Approved</h2>
+                      <br>
+                        <v-progress-circular
+                        :rotate="-90"
+                        :size="190"
+                        :width="25"
+                        :value= "approved"
+                        color="blue"
+                        >
+                            <strong>{{approved}}%</strong>
+                        </v-progress-circular>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+            <v-col>
+                <v-card outlined :min-height="300" :min-width="280">
+                    <v-card-text class="text-center black--text font-weight-black">
+                      <h2>Total Account</h2>
+                      <br>
+                        <v-progress-circular
+                        :rotate="-90"
+                        :size="190"
+                        :width="25"
+                        :value= "100"
+                        color="amber"
+                        >
+                            <strong>{{total}}</strong>
+                        </v-progress-circular>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-row>
+          <div
+          v-for="(user,index) in users"
+          :key="user.Username">
+          <v-col v-if="index < 3" class="mt-n9">
+              <v-card elevation="1"
+                  outlined
+                  :loading="loading"
+                  class="mx-auto my-12"
+                  min-height="220"
+                  min-width="280">
+                  <v-card-title class="pl-0 pb-0">
+                    <v-col class="ml-1">
+                      {{user.full_name}}
+                      <v-chip class="ml-9">{{user.role}}</v-chip>
+                    </v-col>
+                  </v-card-title>
+                  <v-card-text class="pb-1">
+                    {{user.email}}
+                  </v-card-text>
+                  <v-card-text class="pb-1 pt-1">
+                    {{user.username}}
+                  </v-card-text>
+                  <v-card-text v-if="user.university !== null" class="pb-2 pt-1" >
+                    <!-- eslint-disable max-len -->
+                    <strong class="pr-1"><i class="fas fa-map-marker-alt"> </i></strong> {{user.university}}
+                  </v-card-text>
+                  <v-card-text v-if="user.field_of_study !== null" class="pb-1 pt-1">
+                    <!-- eslint-disable max-len -->
+                    <strong class="pr-1"><i class="fas fa-suitcase"></i> </strong> {{user.field_of_study}}
+                  </v-card-text>
+              </v-card>
+            </v-col>
+          </div>
+        </v-row>
+        <br>
+        <div class="txt-xs-center">
+          <v-btn
+            class="ml-auto white--text"
+            color="#8D38E3"
+            width="200px"
+            v-on:click="accountList()"
+          >
+            Lihat Semua List <span> <i class="fas fa-arrow-right"></i></span>
+          </v-btn>
+        </div>
+      </v-layout>
+    </v-row>
+    </v-container>
+  </div>
   </div>
 </template>
 
@@ -197,11 +318,15 @@ export default {
   },
   data() {
     return {
+      users: [],
       userData: '',
       karils: '',
       assigned: 0,
       reviewed: 0,
       done: 0,
+      need: 0,
+      approved: 0,
+      total: 0,
     };
   },
   methods: {
@@ -210,6 +335,9 @@ export default {
     },
     karilList() {
       this.$router.push('/karil-list');
+    },
+    accountList() {
+      this.$router.push('/account-list');
     },
     link(link) {
       window.open(link);
@@ -253,6 +381,31 @@ export default {
           this.done = Math.round((dsum / this.karils.length) * 100);
         } else {
           console.log('fetch failed or no karil');
+        }
+      });
+      Vue.axios.get(`${process.env.VUE_APP_BACKEND_URL || ''}/api/manage-users/`, config).then((res) => {
+        console.log('hello');
+        if (res.status === 200) {
+          console.log(res.data);
+          this.users = res.data;
+          let needSum = 0;
+          let approvedSum = 0;
+          this.users.forEach((item) => {
+            console.log(item.status);
+            if (item.approved === false) {
+              needSum += 1;
+            } else {
+              approvedSum += 1;
+            }
+          });
+          this.need = Math.round((needSum / this.users.length) * 100);
+          console.log(this.need);
+          this.approved = Math.round((approvedSum / this.users.length) * 100);
+          console.log(this.approved);
+          this.total = this.users.length;
+          console.log(this.total);
+        } else {
+          console.log('fetch failed or no user');
         }
       });
     } else {

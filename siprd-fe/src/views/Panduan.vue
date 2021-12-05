@@ -42,7 +42,7 @@
                     <br>
                     <span>Informasi rinci mengenai jenis karil yang bisa dinilai serta angka kredit, dapat dilihat pada Pedoman Operasional PAK (Penilaian Angka Kredit) 2019 melalui:</span>
                     <br>
-                    <span> https://pak.kemdikbud.go.id/portalv2/download/2868/</span>
+                    <span> <a href="https://pak.kemdikbud.go.id/portalv2/download/2868/">https://pak.kemdikbud.go.id/portalv2/download/2868/</a></span>
                 </template>
                 </accordion-item>
 

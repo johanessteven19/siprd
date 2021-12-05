@@ -87,7 +87,7 @@
           <v-btn
             depressed
             color="success"
-           @click="updateUser(item);"
+           @click="updateUser(row.item);"
           >
             Setujui
           </v-btn>
