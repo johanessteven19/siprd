@@ -322,6 +322,39 @@ export default {
                   label: 'Pada database tidak bereputasi',
                   customLabel: 'Jurnal Internasional Terindex di DB non-reputasi',
                 }],
+            }, {
+              id: 'Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan - Internasional',
+              label: 'Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan',
+              customLabel: 'Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan - Internasional',
+            }, {
+              id: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional',
+              label: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN)',
+              customLabel: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional',
+              children: [{
+                id: 'terindeks pada Scimagojr dan Scopus',
+                label: 'Terindeks pada Scimagojr dan Scopus',
+                customLabel: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional - terindeks pada Scimagojr dan Scopus',
+              }, {
+                id: 'Internasional terindeks pada Scopus/IEEE Explore/SPIE',
+                label: 'Terindeks pada Scopus/IEEE Explore/SPIE',
+                customLabel: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional - terindeks pada Scopus/IEEE Explore/SPIE',
+              }],
+            }, {
+              id: 'Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan',
+              label: 'Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan (bukti sertifikat)',
+              customLabel: 'Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan - Internasional',
+            }, {
+              id: 'Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya tetapi dimuat dalam prosiding - Internasional',
+              label: 'Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya tetapi dimuat dalam prosiding ',
+              customLabel: 'Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya tetapi dimuat dalam prosiding - Internasional',
+            }, {
+              id: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda - Internasional',
+              label: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda',
+              customLabel: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda - Internasional',
+            }, {
+              id: 'HAKI',
+              label: 'HAKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI (diakui min. 4 negara)',
+              customLabel: 'HAKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI - Internasional',
             },
           ],
         }, {
@@ -367,68 +400,44 @@ export default {
               id: 'Jurnal ilmiah yang ditulis dalam Bahasa Resmi PBB ',
               label: 'Jurnal ilmiah yang ditulis dalam Bahasa Resmi PBB namun tidak memenuhi syarat syarat sebagai jurnal ilmiah internasional',
               customLabel: 'Jurnal ilmiah yang ditulis dalam Bahasa Resmi PBB namun tidak memenuhi syarat syarat sebagai jurnal ilmiah internasional',
+            }, {
+              id: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Nasional',
+              label: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN)',
+              customLabel: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Nasional',
+            }, {
+              id: 'Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan - Nasional',
+              label: 'Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan',
+              customLabel: 'Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan - Nasional',
+            }, {
+              id: 'Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan - Nasional',
+              label: 'Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan (bukti sertifikat)',
+              customLabel: 'Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan - Nasional',
+            }, {
+              id: 'Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya tetapi dimuat dalam prosiding - Nasional',
+              label: 'Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya tetapi dimuat dalam prosiding',
+              customLabel: 'Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya tetapi dimuat dalam prosiding - Nasional',
+            }, {
+              id: 'HAKI',
+              label: 'HAKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI',
+              children: [{
+                id: 'Nasional',
+                label: 'Nasional',
+                customLabel: 'HKI - Nasional',
+              }, {
+                id: 'Nasional, dalam bentuk paten sederhana yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham',
+                label: 'Nasional, dalam bentuk paten sederhana yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham',
+                customLabel: 'HKI - Nasional - Paten sederhana yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham',
+              }, {
+                id: 'Karya ciptaan desain industri, indikasi geografis yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham ',
+                label: 'Karya ciptaan desain industri, indikasi geografis yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham ',
+                customLabel: 'HKI - Karya ciptaan desain industri, indikasi geografis yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham',
+              }],
+            }, {
+              id: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda - Nasional',
+              label: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda',
+              customLabel: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda - Nasional',
             },
           ],
-        }],
-      }, {
-        id: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN)',
-        label: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN)',
-        children: [{
-          id: 'Nasional',
-          label: 'Nasional',
-          customLabel: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Nasional',
-        }, {
-          id: 'Internasional',
-          label: 'Internasional',
-          children: [{
-            id: 'Internasional',
-            label: 'Internasional',
-            customLabel: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional',
-          }, {
-            id: 'terindeks pada Scimagojr dan Scopus',
-            label: 'Terindeks pada Scimagojr dan Scopus',
-            customLabel: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional - terindeks pada Scimagojr dan Scopus',
-          }, {
-            id: 'Internasional terindeks pada Scopus/IEEE Explore/SPIE',
-            label: 'Terindeks pada Scopus/IEEE Explore/SPIE',
-            customLabel: 'Dipresentasikan secara oral dan dimuat dalam prosiding yang dipublikasikan (ber ISSN/ISBN) - Internasional - terindeks pada Scopus/IEEE Explore/SPIE',
-          }],
-        }],
-      }, {
-        id: 'Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan',
-        label: 'Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan',
-        children: [{
-          id: 'Internasional',
-          label: 'Internasional',
-          customLabel: 'Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan - Internasional',
-        }, {
-          id: 'Nasional',
-          label: 'Nasional',
-          customLabel: 'Disajikan dalam bentuk poster dan dimuat dalam prosiding yang dipublikasikan - Nasional',
-        }],
-      }, {
-        id: 'Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan',
-        label: 'Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan',
-        children: [{
-          id: 'Internasional',
-          label: 'Internasional (bukti sertifikat)',
-          customLabel: 'Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan - Internasional',
-        }, {
-          id: 'Nasional',
-          label: 'Nasional (bukti sertifikat)',
-          customLabel: 'Disajikan dalam seminar/simposium/lokakarya, tetapi tidak dimuat dalam prosiding yang dipublikasikan - Nasional',
-        }],
-      }, {
-        id: 'Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya tetapi dimuat dalam prosiding',
-        label: 'Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya tetapi dimuat dalam prosiding',
-        children: [{
-          id: 'Internasional',
-          label: 'Internasional',
-          customLabel: 'Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya tetapi dimuat dalam prosiding - Internasional',
-        }, {
-          id: 'Nasional',
-          label: 'Nasional',
-          customLabel: 'Hasil penelitian/pemikiran yang tidak disajikan dalam seminar/simposium/lokakarya tetapi dimuat dalam prosiding - Nasional',
         }],
       }, {
         id: 'Hasil penelitian/pemikiran yang disajikan dalam koran/majalah populer/umum',
@@ -447,37 +456,9 @@ export default {
           customLabel: 'Mengedit/menyunting karya ilmiah, Diterbitkan dan diedarkan secara nasional',
         }],
       }, {
-        id: 'HKI',
-        label: 'HKI - Membuat rancangan dan karya teknologi yang dipatenkan atau seni yang terdaftar di HAKI',
-        children: [{
-          id: 'Internasional (paling sedikit diakui oleh 4 negara)',
-          label: 'Internasional (paling sedikit diakui oleh 4 negara)',
-          customLabel: 'HKI - Internasional (paling sedikit diakui oleh 4 negara)',
-        }, {
-          id: 'Nasional',
-          label: 'Nasional',
-          customLabel: 'HKI - Nasional',
-        }, {
-          id: 'Nasional, dalam bentuk paten sederhana yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham',
-          label: 'Nasional, dalam bentuk paten sederhana yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham',
-          customLabel: 'HKI - Nasional - Paten sederhana yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham',
-        }, {
-          id: 'Karya ciptaan desain industri, indikasi geografis yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham ',
-          label: 'Karya ciptaan desain industri, indikasi geografis yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham ',
-          customLabel: 'HKI - Karya ciptaan desain industri, indikasi geografis yang telah memiliki sertifikat dari Direktorat Jenderal Kekayaan Intelektual, Kemenkumham',
-        }],
-      }, {
         id: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda',
         label: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda',
         children: [{
-          id: 'Internasional',
-          label: 'Internasional',
-          customLabel: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda - Internasional',
-        }, {
-          id: 'Nasional',
-          label: 'Nasional',
-          customLabel: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda - Nasional',
-        }, {
           id: 'Lokal',
           label: 'Lokal',
           customLabel: 'Membuat rancangan dan karya teknologi yang tidak dipatenkan tetapi telah dipresentasikan pada forum yang teragenda - Lokal',
