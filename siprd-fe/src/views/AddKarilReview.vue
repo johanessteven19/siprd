@@ -739,7 +739,7 @@ export default {
         comment_3: this.komen3,
         comment_4: this.komen4,
         chosen_proposer: this.chosen_proposer,
-        score_proposer: this.proposer_score,
+        score_proposer: this.calculateTotal(),
       };
       if (localStorage.access) {
         const accessToken = localStorage.access;
