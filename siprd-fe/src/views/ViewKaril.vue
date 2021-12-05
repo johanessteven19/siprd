@@ -16,6 +16,7 @@
                   class="mr-4 white--text"
                   color="blue"
                   width="100%"
+                  v-on:click="downloadExcel()"
                   > Download to Excel
                 </v-btn>
               </v-col>
@@ -597,6 +598,26 @@ export default {
           .catch((err) => {
             console.log(err.response);
           });
+      }
+    },
+
+    downloadExcel() {
+      console.log('downloading!');
+      if (localStorage.access) {
+        const accessToken = localStorage.access;
+
+        Vue.axios.post(`${process.env.VUE_APP_BACKEND_URL || ''}api/download-review-form`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          data: {
+            karil_id: this.karilId,
+          },
+        }).then((res) => {
+          if (res.status === 200) {
+            console.log('download success');
+          }
+        });
       }
     },
   },
