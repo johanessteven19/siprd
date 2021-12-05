@@ -501,6 +501,29 @@
                       </v-select>
                     </v-col>
                 </v-row>
+                <v-row row-gap="0px" v-if="display_writer_nums === true">
+                  <v-col style="margin-top: 1rem" cols="5" align="right">
+                    Jumlah Penulis
+                  </v-col>
+                  <v-col md="4" cols="8" align="right" justify="center">
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Jumlah Penulis"
+                      rules="required|numeric|min_value:1"
+                    >
+                      <v-text-field
+                      :error-messages="errors"
+                      v-model="jumlah_penulis"
+                      placeholder=""
+                      required
+                      numeric
+                      outlined
+                      type="number"
+                      @change="calculateTotal()">
+                      </v-text-field>
+                    </validation-provider>
+                  </v-col>
+                </v-row>
                 <v-row row-gap="0px" v-if="chosen_proposer !== ''">
                   <v-col style="margin-bottom: 1rem" align="center"
                       v-if="chosen_proposer !== ''"
@@ -681,6 +704,8 @@ export default {
         'Nilai pengusul (penulis pendamping, penulis pertama sekaligus koresponden) = 40% dibagi jumlah penulis pendamping',
         'Nilai pengusul (penulis pendamping, penulis pertama bukan koresponden) = 20% dibagi jumlah penulis pendamping',
       ],
+      jumlah_penulis: 1,
+      display_writer_nums: false,
     };
   },
   methods: {
@@ -708,18 +733,25 @@ export default {
         + parseInt(this.score4, 10);
       switch (this.chosen_proposer) {
         case this.score_types[0]:
+          this.display_writer_nums = false;
           return total;
         case this.score_types[1]:
+          this.display_writer_nums = false;
           return total * 0.6;
         case this.score_types[2]:
+          this.display_writer_nums = false;
           return total * 0.5;
         case this.score_types[3]:
+          this.display_writer_nums = false;
           return total * 0.4;
         case this.score_types[4]:
-          return total * 0.4;
+          this.display_writer_nums = true;
+          return (total * 0.4) / this.jumlah_penulis;
         case this.score_types[5]:
-          return total * 0.2;
+          this.display_writer_nums = true;
+          return (total * 0.2) / this.jumlah_penulis;
         default:
+          this.display_writer_nums = false;
           return total;
       }
     },
