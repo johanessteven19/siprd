@@ -387,7 +387,7 @@ export default {
         console.log('hello');
         if (res.status === 200) {
           console.log(res.data);
-          this.users = res.data;
+          this.users = res.data.reverse();
           let needSum = 0;
           let approvedSum = 0;
           this.users.forEach((item) => {
